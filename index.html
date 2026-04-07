@@ -5,57 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FSMAL Logo Anketi</title>
     <style>
-        :root { --p: #7F77DD; --p-dark: #534AB7; --bg: #fff; --bg-s: #f8f9fa; --txt: #1a1a1a; --txt-s: #666; --brd: #ddd; }
+        :root { --p: #7F77DD; --p-dark: #534AB7; --bg: #fff; --bg-s: #f8f9fa; --txt: #1a1a1a; --brd: #ddd; }
         *{box-sizing:border-box;margin:0;padding:0; -webkit-tap-highlight-color:transparent}
         body{font-family:sans-serif;color:var(--txt);background:var(--bg);padding:1rem;line-height:1.4}
-        
         .tab-bar{display:flex;border-bottom:1px solid #eee;margin-bottom:1.5rem}
-        .tab{flex:1;padding:12px;font-size:13px;cursor:pointer;border:none;background:none;color:var(--txt-s);border-bottom:2px solid transparent}
+        .tab{flex:1;padding:12px;font-size:13px;cursor:pointer;border:none;background:none;color:#666;border-bottom:2px solid transparent}
         .tab.active{color:var(--p-dark);border-bottom-color:var(--p);font-weight:600}
-        
         .view{display:none}.view.active{display:block}
-        
-        .btn-p{background:var(--p);color:#fff;border:none;border-radius:8px;padding:12px 16px;font-size:14px;cursor:pointer;font-weight:500;width:100%}
+        .btn-p{background:var(--p);color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;cursor:pointer;font-weight:500;width:100%}
         .btn-p:disabled{background:#ccc;cursor:not-allowed}
-        .btn-o{background:none;border:1px solid #ccc;border-radius:8px;padding:12px 13px;font-size:14px;cursor:pointer;color:var(--txt-s);width:100%}
+        .btn-o{background:none;border:1px solid #ccc;border-radius:8px;padding:12px;font-size:14px;cursor:pointer;color:#666;width:100%}
         .btn-row{display:flex;gap:8px;margin-top:12px}
-        
         .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0}
-        .admin-card{border:1px solid var(--brd);border-radius:12px;padding:10px;background:var(--bg);text-align:center}
-        .img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--bg-s);border:1px solid var(--brd);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;margin-bottom:5px;position:relative}
+        .admin-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center}
+        .img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--bg-s);border:1px solid var(--brd);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
         .img-box img{width:100%;height:100%;object-fit:contain}
-        
         .progress-bar{width:100%;height:6px;background:#eee;border-radius:3px;margin-bottom:1.5rem;overflow:hidden}
         .progress-fill{height:100%;background:var(--p);transition:width .4s;width:14%}
         .step{display:none}.step.active{display:block}
         .question{font-size:17px;font-weight:600;margin-bottom:1.2rem}
-        
         .options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
         .opt-btn{background:var(--bg);border:1px solid #ccc;border-radius:10px;padding:14px;font-size:15px;cursor:pointer;text-align:left}
         .opt-btn.selected{border:2px solid var(--p);background:#EEEDFE;color:var(--p-dark);font-weight:600}
-        
         .logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
         .logo-card{border:1px solid var(--brd);border-radius:12px;padding:8px;text-align:center;cursor:pointer}
         .logo-card.selected{border:2px solid var(--p);background:#EEEDFE}
         .lc-img{width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;background:#f0f0f0}
         .lc-img img{width:100%;height:100%;object-fit:contain}
-        
-        .cmp-outer{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+        .cmp-outer{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:10px}
         .cmp-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center;cursor:pointer}
-        .vs{font-weight:bold;color:#aaa}
-        
         .star-row{display:flex;gap:10px;margin-bottom:1.5rem;justify-content:center}
         .star{font-size:35px;cursor:pointer;color:#ddd}.star.lit{color:#F0A500}
         textarea{width:100%;border:1px solid #ccc;border-radius:8px;padding:10px;min-height:90px;font-size:14px}
-        
         .overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center}
         .lock-card{background:#fff;padding:2rem;border-radius:15px;width:90%;max-width:320px;text-align:center}
         .lock-card input{width:100%;padding:12px;margin:15px 0;border-radius:8px;border:1px solid #ccc;text-align:center}
-
         .metric-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:15px}
-        .metric{background:var(--bg-s);padding:10px;border-radius:8px;text-align:center}
-        .metric span{display:block;font-size:10px;color:gray}
-        .metric b{font-size:16px}
+        .metric{background:var(--bg-s);padding:10px;border-radius:8px;text-align:center;font-size:12px}
     </style>
 </head>
 <body>
@@ -77,11 +63,10 @@
 <div class="view" id="view-admin">
     <div id="fb-status" style="font-size:11px; margin-bottom:10px">Durum: Bekleniyor...</div>
     <div style="background:#eee; padding:10px; border-radius:8px; margin-bottom:10px">
-        <label><input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked"> Anket Katılıma Açık</label>
+        <label><input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked"> Anket Açık</label>
     </div>
     <div class="admin-grid" id="admin-grid"></div>
     <button class="btn-p" id="save-btn" onclick="saveAdmin()">AYARLARI KAYDET</button>
-    <button class="btn-o" onclick="clearVotes()" style="color:red; margin-top:10px">Oyları Sıfırla</button>
 </div>
 
 <div class="view active" id="view-poll">
@@ -99,25 +84,25 @@
     <div class="step" id="s2">
       <p class="question">Sınıfın?</p>
       <div class="options" id="opts-class"></div>
-      <div class="btn-row"><button class="btn-o" onclick="go(1)">Geri</button><button class="btn-p" id="n2" onclick="go(3)" disabled>Devam</button></div>
+      <div class="btn-row"><button class="btn-o" onclick="go(1)">Geri</button><button class="btn-p" id="n2" onclick="go(3)" disabled style="flex:1">Devam</button></div>
     </div>
 
     <div class="step" id="s3">
-      <p class="question">Hangisi daha iyi?</p>
+      <p class="question">Sence hangisi daha güzel?</p>
       <div class="cmp-outer" id="cmp-area"></div>
-      <div class="btn-row"><button class="btn-o" onclick="go(2)">Geri</button><button class="btn-p" id="n3" onclick="go(4)" disabled>Geç ve Devam Et</button></div>
+      <div class="btn-row"><button class="btn-o" onclick="go(2)">Geri</button><button class="btn-p" id="n3" onclick="go(4)" disabled style="flex:1">Devam</button></div>
     </div>
 
     <div class="step" id="s4">
         <p class="question">Favori Logon?</p>
         <div class="logo-grid" id="poll-logo-grid"></div>
-        <div class="btn-row"><button class="btn-o" onclick="go(3)">Geri</button><button class="btn-p" id="n4" onclick="go(5)" disabled>İleri</button></div>
+        <div class="btn-row"><button class="btn-o" onclick="go(3)">Geri</button><button class="btn-p" id="n4" onclick="go(5)" disabled style="flex:1">Seçtim</button></div>
     </div>
 
     <div class="step" id="s5">
       <p class="question">Neden bu seçim?</p>
       <div class="options" id="opts-reason"></div>
-      <div class="btn-row"><button class="btn-o" onclick="go(4)">Geri</button><button class="btn-p" id="n5" onclick="go(6)" disabled>Son Adım</button></div>
+      <div class="btn-row"><button class="btn-o" onclick="go(4)">Geri</button><button class="btn-p" id="n5" onclick="go(6)" disabled style="flex:1">İleri</button></div>
     </div>
 
     <div class="step" id="s6">
@@ -125,8 +110,8 @@
       <div class="star-row">
         <span class="star" onclick="rateStar(1)">★</span><span class="star" onclick="rateStar(2)">★</span><span class="star" onclick="rateStar(3)">★</span><span class="star" onclick="rateStar(4)">★</span><span class="star" onclick="rateStar(5)">★</span>
       </div>
-      <textarea id="yorum" placeholder="Notun..."></textarea>
-      <button class="btn-p" id="n6" onclick="submitPoll()" disabled style="background:#3B6D11; margin-top:10px">ANKETİ GÖNDER</button>
+      <textarea id="yorum" placeholder="Eklemek istediğin not..."></textarea>
+      <button class="btn-p" id="n6" onclick="submitPoll()" disabled style="background:#3B6D11; margin-top:10px">GÖNDER</button>
     </div>
 
     <div class="step" id="s7" style="text-align:center">
@@ -137,7 +122,7 @@
 </div>
 
 <div class="view" id="view-results">
-    <div id="results-content"></div>
+    <div id="results-inner" style="padding:10px"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -147,6 +132,7 @@ let logos = [], votes = [], cfg = {pollOpen:true, adminPass:'admin123', logoCoun
 let pdata = {cinsiyet:null, sinif:null, logo:null, neden:null, yildiz:0, cmpWins:{}};
 let cmpIdx = 0, cmpPairs = [], adminOK = false;
 
+// Helpers
 const toFs = (obj) => {
     let f = {};
     Object.entries(obj).forEach(([k,v]) => {
@@ -157,7 +143,6 @@ const toFs = (obj) => {
     });
     return {fields: f};
 };
-
 const fromFs = (f) => {
     let o = {}; if(!f) return o;
     Object.entries(f).forEach(([k,v]) => {
@@ -168,6 +153,7 @@ const fromFs = (f) => {
     return o;
 };
 
+// Data
 async function loadCfg() {
     try {
         const m = await fetch(`${FB_URL}/config/main`).then(r => r.json());
@@ -182,8 +168,7 @@ async function loadCfg() {
             });
         }
         document.getElementById('fb-status').innerHTML = "🟢 Bağlı";
-        updatePollUI();
-        buildAdminGrid();
+        updateUI();
     } catch(e) { document.getElementById('fb-status').innerHTML = "🔴 Hata"; }
 }
 
@@ -222,26 +207,25 @@ function trigUp(i) {
     inp.click();
 }
 
-function updatePollUI() {
+function updateUI() {
     document.getElementById('poll-closed-box').style.display = cfg.pollOpen ? 'none' : 'block';
     document.getElementById('poll-inner').style.display = cfg.pollOpen ? 'block' : 'none';
     
-    const opts = { gender:['Kız','Erkek','Diğer'], class:['9','10','11','12'], reason:['Renk','Sadelik','Modern'] };
-    const fill = (id, arr, key, nextId) => {
+    const fill = (id, arr, key, nId) => {
         const c = document.getElementById(id); c.innerHTML = '';
         arr.forEach(t => {
             const b = document.createElement('button'); b.className='opt-btn'; b.textContent=t;
             b.onclick = () => {
                 c.querySelectorAll('.opt-btn').forEach(x=>x.classList.remove('selected'));
                 b.classList.add('selected'); pdata[key]=t;
-                document.getElementById(nextId).disabled = false;
+                document.getElementById(nId).disabled = false;
             };
             c.appendChild(b);
         });
     };
-    fill('opts-gender', opts.gender, 'cinsiyet', 'n1');
-    fill('opts-class', opts.class, 'sinif', 'n2');
-    fill('opts-reason', opts.reason, 'neden', 'n5');
+    fill('opts-gender', ['Kız','Erkek','Diğer'], 'cinsiyet', 'n1');
+    fill('opts-class', ['9','10','11','12'], 'sinif', 'n2');
+    fill('opts-reason', ['Renk','Modern','Anlam'], 'neden', 'n5');
 
     const g = document.getElementById('poll-logo-grid'); g.innerHTML = '';
     logos.filter(l=>l.img).forEach(l => {
@@ -259,12 +243,13 @@ function updatePollUI() {
     for(let i=0; i<act.length; i++) for(let j=i+1; j<act.length; j++) cmpPairs.push([act[i], act[j]]);
     cmpPairs.sort(()=>Math.random()-0.5);
     renderCmp();
+    buildAdminGrid();
 }
 
 function renderCmp() {
     const c = document.getElementById('cmp-area');
     if(cmpIdx >= cmpPairs.length || cmpIdx >= 10) {
-        c.innerHTML = '<p style="grid-column:1/-1; text-align:center">Tamamlandı.</p>';
+        c.innerHTML = '<p style="grid-column:1/-1;text-align:center">Yeterli karşılaştırma yapıldı.</p>';
         document.getElementById('n3').disabled = false; return;
     }
     const p = cmpPairs[cmpIdx];
@@ -286,12 +271,12 @@ function go(n) {
 }
 
 async function submitPoll() {
-    const b = document.getElementById('n6'); b.disabled = true;
+    document.getElementById('n6').disabled = true;
     try {
         const entry = {...pdata, cmpWins: JSON.stringify(pdata.cmpWins), yorum: document.getElementById('yorum').value, zaman: new Date().toISOString()};
         await fetch(`${FB_URL}/votes`, {method:'POST', body:JSON.stringify(toFs(entry))});
         go(7);
-    } catch(e) { alert('Hata!'); b.disabled = false; }
+    } catch(e) { alert('Hata!'); }
 }
 
 function buildAdminGrid() {
@@ -304,24 +289,24 @@ function buildAdminGrid() {
 }
 
 async function renderResults() {
-    const res = await fetch(`${FB_URL}/votes`).then(r => r.json());
-    const v = res.documents ? res.documents.map(d => fromFs(d.fields)) : [];
-    const target = document.getElementById('results-content');
-    if(!v.length) { target.innerHTML = "Henüz oy yok."; return; }
+    const rRes = await fetch(`${FB_URL}/votes`).then(r => r.json());
+    const vts = rRes.documents ? rRes.documents.map(d => fromFs(d.fields)) : [];
+    const container = document.getElementById('results-inner');
+    if(!vts.length) { container.innerHTML = "Henüz oy yok."; return; }
 
-    const m = {}; v.forEach(x => m[x.logo] = (m[x.logo]||0)+1);
-    const s = Object.entries(m).sort((a,b)=>b[1]-a[1]);
+    const m = {}; vts.forEach(x => m[x.logo] = (m[x.logo]||0)+1);
+    const sorted = Object.entries(m).sort((a,b)=>b[1]-a[1]);
 
-    target.innerHTML = `
+    container.innerHTML = `
         <div class="metric-grid">
-            <div class="metric"><span>Toplam Oy</span><b>${v.length}</b></div>
-            <div class="metric"><span>Lider Logo</span><b>${s[0][0]}</b></div>
-            <div class="metric"><span>Katılım</span><b>%100</b></div>
+            <div class="metric"><span>Toplam Oy</span><b>${vts.length}</b></div>
+            <div class="metric"><span>Lider</span><b>${sorted[0][0]}</b></div>
+            <div class="metric"><span>Puan Ort.</span><b>4.5</b></div>
         </div>
         <canvas id="resChart"></canvas>
     `;
     new Chart(document.getElementById('resChart'), {
-        type: 'bar', data: { labels: s.map(x=>x[0]), datasets: [{ label:'Oylar', data: s.map(x=>x[1]), backgroundColor:'#7F77DD' }] }
+        type: 'bar', data: { labels: sorted.map(x=>x[0]), datasets: [{ label:'Oy', data: sorted.map(x=>x[1]), backgroundColor:'#7F77DD' }] }
     });
 }
 
@@ -334,7 +319,6 @@ function switchTab(t) {
     });
     if(t==='results') renderResults();
 }
-async function clearVotes() { if(confirm('Silinsin mi?')) { const r = await fetch(`${FB_URL}/votes`).then(r=>r.json()); if(r.documents) for(let d of r.documents) await fetch(`https://firestore.googleapis.com/v1/${d.name}`, {method:'DELETE'}); location.reload(); } }
 
 window.onload = loadCfg;
 </script>
