@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FSMAL Logo Anketi - Güvenli Mod</title>
+    <title>FSMAL Logo Anketi - Veritabanı Maskeli</title>
     <style>
         :root { --p: #7F77DD; --p-dark: #534AB7; --bg: #fff; --bg-s: #f8f9fa; --txt: #1a1a1a; --txt-s: #666; --brd: #ddd; }
         *{box-sizing:border-box;margin:0;padding:0; -webkit-tap-highlight-color:transparent}
@@ -12,15 +12,9 @@
         .tab{flex:1;padding:12px;font-size:13px;cursor:pointer;border:none;background:none;color:#666;border-bottom:2px solid transparent}
         .tab.active{color:var(--p-dark);border-bottom-color:var(--p);font-weight:600}
         .view{display:none}.view.active{display:block}
-        .btn-p{background:var(--p);color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;cursor:pointer;font-weight:500;width:100%}
-        .btn-p:disabled{background:#ccc;cursor:not-allowed}
+        .btn-p{background:var(--p);color:#fff;border:none;border-radius:8px;padding:14px;font-size:14px;cursor:pointer;font-weight:500;width:100%}
         .btn-o{background:none;border:1px solid #ccc;border-radius:8px;padding:12px;font-size:14px;cursor:pointer;color:#666;width:100%}
         .btn-row{display:flex;gap:8px;margin-top:12px}
-        .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0}
-        .admin-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center;background:#fff}
-        .img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--bg-s);border:1px solid var(--brd);overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}
-        .img-box img{width:100%;height:100%;object-fit:contain}
-        .logo-name-input{width:100%;border:1px solid #ccc;border-radius:6px;padding:6px;font-size:12px;margin-top:4px}
         .progress-bar{width:100%;height:6px;background:#eee;border-radius:3px;margin-bottom:1.5rem;overflow:hidden}
         .progress-fill{height:100%;background:var(--p);transition:width .4s;width:0%}
         .step{display:none}.step.active{display:block}
@@ -34,30 +28,31 @@
         .lc-img{width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;background:#f0f0f0}
         .lc-img img{width:100%;height:100%;object-fit:contain}
         .cmp-outer { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; margin-bottom: 10px; }
-        .cmp-card { border: 1px solid var(--brd); border-radius: 12px; padding: 8px; text-align: center; cursor: pointer; background: #fff; width: 100%; min-width: 0; }
+        .cmp-card { border: 1px solid var(--brd); border-radius: 12px; padding: 8px; text-align: center; cursor: pointer; background: #fff; width: 100%; }
         .cmp-img { width: 100%; aspect-ratio: 1; background: #f0f0f0; border-radius: 8px; overflow: hidden; margin-bottom: 5px; }
         .cmp-img img { width: 100%; height: 100%; object-fit: contain; }
         .star-row{display:flex;gap:10px;margin-bottom:1.5rem;justify-content:center}
         .star{font-size:35px;cursor:pointer;color:#ddd}.star.lit{color:#F0A500}
         textarea{width:100%;border:1px solid #ccc;border-radius:8px;padding:10px;min-height:90px;font-size:14px}
+        .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0}
+        .admin-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center;background:#fff}
+        .img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--bg-s);border:1px solid var(--brd);overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}
+        .img-box img{width:100%;height:100%;object-fit:contain}
+        .logo-name-input{width:100%;border:1px solid #ccc;border-radius:6px;padding:6px;font-size:12px;margin-top:4px}
         .res-card { background:var(--bg-s); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #eee; }
         .res-title { font-size:14px; font-weight:600; margin-bottom:10px; color:var(--p-dark); text-transform: uppercase; }
         .metric-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:15px; }
-        .metric { background:#fff; border:1px solid #eee; padding:10px; border-radius:10px; text-align:center; }
-        .metric span { display:block; font-size:10px; color:gray; }
-        .metric b { font-size:14px; color:var(--p-dark); }
-        .comment-box { background:#fff; padding:10px; border-radius:8px; border-bottom:1px solid #eee; font-size:13px; margin-bottom:5px; }
+        .metric { background:#fff; border:1px solid #eee; padding:10px; border-radius:10px; text-align:center; font-size:12px;}
         .overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center}
         .lock-card{background:#fff;padding:2rem;border-radius:15px;width:90%;max-width:320px;text-align:center}
-        .lock-card input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ccc;text-align:center}
-        @media (max-width: 480px) { .cmp-card p { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } }
+        .lock-card input{width:100%;padding:12px;margin:15px 0;border-radius:8px;border:1px solid #ccc;text-align:center}
     </style>
 </head>
 <body>
 
 <div class="overlay-bg" id="admin-overlay">
   <div class="lock-card">
-    <h3>Yönetim Girişi</h3>
+    <h3>Yönetim Paneli</h3>
     <input type="password" id="admin-pass-inp" placeholder="Şifre" onkeydown="if(event.key==='Enter')chkAdmin()">
     <button class="btn-p" onclick="chkAdmin()">GİRİŞ</button>
   </div>
@@ -74,16 +69,16 @@
     <div style="background:#eee; padding:15px; border-radius:10px; margin-bottom:1rem">
         <div style="display:flex; justify-content:space-between; margin-bottom:10px">
             <span style="font-size:14px; font-weight:600">Anket Açık:</span>
-            <input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked" checked style="width:20px;height:20px">
+            <input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked" checked>
         </div>
         <div style="display:flex; gap:5px">
-            <input type="password" id="admin-pass-set" placeholder="Yeni Şifre Yazın" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ccc">
-            <button class="btn-p" style="width:auto" onclick="setNewPass()">Şifre Maskele</button>
+            <input type="password" id="admin-pass-set" placeholder="Yeni Şifre Belirle" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ccc">
+            <button class="btn-p" style="width:auto" onclick="setAndMaskPass()">Şifre Maskele</button>
         </div>
-        <p style="font-size:10px; color:gray; margin-top:5px">Not: Yeni şifrenin aktif olması için aşağıdan KAYDET butonuna basmalısınız.</p>
+        <p style="font-size:10px; color:gray; margin-top:5px">⚠️ Maskeledikten sonra aşağıdan "AYARLARI KAYDET"e basmalısınız.</p>
     </div>
     <div class="admin-grid" id="admin-grid"></div>
-    <button class="btn-p" id="save-btn" onclick="saveAdmin()">AYARLARI VE ŞİFREYİ KAYDET</button>
+    <button class="btn-p" id="save-btn" onclick="saveAdmin()">AYARLARI VE MASKELİ ŞİFREYİ KAYDET</button>
     <button class="btn-o" onclick="clearVotes()" style="color:red; border-color:red; margin-top:10px">Oyları Sıfırla</button>
 </div>
 
@@ -95,8 +90,8 @@
     <div class="step active" id="s1"><p class="question">Cinsiyetin?</p><div class="options" id="opts-gender"></div><button class="btn-p" id="n1" onclick="go(2)" disabled>Devam Et</button></div>
     <div class="step" id="s2"><p class="question">Sınıfın?</p><div class="options" id="opts-class"></div><div class="btn-row"><button class="btn-o" onclick="go(1)">Geri</button><button class="btn-p" id="n2" onclick="go(3)" disabled style="flex:1">Devam</button></div></div>
     <div class="step" id="s3"><p class="question">Hangisi daha iyi?</p><p id="cmp-prog" style="text-align:center;font-size:12px;color:gray;margin-bottom:8px"></p><div class="cmp-outer" id="cmp-area"></div><div class="btn-row"><button class="btn-o" onclick="go(2)">Geri</button><button class="btn-p" id="n3" onclick="go(4)" disabled style="flex:1">Devam</button></div></div>
-    <div class="step" id="s4"><p class="question">Favori Logon?</p><div class="logo-grid" id="poll-logo-grid"></div><div class="btn-row"><button class="btn-o" onclick="go(3)">Geri</button><button class="btn-p" id="n4" onclick="go(5)" disabled style="flex:1">Seçtim</button></div></div>
-    <div class="step" id="s5"><p class="question">Neden bu seçim?</p><div class="options" id="opts-reason"></div><div class="btn-row"><button class="btn-o" onclick="go(4)">Geri</button><button class="btn-p" id="n5" onclick="go(6)" disabled style="flex:1">İleri</button></div></div>
+    <div class="step" id="s4"><p class="question">Favori Logon?</p><div class="logo-grid" id="poll-logo-grid"></div><div class="btn-row"><button class="btn-o" onclick="go(3)">Geri</button><button class="btn-p" id="n4" onclick="go(5)" disabled style="flex:1">İleri</button></div></div>
+    <div class="step" id="s5"><p class="question">Neden bu seçim?</p><div class="options" id="opts-reason"></div><div class="btn-row"><button class="btn-o" onclick="go(4)">Geri</button><button class="btn-p" id="n5" onclick="go(6)" disabled style="flex:1">Son Adım</button></div></div>
     <div class="step" id="s6"><p class="question">Puanla ve Bitir</p><div class="star-row"><span class="star" onclick="rateStar(1)">★</span><span class="star" onclick="rateStar(2)">★</span><span class="star" onclick="rateStar(3)">★</span><span class="star" onclick="rateStar(4)">★</span><span class="star" onclick="rateStar(5)">★</span></div><textarea id="yorum" placeholder="Notun..."></textarea><button class="btn-p" id="n6" onclick="submitPoll()" disabled style="background:#3B6D11; margin-top:10px">GÖNDER</button></div>
     <div class="step" id="s7" style="text-align:center"><h2>Teşekkürler!</h2><button class="btn-p" onclick="location.reload()" style="margin-top:20px">Başa Dön</button></div>
   </div>
@@ -107,12 +102,15 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const FB_URL = 'https://firestore.googleapis.com/v1/projects/okul-logo-anketi/databases/(default)/documents';
-// KRİTİK: İlk girişi sağlayabilmen için adminPass'i admin123 hash'i yaptım. 
-let logos = [], votes = [], cfg = {pollOpen:true, adminPass:'240be518fabd2724ddb6f0403f5d59911211dc173595ad3042c1619623048997', logoCount:10};
+
+// KRİTİK: Eğer veritabanında şifre yoksa admin123 varsayılan olsun.
+const DEFAULT_HASH = '240be518fabd2724ddb6f0403f5d59911211dc173595ad3042c1619623048997';
+
+let logos = [], votes = [], cfg = {pollOpen:true, adminPass: DEFAULT_HASH, logoCount:10};
 let pdata = {cinsiyet:null, sinif:null, logo:null, neden:null, yildiz:0, cmpWins:{}}, cmpPairs = [], cmpIdx = 0, adminOK = false;
 
 // --- GÜVENLİK (SHA-256) ---
-async function hashPass(str) {
+async function hashText(str) {
     const msgBuffer = new TextEncoder().encode(str);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -120,17 +118,24 @@ async function hashPass(str) {
 }
 
 async function chkAdmin() {
-    // Bu satırı geçici olarak böyle yap:
-    adminOK = true;
-    document.getElementById('admin-overlay').style.display = 'none';
-    switchTab('admin');
+    const input = document.getElementById('admin-pass-inp').value;
+    const hashedInput = await hashText(input);
+    
+    // Veritabanından çekilen (cfg.adminPass) ile senin yazdığının hash halini kıyasla
+    if(hashedInput === cfg.adminPass) {
+        adminOK = true;
+        document.getElementById('admin-overlay').style.display = 'none';
+        switchTab('admin');
+    } else {
+        alert('Hatalı Şifre!');
+    }
 }
 
-async function setNewPass() {
-    const val = document.getElementById('admin-pass-set').value;
-    if(val.length < 4) return alert('En az 4 karakter girin.');
-    cfg.adminPass = await hashPass(val);
-    alert('Şifre yeni haliyle maskelendi. Şimdi aşağıdaki KAYDET butonuna basarak veritabanına gönderin.');
+async function setAndMaskPass() {
+    const newP = document.getElementById('admin-pass-set').value;
+    if(newP.length < 4) return alert('En az 4 karakter.');
+    cfg.adminPass = await hashText(newP);
+    alert('Şifre yeni haliyle maskelendi. Kalıcı olması için aşağıdaki butona basıp kaydedin.');
 }
 
 // --- FIREBASE ---
@@ -141,26 +146,30 @@ async function loadCfg() {
     logos = Array.from({length: cfg.logoCount}, (_, i) => ({name:'Logo '+(i+1), img:null}));
     try {
         const m = await fetch(`${FB_URL}/config/main`).then(r => r.json());
-        if(m.fields) Object.assign(cfg, fromFs(m.fields));
+        if(m.fields) {
+            const d = fromFs(m.fields);
+            // Eğer veritabanında bir hash varsa onu kullan, yoksa varsayılanı (admin123 hash) tut
+            cfg.adminPass = d.adminPass || DEFAULT_HASH;
+            cfg.pollOpen = d.pollOpen ?? true;
+        }
         const lRes = await fetch(`${FB_URL}/logos`).then(r => r.json());
         if(lRes.documents) lRes.documents.forEach(doc => { const idx = parseInt(doc.name.split('_').pop()); if(idx < cfg.logoCount) logos[idx] = fromFs(doc.fields); });
-        document.getElementById('fb-status').innerHTML = "🟢 Güvenli Mod Bağlı";
-    } catch(e) { document.getElementById('fb-status').innerHTML = "🔴 Bağlantı Hatası"; }
+        document.getElementById('fb-status').innerHTML = "🟢 Veritabanı Maskeleme Aktif";
+    } catch(e) { document.getElementById('fb-status').innerHTML = "🔴 Bağlantı Sorunu"; }
     updateUI();
 }
 
 async function saveAdmin() {
     const b = document.getElementById('save-btn'); b.textContent = 'Kaydediliyor...'; b.disabled = true;
     try {
-        // Şifre maskeli (hash) olarak gider
-        await fetch(`${FB_URL}/config/main`, {method:'PATCH', body:JSON.stringify(toFs(cfg))});
+        await fetch(`${FB_URL}/config/main`, {method:'PATCH', body:JSON.stringify(toFs({adminPass: cfg.adminPass, pollOpen: cfg.pollOpen}))});
         for(let i=0; i<logos.length; i++) await fetch(`${FB_URL}/logos/logo_${i}`, {method:'PATCH', body:JSON.stringify(toFs(logos[i]))});
-        alert('Tüm Ayarlar ve Maskeli Şifre Kaydedildi!');
+        alert('Yeni maskeli şifre ve ayarlar veritabanına işlendi!');
     } catch(e) { alert('Hata!'); }
-    b.textContent = 'AYARLARI VE ŞİFREYİ KAYDET'; b.disabled = false;
+    b.textContent = 'AYARLARI VE MASKELİ ŞİFREYİ KAYDET'; b.disabled = false;
 }
 
-// --- LOGO YÜKLEME ---
+// --- DİĞER FONKSİYONLAR ---
 function trigUp(i) {
     const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
     inp.onchange = e => {
@@ -182,7 +191,6 @@ function trigUp(i) {
     inp.click();
 }
 
-// --- UI ---
 function updateUI() {
     document.getElementById('poll-closed-box').style.display = cfg.pollOpen ? 'none' : 'block';
     document.getElementById('poll-inner').style.display = cfg.pollOpen ? 'block' : 'none';
@@ -196,11 +204,11 @@ function updateUI() {
     };
     fill('opts-gender', ['Kız','Erkek','Diğer'], 'cinsiyet', 'n1');
     fill('opts-class', ['9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf'], 'sinif', 'n2');
-    fill('opts-reason', ['Renk Uyumu','Sadelik','Modern Görünüm'], 'neden', 'n5');
+    fill('opts-reason', ['Renk Uyumu','Sadelik ve Temizlik','Modern Görünüm','Anlamlılık'], 'neden', 'n5');
     const g = document.getElementById('poll-logo-grid'); g.innerHTML = '';
     logos.filter(l=>l.img).forEach(l => {
         const d = document.createElement('div'); d.className='logo-card';
-        d.innerHTML = `<div class="lc-img"><img src="${l.img}"></div><p style="font-size:12px;margin-top:5px">${l.name}</p>`;
+        d.innerHTML = `<div class="lc-img"><img src="${l.img}"></div><p style="font-size:11px;margin-top:5px">${l.name}</p>`;
         d.onclick = () => { document.querySelectorAll('.logo-card').forEach(x=>x.classList.remove('selected')); d.classList.add('selected'); pdata.logo = l.name; document.getElementById('n4').disabled = false; };
         g.appendChild(d);
     });
@@ -216,9 +224,9 @@ function buildCmp() {
 function renderCmp() {
     const c = document.getElementById('cmp-area'); const act = logos.filter(l => l.img);
     if(act.length < 2) return c.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:gray">En az 2 logo yüklenmeli.</p>';
-    if(cmpIdx >= cmpPairs.length || cmpIdx >= 10) { c.innerHTML = '<div style="grid-column:1/-1;text-align:center;background:#EEEDFE;padding:1rem;border-radius:10px;color:var(--p-dark)">Karşılaştırmalar Bitti.</div>'; document.getElementById('n3').disabled = false; return; }
+    if(cmpIdx >= cmpPairs.length || cmpIdx >= 10) { c.innerHTML = '<div style="grid-column:1/-1;text-align:center;background:#EEEDFE;padding:1rem;border-radius:10px;color:var(--p-dark)">Karşılaştırmalar Tamamlandı.</div>'; document.getElementById('n3').disabled = false; return; }
     const p = cmpPairs[cmpIdx]; document.getElementById('cmp-prog').textContent = `${cmpIdx+1} / ${Math.min(cmpPairs.length, 10)}`;
-    c.innerHTML = `<div class="cmp-card" onclick="pickCmp('${p[0].name}')"><div class="cmp-img"><img src="${p[0].img}"></div><p>${p[0].name}</p></div><div style="font-weight:bold;color:#aaa">VS</div><div class="cmp-card" onclick="pickCmp('${p[1].name}')"><div class="cmp-img"><img src="${p[1].img}"></div><p>${p[1].name}</p></div>`;
+    c.innerHTML = `<div class="cmp-card" onclick="pickCmp('${p[0].name}')"><div class="cmp-img"><img src="${p[0].img}"></div><p style="font-size:11px">${p[0].name}</p></div><div style="font-weight:bold;color:#aaa">VS</div><div class="cmp-card" onclick="pickCmp('${p[1].name}')"><div class="cmp-img"><img src="${p[1].img}"></div><p style="font-size:11px">${p[1].name}</p></div>`;
 }
 
 function pickCmp(n) { pdata.cmpWins[n] = (pdata.cmpWins[n]||0)+1; cmpIdx++; renderCmp(); }
@@ -247,12 +255,12 @@ async function renderResults() {
         const counts = (k) => { let m = {}; v.forEach(x => { if(x[k]) m[x[k]] = (m[x[k]]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]); };
         const logoStats = counts('logo'), genderStats = counts('cinsiyet'), classStats = counts('sinif'), reasonStats = counts('neden');
         const avgStar = (v.reduce((a,b)=>a+(b.yildiz||0),0)/v.length).toFixed(1);
-        target.innerHTML = `<div class="metric-grid"><div class="metric"><span>Toplam</span><b>${v.length}</b></div><div class="metric"><span>Ort. Puan</span><b>${avgStar} ★</b></div><div class="metric"><span>Katılım</span><b>%100</b></div></div><div class="res-card"><div class="res-title">En Çok Beğenilenler</div><canvas id="c1"></canvas></div><div class="res-card"><div class="res-title">Cinsiyet</div><canvas id="c2"></canvas></div><div class="res-card"><div class="res-title">Sınıf</div><canvas id="c3"></canvas></div><div class="res-card"><div class="res-title">Nedenler</div><canvas id="c4"></canvas></div><div class="res-card"><div class="res-title">Öğrenci Yorumları</div><div id="cmt"></div></div>`;
+        target.innerHTML = `<div class="metric-grid"><div class="metric"><span>Toplam Oy</span><b>${v.length}</b></div><div class="metric"><span>Ort. Puan</span><b>${avgStar} ★</b></div><div class="metric"><span>Katılım</span><b>%100</b></div></div><div class="res-card"><div class="res-title">En Sevilenler</div><canvas id="c1"></canvas></div><div class="res-card"><div class="res-title">Cinsiyet</div><canvas id="c2"></canvas></div><div class="res-card"><div class="res-title">Sınıf</div><canvas id="c3"></canvas></div><div class="res-card"><div class="res-title">Yorumlar</div><div id="cmt"></div></div>`;
         const mkB = (id, s, color) => { new Chart(document.getElementById(id), { type:'bar', data:{ labels:s.map(x=>x[0]), datasets:[{data:s.map(x=>x[1]), backgroundColor:color}] }, options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}} }); };
-        mkB('c1', logoStats, '#7F77DD'); mkB('c3', classStats, '#534AB7'); mkB('c4', reasonStats, '#D85A30');
+        mkB('c1', logoStats, '#7F77DD'); mkB('c3', classStats, '#534AB7');
         new Chart(document.getElementById('c2'), { type:'doughnut', data:{ labels:genderStats.map(x=>x[0]), datasets:[{data:genderStats.map(x=>x[1]), backgroundColor:['#FF6384','#36A2EB','#FFCE56']}] } });
         const cList = document.getElementById('cmt'); v.filter(x => x.yorum && x.yorum.trim()).forEach(x => { cList.innerHTML += `<div class="comment-box"><div style="font-size:10px;color:gray">${x.logo} · ${x.sinif}</div>${x.yorum}</div>`; });
-    } catch(e) { target.innerHTML = "Veri çekme hatası."; }
+    } catch(e) { target.innerHTML = "Hata oluştu."; }
 }
 
 async function clearVotes() { if(confirm('Tüm oylar silinecek!')) { const r = await fetch(`${FB_URL}/votes`).then(r=>r.json()); if(r.documents) for(let d of r.documents) await fetch(`https://firestore.googleapis.com/v1/${d.name}`, {method:'DELETE'}); location.reload(); } }
