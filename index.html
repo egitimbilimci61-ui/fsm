@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FSMAL Logo Anketi</title>
+    <title>FSMAL Logo Anketi - Final</title>
     <style>
         :root { --p: #7F77DD; --p-dark: #534AB7; --bg: #fff; --bg-s: #f8f9fa; --txt: #1a1a1a; --brd: #ddd; }
         *{box-sizing:border-box;margin:0;padding:0; -webkit-tap-highlight-color:transparent}
@@ -41,6 +41,16 @@
         .overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center}
         .lock-card{background:#fff;padding:2rem;border-radius:15px;width:90%;max-width:320px;text-align:center}
         .lock-card input{width:100%;padding:12px;margin:15px 0;border-radius:8px;border:1px solid #ccc;text-align:center}
+        
+        /* Sonuç Ekranı Ek Stilleri */
+        .res-card { background:var(--bg-s); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #eee; }
+        .res-title { font-size:14px; font-weight:600; margin-bottom:10px; color:var(--p-dark); text-transform: uppercase; }
+        .metric-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:15px; }
+        .metric { background:#fff; border:1px solid #eee; padding:10px; border-radius:10px; text-align:center; }
+        .metric span { display:block; font-size:10px; color:gray; margin-bottom:2px; }
+        .metric b { font-size:15px; color:var(--p-dark); }
+        .comment-box { background:#fff; padding:10px; border-radius:8px; border-bottom:1px solid #eee; font-size:13px; margin-bottom:5px; }
+        .comment-meta { font-size:10px; color:gray; margin-bottom:3px; }
     </style>
 </head>
 <body>
@@ -61,8 +71,9 @@
 
 <div class="view" id="view-admin">
     <div id="fb-status" style="font-size:11px; margin-bottom:10px">Yükleniyor...</div>
-    <div style="background:#eee; padding:10px; border-radius:8px; margin-bottom:10px">
-        <label><input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked" checked> Anket Açık</label>
+    <div style="background:#eee; padding:10px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center">
+        <label>Anket Katılıma Açık</label>
+        <input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked" checked style="width:20px;height:20px">
     </div>
     <div class="admin-grid" id="admin-grid"></div>
     <button class="btn-p" id="save-btn" onclick="saveAdmin()">AYARLARI KAYDET</button>
@@ -133,7 +144,7 @@ let logos = [], votes = [], cfg = {pollOpen:true, adminPass:'admin123', logoCoun
 let pdata = {cinsiyet:null, sinif:null, logo:null, neden:null, yildiz:0, cmpWins:{}};
 let cmpIdx = 0, cmpPairs = [], adminOK = false;
 
-// Firebase Helpers
+// Firebase Dönüştürücüler
 const toFs = (o) => {
     let f = {};
     Object.entries(o).forEach(([k,v]) => {
@@ -154,13 +165,8 @@ const fromFs = (f) => {
     return o;
 };
 
-// Başlangıç Logoları (Hata olsa bile kutular görünsün)
-function initLogos() {
-    logos = Array.from({length: cfg.logoCount}, (_, i) => ({name:'Logo '+(i+1), img:null}));
-}
-
+// Veri Çekme
 async function loadCfg() {
-    initLogos();
     try {
         const mRes = await fetch(`${FB_URL}/config/main`);
         const mData = await mRes.json();
@@ -168,17 +174,20 @@ async function loadCfg() {
         
         const lRes = await fetch(`${FB_URL}/logos`);
         const lData = await lRes.json();
+        
+        logos = Array.from({length: cfg.logoCount}, (_, i) => ({name:'Logo '+(i+1), img:null}));
         if(lData.documents) {
             lData.documents.forEach(doc => {
                 const idx = parseInt(doc.name.split('_').pop());
                 if(idx < cfg.logoCount) logos[idx] = fromFs(doc.fields);
             });
         }
-        document.getElementById('fb-status').innerHTML = "🟢 Bağlı";
+        document.getElementById('fb-status').innerHTML = "🟢 Sistem Bağlı";
+        updateUI();
     } catch(e) { 
-        document.getElementById('fb-status').innerHTML = "🔴 Çevrimdışı (Kaydet yapınca düzelir)";
+        document.getElementById('fb-status').innerHTML = "🔴 Çevrimdışı";
+        updateUI();
     }
-    updateUI();
 }
 
 async function saveAdmin() {
@@ -220,6 +229,7 @@ function trigUp(i) {
 function updateUI() {
     document.getElementById('poll-closed-box').style.display = cfg.pollOpen ? 'none' : 'block';
     document.getElementById('poll-inner').style.display = cfg.pollOpen ? 'block' : 'none';
+    document.getElementById('poll-open-chk').checked = cfg.pollOpen;
     
     const fill = (id, arr, key, nId) => {
         const c = document.getElementById(id); if(!c) return;
@@ -234,9 +244,9 @@ function updateUI() {
             c.appendChild(b);
         });
     };
-    fill('opts-gender', ['Kız','Erkek','Diğer'], 'cinsiyet', 'n1');
+    fill('opts-gender', ['Kız','Erkek','Belirtmek İstemiyorum'], 'cinsiyet', 'n1');
     fill('opts-class', ['9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf'], 'sinif', 'n2');
-    fill('opts-reason', ['Renk Uyumu','Sadelik','Modern Görünüm'], 'neden', 'n5');
+    fill('opts-reason', ['Renk Uyumu','Sadelik','Modern Görünüm','Anlamlılık'], 'neden', 'n5');
 
     const g = document.getElementById('poll-logo-grid'); g.innerHTML = '';
     logos.filter(l=>l.img).forEach(l => {
@@ -250,26 +260,22 @@ function updateUI() {
         g.appendChild(d);
     });
     
-    buildCmp();
-    buildAdminGrid();
-}
-
-function buildCmp() {
     cmpPairs = []; cmpIdx = 0; const act = logos.filter(l=>l.img);
     for(let i=0; i<act.length; i++) for(let j=i+1; j<act.length; j++) cmpPairs.push([act[i], act[j]]);
     cmpPairs.sort(()=>Math.random()-0.5);
     renderCmp();
+    buildAdminGrid();
 }
 
 function renderCmp() {
     const c = document.getElementById('cmp-area');
     const actLogos = logos.filter(l => l.img);
     if(actLogos.length < 2) {
-        c.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:gray;padding:1rem">Karşılaştırma için en az 2 logo yüklenmeli.</p>';
+        c.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:gray;padding:1rem">En az 2 logo yüklenmeli.</p>';
         return;
     }
     if(cmpIdx >= cmpPairs.length || cmpIdx >= 10) {
-        c.innerHTML = '<div style="grid-column:1/-1;text-align:center;background:#EEEDFE;padding:1.5rem;border-radius:12px;color:var(--p-dark);font-weight:600">Karşılaştırmalar Tamamlandı.</div>';
+        c.innerHTML = '<div style="grid-column:1/-1;text-align:center;background:#EEEDFE;padding:1rem;border-radius:10px;color:var(--p-dark)">Karşılaştırmalar Tamamlandı.</div>';
         document.getElementById('n3').disabled = false; return;
     }
     const p = cmpPairs[cmpIdx];
@@ -311,7 +317,7 @@ function buildAdminGrid() {
 }
 
 function tryAdmin() { document.getElementById('admin-overlay').style.display='flex'; }
-function chkAdmin() { if(document.getElementById('admin-pass-inp').value === cfg.adminPass) { adminOK=true; document.getElementById('admin-overlay').style.display='none'; switchTab('admin'); } else alert('Şifre Hatalı!'); }
+function chkAdmin() { if(document.getElementById('admin-pass-inp').value === cfg.adminPass) { adminOK=true; document.getElementById('admin-overlay').style.display='none'; switchTab('admin'); } else alert('Hatalı şifre'); }
 
 function switchTab(t) {
     ['admin','poll','results'].forEach(v => {
@@ -322,18 +328,87 @@ function switchTab(t) {
 }
 
 async function renderResults() {
-    const res = await fetch(`${FB_URL}/votes`).then(r => r.json());
-    const v = res.documents ? res.documents.map(d => fromFs(d.fields)) : [];
     const target = document.getElementById('results-inner');
-    if(!v.length) { target.innerHTML = "Henüz oy yok."; return; }
+    target.innerHTML = '<p style="text-align:center; padding:2rem">Veriler Yükleniyor...</p>';
+    
+    try {
+        const res = await fetch(`${FB_URL}/votes`);
+        const data = await res.json();
+        const v = data.documents ? data.documents.map(d => fromFs(d.fields)) : [];
+        
+        if(!v.length) { target.innerHTML = "<p style='text-align:center; padding:2rem'>Henüz oy yok.</p>"; return; }
 
-    const m = {}; v.forEach(x => m[x.logo] = (m[x.logo]||0)+1);
-    const s = Object.entries(m).sort((a,b)=>b[1]-a[1]);
+        // Hesaplamalar
+        const counts = (key) => {
+            let m = {}; v.forEach(x => { if(x[key]) m[x[key]] = (m[x[key]]||0)+1; });
+            return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+        };
 
-    target.innerHTML = `<h3>Sonuçlar (${v.length} Katılım)</h3><canvas id="resChart" style="margin-top:1rem"></canvas>`;
-    new Chart(document.getElementById('resChart'), {
-        type: 'bar', data: { labels: s.map(x=>x[0]), datasets: [{ label:'Oy', data: s.map(x=>x[1]), backgroundColor:'#7F77DD' }] }
-    });
+        const logoStats = counts('logo');
+        const genderStats = counts('cinsiyet');
+        const classStats = counts('sinif');
+        const reasonStats = counts('neden');
+        const avgStar = (v.reduce((a,b)=>a+(b.yildiz||0),0)/v.length).toFixed(1);
+        
+        // Karşılaştırma Şampiyonu
+        let winM = {};
+        v.forEach(x => {
+            if(x.cmpWins) {
+                try {
+                    const wins = JSON.parse(x.cmpWins);
+                    Object.entries(wins).forEach(([name, count]) => winM[name] = (winM[name]||0) + count);
+                } catch(e){}
+            }
+        });
+        const cmpWinner = Object.entries(winM).sort((a,b)=>b[1]-a[1])[0] || ['-', 0];
+
+        // HTML İnşası
+        target.innerHTML = `
+            <div class="metric-grid">
+                <div class="metric"><span>Toplam Oy</span><b>${v.length}</b></div>
+                <div class="metric"><span>Ort. Puan</span><b>${avgStar} ★</b></div>
+                <div class="metric"><span>VS Lideri</span><b>${cmpWinner[0]}</b></div>
+            </div>
+
+            <div class="res-card"><div class="res-title">Logo Dağılımı (Favoriler)</div><canvas id="chartLogos"></canvas></div>
+            <div class="res-card"><div class="res-title">Cinsiyet Dağılımı</div><canvas id="chartGender"></canvas></div>
+            <div class="res-card"><div class="res-title">Sınıf Dağılımı</div><canvas id="chartClass"></canvas></div>
+            <div class="res-card"><div class="res-title">Tercih Nedenleri</div><canvas id="chartReason"></canvas></div>
+            
+            <div class="res-card">
+                <div class="res-title">Öğrenci Yorumları</div>
+                <div id="comments-list"></div>
+            </div>
+        `;
+
+        // Grafikleri Çiz
+        const mkBar = (id, stats, color) => {
+            new Chart(document.getElementById(id), {
+                type: 'bar',
+                data: { labels: stats.map(x=>x[0]), datasets: [{ data: stats.map(x=>x[1]), backgroundColor: color }] },
+                options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+        };
+
+        mkBar('chartLogos', logoStats, '#7F77DD');
+        mkBar('chartClass', classStats, '#534AB7');
+        mkBar('chartReason', reasonStats, '#D85A30');
+        
+        new Chart(document.getElementById('chartGender'), {
+            type: 'doughnut',
+            data: { labels: genderStats.map(x=>x[0]), datasets: [{ data: genderStats.map(x=>x[1]), backgroundColor: ['#FF6384','#36A2EB','#FFCE56'] }] }
+        });
+
+        // Yorumları Listele
+        const cList = document.getElementById('comments-list');
+        v.filter(x => x.yorum && x.yorum.trim()).forEach(x => {
+            cList.innerHTML += `<div class="comment-box">
+                <div class="comment-meta">${x.logo} · ${x.sinif} · ${x.cinsiyet} · ${'★'.repeat(x.yildiz)}</div>
+                ${x.yorum}
+            </div>`;
+        });
+
+    } catch(e) { target.innerHTML = "<p>Veriler yüklenirken hata oluştu.</p>"; }
 }
 
 async function clearVotes() { if(confirm('Tüm oylar silinecek!')) { const r = await fetch(`${FB_URL}/votes`).then(r=>r.json()); if(r.documents) for(let d of r.documents) await fetch(`https://firestore.googleapis.com/v1/${d.name}`, {method:'DELETE'}); location.reload(); } }
