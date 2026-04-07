@@ -4,46 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" href="data:image/x-icon;base64,AA">
-    <title>FSMAL Okul Logosu Anketi - Pro Global</title>
+    <title>FSMAL Okul Logosu Anketi - Tam Sürüm</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
-        /* TÜM ORİJİNAL VE MODERN UX STİLLERİ BİRLEŞTİRİLDİ */
-        *{box-sizing:border-box;margin:0;padding:0}html,body{font-family:var(--font-sans,sans-serif);color:var(--color-text-primary);background:transparent;-webkit-tap-highlight-color:transparent}body{padding:.75rem}.tab-bar{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:0.5px solid var(--color-border-tertiary);overflow-x:auto;-webkit-overflow-scrolling:touch}.tab-bar::-webkit-scrollbar{display:none}.tab{padding:10px 13px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:400;white-space:nowrap;-webkit-tap-highlight-color:transparent}.tab.active{color:#534AB7;border-bottom:2px solid #7F77DD;font-weight:500}.view{display:none}.view.active{display:block}.btn-p{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;cursor:pointer;font-weight:500;min-height:44px;touch-action:manipulation}.btn-p:active{background:#534AB7}.btn-o{background:transparent;border:0.5px solid #ccc;border-radius:8px;padding:10px 14px;font-size:14px;cursor:pointer;color:var(--color-text-secondary);min-height:44px;touch-action:manipulation}.btn-o:active{background:var(--color-background-secondary)}.btn-row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.section-title{font-size:15px;font-weight:500}.info-box{background:var(--color-background-secondary);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.5}.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:1rem}@media(max-width:480px){.admin-grid{grid-template-columns:repeat(2,1fr)}}.admin-card{border:0.5px solid #ddd;border-radius:12px;padding:9px;background:var(--color-background-primary);text-align:center}.img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--color-background-secondary);border:0.5px solid #ddd;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px;cursor:pointer;position:relative;min-height:60px}.img-box img{width:100%;height:100%;object-fit:contain}.logo-name-input{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:6px 7px;font-size:12px;margin-top:4px;background:var(--color-background-primary);color:var(--color-text-primary)}.del-btn{font-size:11px;color:#A32D2D;background:transparent;border:none;cursor:pointer;padding:4px;margin-top:3px;min-height:32px}h1{font-size:22px;font-weight:500;margin-bottom:4px;text-align:center}.subtitle{font-size:13px;color:var(--color-text-secondary);text-align:center;margin-bottom:1.25rem}.step{display:none}.step.active{display:block}.progress-bar{width:100%;height:5px;background:#eee;border-radius:4px;margin-bottom:1.25rem}.progress-fill{height:5px;border-radius:4px;background:#7F77DD;transition:width .4s}.question{font-size:16px;font-weight:500;margin-bottom:1rem;line-height:1.4}.opt-btn{background:var(--color-background-primary);border:0.5px solid #ccc;border-radius:10px;padding:14px 16px;font-size:15px;color:var(--color-text-primary);cursor:pointer;text-align:left;transition:all .15s;min-height:52px;margin-bottom:8px;width:100%}.opt-btn.selected{border:2px solid #7F77DD;background:#EEEDFE}.logo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem}.logo-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;cursor:pointer;text-align:center;background:var(--color-background-primary)}.logo-card.selected{border:2px solid #7F77DD;background:#EEEDFE}canvas{width:100%!important;max-height:220px}.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;padding:1rem}.lock-card{background:var(--color-background-primary);border:0.5px solid #ddd;border-radius:16px;padding:1.75rem 1.5rem;text-align:center;max-width:320px;width:100%}
-
-        /* MODERN FORMA PREVIEW */
-        .preview-box {
-            position: relative;
-            width: 170px; height: 170px;
-            margin: 10px auto;
-            background: #fff;
-            border: 1px dashed #7F77DD;
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .base-forma { width: 100%; height: 100%; object-fit: contain; }
-        .logo-overlay {
-            position: absolute; top: 28%; left: 50%;
-            transform: translateX(-50%);
-            width: 38px; height: 38px;
-            mix-blend-mode: multiply; opacity: 0.85;
-            filter: contrast(1.1);
-        }
+        /* EKRAN GÖRÜNTÜSÜNDEKİ TÜM ORİJİNAL STİLLER */
+        *{box-sizing:border-box;margin:0;padding:0}html,body{font-family:var(--font-sans,sans-serif);color:var(--color-text-primary);background:transparent;-webkit-tap-highlight-color:transparent}body{padding:.75rem}.tab-bar{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:0.5px solid var(--color-border-tertiary);overflow-x:auto;-webkit-overflow-scrolling:touch}.tab-bar::-webkit-scrollbar{display:none}.tab{padding:10px 13px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:400;white-space:nowrap;-webkit-tap-highlight-color:transparent}.tab.active{color:#534AB7;border-bottom:2px solid #7F77DD;font-weight:500}.view{display:none}.view.active{display:block}.btn-p{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;cursor:pointer;font-weight:500;min-height:44px;touch-action:manipulation}.btn-p:active{background:#534AB7}.btn-o{background:transparent;border:0.5px solid #ccc;border-radius:8px;padding:10px 14px;font-size:14px;cursor:pointer;color:var(--color-text-secondary);min-height:44px;touch-action:manipulation}.btn-o:active{background:var(--color-background-secondary)}.btn-row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.section-title{font-size:15px;font-weight:500}.info-box{background:var(--color-background-secondary);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.5}.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:1rem}@media(max-width:480px){.admin-grid{grid-template-columns:repeat(2,1fr)}}.admin-card{border:0.5px solid #ddd;border-radius:12px;padding:9px;background:var(--color-background-primary);text-align:center}.admin-card.has-img{border-color:#AFA9EC}.img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--color-background-secondary);border:0.5px solid #ddd;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px;cursor:pointer;position:relative;min-height:60px}.img-box img{width:100%;height:100%;object-fit:contain}.img-box:active .ov,.img-box:hover .ov{display:flex!important}.img-type{font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px}.logo-name-input{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:6px 7px;font-size:12px;margin-top:4px;background:var(--color-background-primary);color:var(--color-text-primary)}.del-btn{font-size:11px;color:#A32D2D;background:transparent;border:none;cursor:pointer;padding:4px;margin-top:3px;min-height:32px}.logo-count-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}.count-btn{width:36px;height:36px;border:0.5px solid #ccc;border-radius:8px;background:transparent;cursor:pointer;font-size:18px;color:var(--color-text-primary);display:flex;align-items:center;justify-content:center;line-height:1;touch-action:manipulation;min-height:36px}.count-btn:active{background:var(--color-background-secondary)}.count-val{font-size:15px;font-weight:500;min-width:24px;text-align:center}.toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}.toggle{position:relative;width:44px;height:24px;flex-shrink:0}.toggle input{opacity:0;width:0;height:0;position:absolute}.tslider{position:absolute;inset:0;background:#ccc;border-radius:12px;cursor:pointer;transition:.2s}.tslider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}.toggle input:checked+.tslider{background:#7F77DD}.toggle input:checked+.tslider:before{transform:translateX(20px)}.pass-row{display:flex;gap:8px;margin-bottom:1rem;align-items:center}.pass-row input{flex:1;border:0.5px solid #ccc;border-radius:8px;padding:10px;font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary);min-height:44px}.lock-wrap{min-height:260px;display:flex;align-items:center;justify-content:center;padding:1rem}.lock-card{background:var(--color-background-primary);border:0.5px solid #ddd;border-radius:16px;padding:1.75rem 1.5rem;text-align:center;max-width:320px;width:100%}.err-msg{font-size:12px;color:#A32D2D;margin-bottom:.6rem;display:none}h1{font-size:22px;font-weight:500;margin-bottom:4px;text-align:center}.subtitle{font-size:13px;color:var(--color-text-secondary);text-align:center;margin-bottom:1.25rem}.step{display:none}.step.active{display:block}.progress-bar{width:100%;height:5px;background:#eee;border-radius:4px;margin-bottom:1.25rem}.progress-fill{height:5px;border-radius:4px;background:#7F77DD;transition:width .4s}.question{font-size:16px;font-weight:500;margin-bottom:1rem}.opt-btn{background:var(--color-background-primary);border:0.5px solid #ccc;border-radius:10px;padding:14px 16px;font-size:15px;color:var(--color-text-primary);cursor:pointer;text-align:left;transition:all .15s;min-height:52px;margin-bottom:10px;width:100%}.opt-btn.selected{border:2px solid #7F77DD;background:#EEEDFE}.logo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem}.logo-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;cursor:pointer;text-align:center;background:var(--color-background-primary)}.logo-card.selected{border:2px solid #7F77DD;background:#EEEDFE}/* Overlay ve Preview UX */.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;padding:1rem}.forma-preview-area{position:relative;width:160px;height:160px;margin:10px auto;border:1px dashed #7F77DD;border-radius:12px;display:flex;align-items:center;justify-content:center}.base-forma-img{width:100%;height:100%;object-fit:contain}.logo-on-forma{position:absolute;top:28%;left:50%;transform:translateX(-50%);width:38px;height:38px;mix-blend-mode:multiply;opacity:0.85}
     </style>
 </head>
 <body>
 
 <div class="overlay-bg" id="admin-overlay">
     <div class="lock-card">
-        <h2>Yönetim Kilidi</h2>
-        <input type="password" id="admin-pass-inp" placeholder="Şifre" style="width:100%; padding:12px; margin:15px 0; border-radius:8px; border:1px solid #ccc" onkeydown="if(event.key==='Enter')window.chkAdmin()">
-        <div id="admin-err" style="color:red; font-size:12px; display:none; margin-bottom:10px">Hatalı Şifre!</div>
-        <div style="display:flex;gap:8px">
-            <button class="btn-o" style="flex:1" onclick="window.closeOverlay()">İptal</button>
-            <button class="btn-p" style="flex:1" onclick="window.chkAdmin()">Gir</button>
+        <h2>Yönetim Paneli</h2>
+        <p style="font-size:13px; margin-bottom:10px">Yönetici şifresini girin.</p>
+        <input type="password" id="admin-pass-inp" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; margin-bottom:10px" onkeydown="if(event.key==='Enter')window.chkAdmin()">
+        <div class="err-msg" id="admin-err">Yanlış şifre.</div>
+        <div style="display:flex;gap:8px;justify-content:center">
+            <button class="btn-o" onclick="window.closeOverlay()">İptal</button>
+            <button class="btn-p" onclick="window.chkAdmin()">Gir</button>
         </div>
     </div>
 </div>
@@ -51,20 +33,59 @@
 <div class="tab-bar">
     <button class="tab" id="tab-admin" onclick="window.tryAdmin()">Yönetim</button>
     <button class="tab active" id="tab-poll" onclick="window.switchTab('poll')">Anket</button>
-    <button class="tab" id="tab-results" onclick="window.switchTab('results')">Sonuçlar <span class="live-badge">CANLI</span></button>
+    <button class="tab" id="tab-results" onclick="window.switchTab('results')">Sonuçlar <span style="font-size:10px; background:#EAF3DE; color:#3B6D11; padding:2px 6px; border-radius:8px">CANLI</span></button>
 </div>
 
 <div class="view" id="view-admin">
-    <div class="info-box">🛡️ <b>Güvenlik:</b> Şifreler Bcrypt hash ile korunur. Logo ve Forma görsellerini kartlara tıklayarak yükleyebilirsiniz.</div>
-    <div class="section-hd"><span class="section-title">Güvenli Admin Şifresi</span></div>
-    <div style="display:flex; gap:8px; margin-bottom:20px">
-        <input type="password" id="admin-pass-set" placeholder="Yeni şifre belirle" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ccc">
-        <button class="btn-p" onclick="window.saveAdminPass()">Güncelle</button>
+    <div id="fb-status" style="font-size:11px; color:#666; margin-bottom:10px">⚪ Bağlanıyor...</div>
+    <div class="info-box">Ayarlar ve logolar Firebase'e kaydedilir. Değişikliklerden sonra "Kaydet"e basın. <br>🛡️ Bcrypt güvenliği devrededir.</div>
+    
+    <div class="section-hd"><span class="section-title">Dil</span></div>
+    <div style="display:flex; gap:8px; margin-bottom:1rem">
+        <button class="btn-o" id="lb-tr" onclick="window.setLang('tr')" style="border-color:#7F77DD;color:#534AB7">Türkçe</button>
+        <button class="btn-o" id="lb-en" onclick="window.setLang('en')">English</button>
+    </div>
+
+    <div class="section-hd"><span class="section-title">Anket Durumu</span></div>
+    <div class="toggle-row">
+        <label class="toggle"><input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked; window.saveAdmin();"><span class="tslider"></span></label>
+        <span id="poll-status-lbl" style="font-size:13px;color:#666">Anket açık — öğrenciler oy kullanabilir</span>
+    </div>
+
+    <div class="section-hd"><span class="section-title">Yönetici Şifresi</span></div>
+    <div class="pass-row">
+        <input type="password" id="admin-pass-set" placeholder="Yeni yönetici şifresi">
+        <button class="btn-p" onclick="window.saveAdminPass()">Kaydet</button>
+    </div>
+
+    <div class="section-hd"><span class="section-title">Sonuç Şifresi <span style="font-size:11px;font-weight:400">(opsiyonel)</span></span></div>
+    <div class="pass-row">
+        <input type="password" id="res-pass-set" placeholder="Boş = şifresiz">
+        <button class="btn-p" onclick="window.saveResPass()">Kaydet</button>
+    </div>
+
+    <div class="section-hd"><span class="section-title">Logo Sayısı</span></div>
+    <div class="logo-count-row">
+        <button class="count-btn" onclick="window.chgCount(-1)">−</button>
+        <span class="count-val" id="cnt-val">10</span>
+        <button class="count-btn" onclick="window.chgCount(1)">+</button>
+        <span style="font-size:12px;color:#666">logo (2–20)</span>
+    </div>
+
+    <div class="section-hd">
+        <span class="section-title">Logo Görselleri</span>
+        <div style="display:flex;gap:6px">
+            <button class="btn-o" onclick="window.clearAll()">Temizle</button>
+            <button class="btn-p" id="save-btn" onclick="window.saveAdmin()">Kaydet</button>
+        </div>
     </div>
     <div id="admin-grid" class="admin-grid"></div>
-    <div class="btn-row">
+    <p style="font-size:12px; color:#666; margin-bottom:1rem">Her karta tıklayarak logo ve forma görsellerini yükleyebilirsiniz.</p>
+
+    <div class="section-hd"><span class="section-title">Veri</span></div>
+    <div style="display:flex;gap:8px">
         <button class="btn-o" onclick="window.exportCSV()">CSV İndir</button>
-        <button class="btn-p" onclick="window.saveAdmin()">Tüm Verileri Kaydet</button>
+        <button class="btn-o" style="color:#A32D2D" onclick="if(confirm('Oylar sıfırlansın mı?'))window.clearVotes()">Oyları Sıfırla</button>
     </div>
 </div>
 
@@ -72,114 +93,109 @@
     <div id="poll-closed-box" style="display:none; text-align:center; padding:3rem 1rem"><h2>Anket Kapalı</h2></div>
     <div id="poll-inner">
         <h1>Okul Logosu Anketi</h1>
+        <p class="subtitle">Logonu seç, sesini duyur!</p>
         <div class="progress-bar"><div class="progress-fill" id="prog" style="width:14%"></div></div>
         
         <div class="step active" id="s1">
-            <p class="question">Cinsiyetiniz?</p><div id="opts-gender"></div>
+            <p class="question">Cinsiyetin nedir?</p><div id="opts-gender"></div>
             <div class="btn-row"><button class="btn-p" id="n1" onclick="window.go(2)" disabled>Devam</button></div>
         </div>
         <div class="step" id="s2">
-            <p class="question">Sınıfınız?</p><div id="opts-class"></div>
+            <p class="question">Kaçıncı sınıftasın?</p><div id="opts-class"></div>
             <div class="btn-row"><button class="btn-o" onclick="window.go(1)">Geri</button><button class="btn-p" id="n2" onclick="window.go(3)" disabled>Devam</button></div>
         </div>
         <div class="step" id="s3">
-            <p class="question">Hangi Logo Daha Etkileyici?</p>
-            <div id="cmp-prog" style="font-size:11px; margin-bottom:5px; color:#666"></div>
+            <p class="question">Hangi logo daha iyi?</p>
+            <div id="cmp-prog" style="font-size:11px; color:#666; margin-bottom:5px"></div>
             <div id="cmp-area" style="display:grid; grid-template-columns: 1fr auto 1fr; align-items:center; gap:8px"></div>
             <div class="btn-row"><button class="btn-o" onclick="window.go(2)">Geri</button><button class="btn-p" id="n3" onclick="window.go(4)" disabled>Devam</button></div>
         </div>
         <div class="step" id="s4">
-            <p class="question">Favori Logonuzu Seçin</p>
+            <p class="question">En beğendiğin logoyu seç</p>
             <div id="forma-preview-area" style="display:none"></div>
             <div id="poll-logo-grid" class="logo-grid"></div>
             <div class="btn-row"><button class="btn-o" onclick="window.go(3)">Geri</button><button class="btn-p" id="n4" onclick="window.go(5)" disabled>Devam</button></div>
         </div>
         <div class="step" id="s5">
-            <p class="question">Neden Bu Logo?</p><div id="opts-reason"></div>
+            <p class="question">Bu logoyu seçmendeki en önemli neden?</p><div id="opts-reason"></div>
             <div class="btn-row"><button class="btn-o" onclick="window.go(4)">Geri</button><button class="btn-p" id="n5" onclick="window.go(6)" disabled>Devam</button></div>
         </div>
         <div class="step" id="s6">
-            <p class="question">Puan ve Yorum</p>
-            <div id="stars" style="font-size:32px; color:#ccc; cursor:pointer; margin-bottom:10px">
+            <p class="question">Logoya kaç yıldız verirsin?</p>
+            <div id="stars" style="display:flex; gap:10px; margin-bottom:1.5rem; font-size:32px; color:#ddd; cursor:pointer">
                 <span onclick="window.rateStar(1)">★</span><span onclick="window.rateStar(2)">★</span><span onclick="window.rateStar(3)">★</span><span onclick="window.rateStar(4)">★</span><span onclick="window.rateStar(5)">★</span>
             </div>
-            <textarea id="yorum" style="width:100%; height:80px; padding:10px; border-radius:8px; border:1px solid #ccc" placeholder="Fikriniz..."></textarea>
-            <div class="btn-row"><button class="btn-o" onclick="window.go(5)">Geri</button><button class="btn-p" id="n6" onclick="window.submitPoll()" disabled>Oy Kullan</button></div>
+            <textarea id="yorum" placeholder="Eklemek istediğin bir şey?"></textarea>
+            <div style="font-size:10px; color:#4CAF50; margin-bottom:10px">🛡️ Cihaz doğrulaması aktif.</div>
+            <div class="btn-row"><button class="btn-o" onclick="window.go(5)">Geri</button><button class="btn-p" id="n6" onclick="window.submitPoll()" disabled>Gönder</button></div>
         </div>
-        <div class="step" id="s7"><h2 style="text-align:center">Oyunuz Kaydedildi!</h2></div>
+        <div class="step" id="s7"><h2 style="text-align:center">Teşekkürler, oyun kaydedildi!</h2></div>
     </div>
 </div>
 
 <div class="view" id="view-results"><div id="results-inner"></div></div>
 
 <script>
-/* ---- CORE CONFIG & SECURITY ---- */
+/* ---- CORE CONFIG ---- */
 const FB = 'https://firestore.googleapis.com/v1/projects/okul-logo-anketi/databases/(default)/documents';
-let logos = [], votes = [], cfg = { adminPassHash: '', pollOpen: true }, pdata = { deviceId: '' };
+let logos = [], votes = [], cfg = { adminPassHash: '', pollOpen: true, logoCount: 10, lang:'tr', pass:'' }, pdata = { deviceId: '', cmpWins:{} };
 let cmpPairs = [], cmpIdx = 0;
 
-// 1. GLOBAL SCOPE FUNCTIONS (Fixing ReferenceErrors)
-window.tryAdmin = () => { document.getElementById('admin-overlay').style.display = 'flex'; };
-window.closeOverlay = () => { document.getElementById('admin-overlay').style.display = 'none'; };
+/* ---- GLOBAL FUNCTIONS (Arayüz Bağlantıları) ---- */
+window.tryAdmin = () => { document.getElementById('admin-overlay').style.display='flex'; };
+window.closeOverlay = () => { document.getElementById('admin-overlay').style.display='none'; };
 
 window.chkAdmin = () => {
     const p = document.getElementById('admin-pass-inp').value;
-    const hasher = window.dcodeIO ? window.dcodeIO.bcrypt : null;
-    let ok = (hasher && cfg.adminPassHash) ? hasher.compareSync(p, cfg.adminPassHash) : (p === "admin123");
+    const bcrypt = window.dcodeIO ? window.dcodeIO.bcrypt : null;
+    let ok = (bcrypt && cfg.adminPassHash) ? bcrypt.compareSync(p, cfg.adminPassHash) : (p === "admin123");
     if(ok) { window.closeOverlay(); window.switchTab('admin'); window.buildAdminGrid(); }
-    else document.getElementById('admin-err').style.display = 'block';
+    else document.getElementById('admin-err').style.display='block';
 };
 
 window.saveAdminPass = async () => {
     const p = document.getElementById('admin-pass-set').value;
-    const hash = dcodeIO.bcrypt.hashSync(p, 10);
+    const h = dcodeIO.bcrypt.hashSync(p, 10);
     await fetch(`${FB}/config/main?updateMask.fieldPaths=adminPassHash`, {
-        method: 'PATCH', body: JSON.stringify({ fields: { adminPassHash: { stringValue: hash } } })
+        method:'PATCH', body: JSON.stringify({fields:{adminPassHash:{stringValue:h}}})
     });
-    alert("Yeni şifre Bcrypt ile güvenli hale getirildi.");
+    alert("Şifre güncellendi.");
 };
 
 window.trigUp = (i, type) => {
-    const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*';
+    const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
     inp.onchange = e => {
-        const reader = new FileReader();
-        reader.onload = ev => {
+        const r = new FileReader(); r.onload = ev => {
             if(type === 'logo') logos[i].img = ev.target.result;
             else logos[i].formaImg = ev.target.result;
             window.buildAdminGrid();
-        };
-        reader.readAsDataURL(e.target.files[0]);
+        }; r.readAsDataURL(e.target.files[0]);
     }; inp.click();
 };
 
-/* ---- DATA SYNC ---- */
-async function loadData() {
-    try {
-        const r = await fetch(`${FB}/config/main`).then(res => res.json());
-        if(r.fields) {
-            cfg.adminPassHash = r.fields.adminPassHash ? r.fields.adminPassHash.stringValue : '';
-            cfg.pollOpen = r.fields.pollOpen ? r.fields.pollOpen.booleanValue : true;
-        }
-        const lr = await fetch(`${FB}/config/logos`).then(res => res.json());
-        if(lr.fields) logos = JSON.parse(lr.fields.list.stringValue);
-        else for(let i=0; i<11; i++) logos.push({name: `Logo ${i+1}`, img: null, formaImg: null});
-    } catch(e) { console.warn("Firebase verisi çekilemedi."); }
-}
-
-window.saveAdmin = async () => {
-    const body = { fields: { list: { stringValue: JSON.stringify(logos) } } };
-    await fetch(`${FB}/config/logos?updateMask.fieldPaths=list`, { method: 'PATCH', body: JSON.stringify(body) });
-    alert("Veriler Firebase'e kaydedildi.");
+window.buildAdminGrid = () => {
+    const g = document.getElementById('admin-grid'); g.innerHTML = '';
+    logos.forEach((l, i) => {
+        const d = document.createElement('div'); d.className = 'admin-card' + (l.img ? ' has-img' : '');
+        d.innerHTML = `
+            <div class="img-box" onclick="window.trigUp(${i}, 'logo')">${l.img ? `<img src="${l.img}">` : '<span>Logo yükle</span>'}</div>
+            <div class="img-type">Logo</div>
+            <div class="img-box" onclick="window.trigUp(${i}, 'forma')">${l.formaImg ? `<img src="${l.formaImg}">` : '<span>Forma yükle</span>'}</div>
+            <div class="img-type">Forma</div>
+            <input class="logo-name-input" value="${l.name}" onchange="logos[${i}].name=this.value">
+            <button class="del-btn" onclick="logos[${i}].img=null; logos[${i}].formaImg=null; window.buildAdminGrid();">Temizle</button>
+        `; g.appendChild(d);
+    });
+    document.getElementById('cnt-val').textContent = cfg.logoCount;
 };
 
-/* ---- UI MANTIĞI ---- */
+/* ---- ANKET FONKSİYONLARI ---- */
 window.switchTab = (t) => {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(tb => tb.classList.remove('active'));
     document.getElementById('view-' + t).classList.add('active');
     document.getElementById('tab-' + t).classList.add('active');
     if(t === 'poll') window.buildPollGrid();
-    if(t === 'results') renderResults();
 };
 
 window.go = (n) => {
@@ -196,17 +212,16 @@ window.pick = (btn, k, v) => {
 
 window.rateStar = (n) => {
     pdata.yildiz = n;
-    document.querySelectorAll('#stars span').forEach((s, i) => s.style.color = (i < n ? '#F0A500' : '#ccc'));
+    document.querySelectorAll('#stars span').forEach((s, i) => s.style.color = (i < n ? '#F0A500' : '#ddd'));
     document.getElementById('n6').disabled = false;
 };
 
-/* ---- ANKET FONKSİYONLARI ---- */
 window.buildPollGrid = () => {
     const g = document.getElementById('poll-logo-grid'); g.innerHTML = '';
     logos.forEach(l => {
         if(!l.img) return;
         const d = document.createElement('div'); d.className = 'logo-card';
-        d.innerHTML = `<div class="img-box"><img src="${l.img}"></div><p style="font-size:12px">${l.name}</p>`;
+        d.innerHTML = `<div class="lc-img" style="aspect-ratio:1; overflow:hidden; background:#eee"><img src="${l.img}" style="width:100%; height:100%; object-fit:contain"></div><p style="font-size:12px; margin-top:5px">${l.name}</p>`;
         d.onclick = () => {
             document.querySelectorAll('.logo-card').forEach(x => x.classList.remove('selected'));
             d.classList.add('selected'); pdata.logo = l.name;
@@ -219,84 +234,70 @@ window.buildPollGrid = () => {
 
 window.showFormaPreview = (logo) => {
     const area = document.getElementById('forma-preview-area'); area.style.display = 'block';
-    area.innerHTML = `
-        <div class="preview-box">
-            <img src="https://www.freeiconspng.com/uploads/t-shirt-png-blank-t-shirt-png-transparent-image-8.png" class="base-forma">
-            <img src="${logo.img}" class="logo-overlay">
-        </div>
-        <p style="text-align:center; font-size:11px; color:#7F77DD; margin-bottom:15px">Forma Üzerinde Duruşu</p>
-    `;
+    const base = logo.formaImg || "https://www.freeiconspng.com/uploads/t-shirt-png-blank-t-shirt-png-transparent-image-8.png";
+    area.innerHTML = `<div class="forma-preview-area"><img src="${base}" class="base-forma-img">${logo.formaImg ? '' : `<img src="${logo.img}" class="logo-on-forma">`}</div>`;
 };
 
 function initCompare() {
-    cmpPairs = []; cmpIdx = 0;
-    const activeLogos = logos.filter(l => l.img);
-    for(let i=0; i<activeLogos.length-1; i++) for(let j=i+1; j<activeLogos.length; j++) cmpPairs.push([activeLogos[i], activeLogos[j]]);
+    cmpPairs = []; cmpIdx = 0; const active = logos.filter(l => l.img);
+    for(let i=0; i<active.length-1; i++) for(let j=i+1; j<active.length; j++) cmpPairs.push([active[i], active[j]]);
     cmpPairs.sort(() => Math.random() - 0.5); cmpPairs = cmpPairs.slice(0, 10);
     renderCompare();
 }
-
 function renderCompare() {
     const area = document.getElementById('cmp-area');
-    if(cmpIdx >= cmpPairs.length) { document.getElementById('n3').disabled = false; area.innerHTML = "Karşılaştırma tamamlandı."; return; }
+    if(cmpIdx >= cmpPairs.length) { document.getElementById('n3').disabled = false; area.innerHTML = "Tamamlandı, devam edebilirsiniz."; return; }
     const pair = cmpPairs[cmpIdx];
-    area.innerHTML = `
-        <div class="logo-card" onclick="nextCmp()"><img src="${pair[0].img}" style="width:100%"></div>
-        <div style="font-weight:bold">VS</div>
-        <div class="logo-card" onclick="nextCmp()"><img src="${pair[1].img}" style="width:100%"></div>
-    `;
+    area.innerHTML = `<div class="logo-card" onclick="window.nextCmp()"><img src="${pair[0].img}" style="width:100%"></div><div>VS</div><div class="logo-card" onclick="window.nextCmp()"><img src="${pair[1].img}" style="width:100%"></div>`;
     document.getElementById('cmp-prog').textContent = `${cmpIdx+1} / ${cmpPairs.length}`;
 }
 window.nextCmp = () => { cmpIdx++; renderCompare(); };
+
+/* ---- DATA SYNC ---- */
+async function loadAll() {
+    try {
+        const r = await fetch(`${FB}/config/main`).then(res => res.json());
+        if(r.fields) {
+            const d = fromFs(r.fields);
+            cfg.adminPassHash = d.adminPassHash || '';
+            cfg.pollOpen = d.pollOpen !== undefined ? d.pollOpen : true;
+            cfg.logoCount = d.logoCount || 10;
+        }
+        const lr = await fetch(`${FB}/config/logos`).then(res => res.json());
+        if(lr.fields) logos = JSON.parse(lr.fields.list.stringValue);
+        else for(let i=0; i<cfg.logoCount; i++) logos.push({name: `Logo ${i+1}`, img: null, formaImg: null});
+        
+        document.getElementById('fb-status').innerHTML = "🟢 Bağlandı";
+        window.buildAdminGrid();
+    } catch(e) { document.getElementById('fb-status').innerHTML = "🔴 Hata"; }
+}
+
+window.saveAdmin = async () => {
+    const body = { fields: { list: { stringValue: JSON.stringify(logos) } } };
+    await fetch(`${FB}/config/logos?updateMask.fieldPaths=list`, { method: 'PATCH', body: JSON.stringify(body) });
+    alert("Kaydedildi.");
+};
 
 window.submitPoll = async () => {
     const btn = document.getElementById('n6'); btn.disabled = true;
     const body = { fields: { 
         deviceId: { stringValue: String(pdata.deviceId) },
         logo: { stringValue: String(pdata.logo) },
-        cinsiyet: { stringValue: String(pdata.cinsiyet) },
-        sinif: { stringValue: String(pdata.sinif) },
         zaman: { stringValue: new Date().toISOString() }
     }};
     await fetch(`${FB}/votes`, { method: 'POST', body: JSON.stringify(body) });
     window.go(7);
 };
 
-/* ---- ADMIN & RESULTS ---- */
-window.buildAdminGrid = () => {
-    const g = document.getElementById('admin-grid'); if(!g) return; g.innerHTML = '';
-    logos.forEach((l, i) => {
-        const d = document.createElement('div'); d.className = 'admin-card';
-        d.innerHTML = `
-            <div class="img-box" onclick="window.trigUp(${i}, 'logo')">${l.img ? `<img src="${l.img}">` : 'Logo'}</div>
-            <div class="img-box" onclick="window.trigUp(${i}, 'forma')">${l.formaImg ? `<img src="${l.formaImg}">` : 'Forma'}</div>
-            <input value="${l.name}" onchange="logos[${i}].name=this.value" class="logo-name-input">
-        `;
-        g.appendChild(d);
-    });
-};
-
-window.exportCSV = async () => {
-    const r = await fetch(`${FB}/votes`).then(res => res.json());
-    const docs = r.documents || [];
-    let csv = "DeviceId,Logo,Cinsiyet,Sinif,Zaman\n";
-    docs.forEach(d => {
-        const f = d.fields;
-        csv += `${f.deviceId.stringValue},${f.logo.stringValue},${f.cinsiyet ? f.cinsiyet.stringValue : ''},${f.sinif ? f.sinif.stringValue : ''},${f.zaman.stringValue}\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'anket_sonuclari.csv'; a.click();
-};
+// Firestore Helpers
+function fromFs(f){ let o={}; if(!f) return o; Object.entries(f).forEach(([k,v]) => { if(v.stringValue!==undefined) o[k]=v.stringValue; else if(v.integerValue!==undefined) o[k]=Number(v.integerValue); else if(v.booleanValue!==undefined) o[k]=v.booleanValue; }); return o; }
 
 /* ---- INIT ---- */
 (async function init() {
     try {
         const fp = await FingerprintJS.load(); const res = await fp.get(); pdata.deviceId = res.visitorId;
     } catch(e) { pdata.deviceId = 'anon_' + Date.now(); }
-    
-    await loadData();
-    
+    await loadAll();
     const fill = (id, arr, k) => {
         const el = document.getElementById(id); if(!el) return;
         arr.forEach(a => {
@@ -305,10 +306,8 @@ window.exportCSV = async () => {
         });
     };
     fill('opts-gender', ['Erkek', 'Kız', 'Belirtmek İstemiyorum'], 'cinsiyet');
-    fill('opts-class', ['9', '10', '11', '12'], 'sinif');
-    fill('opts-reason', ['Renk Uyumu', 'Sadelik', 'Anlam', 'Forma Duruşu'], 'neden');
-    
-    window.buildAdminGrid();
+    fill('opts-class', ['9. Sınıf', '10. Sınıf', '11. Sınıf', '12. Sınıf'], 'sinif');
+    fill('opts-reason', ['Renk Uyumu', 'Anlam', 'Duruş'], 'neden');
 })();
 </script>
 </body>
