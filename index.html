@@ -1,271 +1,576 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FSMAL Logo Anketi - Veritabanı Maskeli</title>
-    <style>
-        :root { --p: #7F77DD; --p-dark: #534AB7; --bg: #fff; --bg-s: #f8f9fa; --txt: #1a1a1a; --txt-s: #666; --brd: #ddd; }
-        *{box-sizing:border-box;margin:0;padding:0; -webkit-tap-highlight-color:transparent}
-        body{font-family:sans-serif;color:var(--txt);background:var(--bg);padding:1rem;line-height:1.4}
-        .tab-bar{display:flex;border-bottom:1px solid #eee;margin-bottom:1.5rem}
-        .tab{flex:1;padding:12px;font-size:13px;cursor:pointer;border:none;background:none;color:#666;border-bottom:2px solid transparent}
-        .tab.active{color:var(--p-dark);border-bottom-color:var(--p);font-weight:600}
-        .view{display:none}.view.active{display:block}
-        .btn-p{background:var(--p);color:#fff;border:none;border-radius:8px;padding:14px;font-size:14px;cursor:pointer;font-weight:500;width:100%}
-        .btn-o{background:none;border:1px solid #ccc;border-radius:8px;padding:12px;font-size:14px;cursor:pointer;color:#666;width:100%}
-        .btn-row{display:flex;gap:8px;margin-top:12px}
-        .progress-bar{width:100%;height:6px;background:#eee;border-radius:3px;margin-bottom:1.5rem;overflow:hidden}
-        .progress-fill{height:100%;background:var(--p);transition:width .4s;width:0%}
-        .step{display:none}.step.active{display:block}
-        .question{font-size:17px;font-weight:600;margin-bottom:1.2rem}
-        .options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
-        .opt-btn{background:var(--bg);border:1px solid #ccc;border-radius:10px;padding:14px;font-size:15px;cursor:pointer;text-align:left}
-        .opt-btn.selected{border:2px solid var(--p);background:#EEEDFE;color:var(--p-dark);font-weight:600}
-        .logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
-        .logo-card{border:1px solid var(--brd);border-radius:12px;padding:8px;text-align:center;cursor:pointer}
-        .logo-card.selected{border:2px solid var(--p);background:#EEEDFE}
-        .lc-img{width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;background:#f0f0f0}
-        .lc-img img{width:100%;height:100%;object-fit:contain}
-        .cmp-outer { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; margin-bottom: 10px; }
-        .cmp-card { border: 1px solid var(--brd); border-radius: 12px; padding: 8px; text-align: center; cursor: pointer; background: #fff; width: 100%; }
-        .cmp-img { width: 100%; aspect-ratio: 1; background: #f0f0f0; border-radius: 8px; overflow: hidden; margin-bottom: 5px; }
-        .cmp-img img { width: 100%; height: 100%; object-fit: contain; }
-        .star-row{display:flex;gap:10px;margin-bottom:1.5rem;justify-content:center}
-        .star{font-size:35px;cursor:pointer;color:#ddd}.star.lit{color:#F0A500}
-        textarea{width:100%;border:1px solid #ccc;border-radius:8px;padding:10px;min-height:90px;font-size:14px}
-        .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0}
-        .admin-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center;background:#fff}
-        .img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--bg-s);border:1px solid var(--brd);overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}
-        .img-box img{width:100%;height:100%;object-fit:contain}
-        .logo-name-input{width:100%;border:1px solid #ccc;border-radius:6px;padding:6px;font-size:12px;margin-top:4px}
-        .res-card { background:var(--bg-s); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #eee; }
-        .res-title { font-size:14px; font-weight:600; margin-bottom:10px; color:var(--p-dark); text-transform: uppercase; }
-        .metric-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:15px; }
-        .metric { background:#fff; border:1px solid #eee; padding:10px; border-radius:10px; text-align:center; font-size:12px;}
-        .overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center}
-        .lock-card{background:#fff;padding:2rem;border-radius:15px;width:90%;max-width:320px;text-align:center}
-        .lock-card input{width:100%;padding:12px;margin:15px 0;border-radius:8px;border:1px solid #ccc;text-align:center}
-    </style>
-</head>
-<body>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:var(--font-sans,sans-serif);color:var(--color-text-primary);background:transparent;-webkit-tap-highlight-color:transparent}
+body{padding:.75rem}
+.tab-bar{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:0.5px solid var(--color-border-tertiary);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab{padding:10px 13px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:400;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.tab.active{color:#534AB7;border-bottom:2px solid #7F77DD;font-weight:500}
+.view{display:none}.view.active{display:block}
+.btn-p{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;cursor:pointer;font-weight:500;min-height:44px;touch-action:manipulation}
+.btn-p:active{background:#534AB7}
+.btn-o{background:transparent;border:0.5px solid #ccc;border-radius:8px;padding:10px 14px;font-size:14px;cursor:pointer;color:var(--color-text-secondary);min-height:44px;touch-action:manipulation}
+.btn-o:active{background:var(--color-background-secondary)}
+.btn-row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}
+.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.section-title{font-size:15px;font-weight:500}
+.info-box{background:var(--color-background-secondary);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.5}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:1rem}
+@media(max-width:480px){.admin-grid{grid-template-columns:repeat(2,1fr)}}
+.admin-card{border:0.5px solid #ddd;border-radius:12px;padding:9px;background:var(--color-background-primary);text-align:center}
+.admin-card.has-img{border-color:#AFA9EC}
+.img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--color-background-secondary);border:0.5px solid #ddd;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px;cursor:pointer;position:relative;min-height:60px}
+.img-box img{width:100%;height:100%;object-fit:contain}
+.img-box:active .ov,.img-box:hover .ov{display:flex!important}
+.img-type{font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px}
+.logo-name-input{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:6px 7px;font-size:12px;margin-top:4px;background:var(--color-background-primary);color:var(--color-text-primary)}
+.del-btn{font-size:11px;color:#A32D2D;background:transparent;border:none;cursor:pointer;padding:4px;margin-top:3px;min-height:32px}
+.logo-count-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.count-btn{width:36px;height:36px;border:0.5px solid #ccc;border-radius:8px;background:transparent;cursor:pointer;font-size:18px;color:var(--color-text-primary);display:flex;align-items:center;justify-content:center;line-height:1;touch-action:manipulation;min-height:36px}
+.count-btn:active{background:var(--color-background-secondary)}
+.count-val{font-size:15px;font-weight:500;min-width:24px;text-align:center}
+.toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.tslider{position:absolute;inset:0;background:#ccc;border-radius:12px;cursor:pointer;transition:.2s}
+.tslider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked+.tslider{background:#7F77DD}
+.toggle input:checked+.tslider:before{transform:translateX(20px)}
+.pass-row{display:flex;gap:8px;margin-bottom:1rem;align-items:center}
+.pass-row input{flex:1;border:0.5px solid #ccc;border-radius:8px;padding:10px;font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary);min-height:44px}
+.lock-wrap{min-height:260px;display:flex;align-items:center;justify-content:center;padding:1rem}
+.lock-card{background:var(--color-background-primary);border:0.5px solid #ddd;border-radius:16px;padding:1.75rem 1.5rem;text-align:center;max-width:320px;width:100%}
+.lock-card h2{font-size:17px;font-weight:500;margin-bottom:.4rem}
+.lock-card p{font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem}
+.lock-card input{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:12px;font-size:16px;background:var(--color-background-primary);color:var(--color-text-primary);text-align:center;margin-bottom:.75rem;min-height:44px}
+.err-msg{font-size:12px;color:#A32D2D;margin-bottom:.6rem;display:none}
+/* poll */
+h1{font-size:22px;font-weight:500;margin-bottom:4px;text-align:center}
+.subtitle{font-size:13px;color:var(--color-text-secondary);text-align:center;margin-bottom:1.25rem}
+.step{display:none}.step.active{display:block}
+.progress-bar{width:100%;height:5px;background:#eee;border-radius:4px;margin-bottom:1.25rem}
+.progress-fill{height:5px;border-radius:4px;background:#7F77DD;transition:width .4s}
+.step-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:1.25rem;text-align:right}
+.question{font-size:16px;font-weight:500;margin-bottom:1rem;line-height:1.4}
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
+.opt-btn{background:var(--color-background-primary);border:0.5px solid #ccc;border-radius:10px;padding:14px 16px;font-size:15px;color:var(--color-text-primary);cursor:pointer;text-align:left;transition:all .15s;min-height:52px;touch-action:manipulation;line-height:1.3}
+.opt-btn:active,.opt-btn:hover{background:var(--color-background-secondary)}
+.opt-btn.selected{border:2px solid #7F77DD;background:#EEEDFE;color:#3C3489}
+/* logo grid */
+.logo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem}
+@media(max-width:400px){.logo-grid{grid-template-columns:repeat(2,1fr)}}
+.logo-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;cursor:pointer;text-align:center;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}
+.logo-card:active,.logo-card:hover{border-color:#AFA9EC}
+.logo-card.selected{border:2px solid #7F77DD;background:#EEEDFE}
+.lc-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-tertiary)}
+.lc-img img{width:100%;height:100%;object-fit:contain}
+.lc-name{font-size:12px;font-weight:500;margin-top:6px}
+/* compare */
+.cmp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px}
+.cmp-prog-txt{font-size:12px;color:var(--color-text-secondary)}
+.cmp-skip-btn{font-size:12px;color:#534AB7;background:transparent;border:0.5px solid #AFA9EC;border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap;min-height:32px;touch-action:manipulation}
+.cmp-to-vote{display:block;width:100%;text-align:center;font-size:13px;color:#534AB7;background:#EEEDFE;border:0.5px solid #AFA9EC;border-radius:10px;padding:10px;cursor:pointer;margin-bottom:12px;min-height:44px;touch-action:manipulation}
+.cmp-to-vote:active{background:#dddcf5}
+.cmp-outer{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin-bottom:8px;align-items:center}
+.cmp-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;text-align:center;cursor:pointer;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}
+.cmp-card:active,.cmp-card:hover{border-color:#AFA9EC}
+.cmp-card.win{border:2px solid #7F77DD;background:#EEEDFE}
+.cmp-card.lose{opacity:.35}
+.cmp-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-tertiary);margin-bottom:5px}
+.cmp-img img{width:100%;height:100%;object-fit:contain}
+.vs{text-align:center;font-size:12px;font-weight:500;color:var(--color-text-tertiary);padding:4px}
+/* star */
+.star-row{display:flex;gap:10px;margin-bottom:1.5rem}
+.star{font-size:32px;cursor:pointer;color:#ddd;transition:color .1s;user-select:none;touch-action:manipulation}
+.star.lit{color:#F0A500}
+textarea{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:12px;font-size:15px;resize:vertical;min-height:80px;background:var(--color-background-primary);color:var(--color-text-primary)}
+button.nxt{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:12px 22px;font-size:15px;cursor:pointer;font-weight:500;min-height:48px;touch-action:manipulation}
+button.nxt:active{background:#534AB7}
+button.nxt:disabled{background:#ddd;color:#aaa;cursor:not-allowed}
+button.back-btn{background:transparent;border:0.5px solid #ccc;border-radius:8px;padding:12px 16px;font-size:15px;cursor:pointer;color:var(--color-text-secondary);min-height:48px;touch-action:manipulation}
+button.back-btn:active{background:var(--color-background-secondary)}
+/* results */
+.result-card{background:var(--color-background-primary);border:0.5px solid #ddd;border-radius:12px;padding:1rem;margin-bottom:12px}
+.result-title{font-size:11px;font-weight:500;margin-bottom:10px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em}
+.winner-box{background:#EEEDFE;border-radius:12px;padding:1rem;display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.winner-img{width:52px;height:52px;border-radius:8px;overflow:hidden;background:#fff;border:0.5px solid #AFA9EC;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.winner-img img{width:100%;height:100%;object-fit:contain}
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.metric{background:var(--color-background-secondary);border-radius:8px;padding:10px;text-align:center}
+.metric .ml{font-size:10px;color:var(--color-text-secondary)}
+.metric .mv{font-size:18px;font-weight:500;margin-top:2px}
+canvas{width:100%!important;max-height:220px}
+.logo-detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-bottom:10px}
+@media(max-width:400px){.logo-detail-grid{grid-template-columns:repeat(3,1fr)}}
+.lsc{border:0.5px solid #ddd;border-radius:10px;padding:7px;text-align:center;cursor:pointer;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}
+.lsc:active,.lsc:hover{border-color:#7F77DD;background:#EEEDFE}
+.lsc.active{border:1.5px solid #7F77DD;background:#EEEDFE}
+.lsc-img{width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px}
+.lsc-img img{width:100%;height:100%;object-fit:contain}
+.lsc-name{font-size:11px;font-weight:500;color:var(--color-text-primary)}
+.lsc-v{font-size:11px;color:#534AB7}
+.detail-panel{background:var(--color-background-secondary);border-radius:12px;padding:1rem;margin-top:8px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.bar-lbl{font-size:12px;color:var(--color-text-secondary);min-width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:7px;background:#eee;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;background:#7F77DD;transition:width .5s}
+.bar-pct{font-size:12px;font-weight:500;color:#534AB7;min-width:34px;text-align:right}
+.comment-item{padding:8px 0;border-bottom:0.5px solid #eee;font-size:13px;line-height:1.5}
+.comment-item:last-child{border-bottom:none}
+.comment-meta{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+.live-badge{font-size:10px;background:#EAF3DE;color:#3B6D11;padding:2px 7px;border-radius:8px;margin-left:4px}
+.status-bar{font-size:11px;color:var(--color-text-secondary);margin-bottom:1rem;display:flex;align-items:center;gap:4px}
+.fb-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#aaa;margin-right:4px;flex-shrink:0}
+.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;padding:1rem}
+</style>
 
+<!-- ADMIN LOCK OVERLAY -->
 <div class="overlay-bg" id="admin-overlay">
   <div class="lock-card">
-    <h3>Yönetim Paneli</h3>
+    <h2>Yönetim Paneli</h2>
+    <p>Yönetici şifresini girin.</p>
     <input type="password" id="admin-pass-inp" placeholder="Şifre" onkeydown="if(event.key==='Enter')chkAdmin()">
-    <button class="btn-p" onclick="chkAdmin()">GİRİŞ</button>
+    <div class="err-msg" id="admin-err">Yanlış şifre.</div>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button class="btn-o" onclick="closeOverlay('admin-overlay')">İptal</button>
+      <button class="btn-p" onclick="chkAdmin()">Gir</button>
+    </div>
   </div>
 </div>
 
 <div class="tab-bar">
   <button class="tab" id="tab-admin" onclick="tryAdmin()">Yönetim</button>
   <button class="tab active" id="tab-poll" onclick="switchTab('poll')">Anket</button>
-  <button class="tab" id="tab-results" onclick="switchTab('results')">Sonuçlar</button>
+  <button class="tab" id="tab-results" onclick="switchTab('results')">Sonuçlar <span class="live-badge">CANLI</span></button>
 </div>
 
+<!-- ADMIN -->
 <div class="view" id="view-admin">
-    <div id="fb-status" style="font-size:11px; margin-bottom:10px">Durum Bekleniyor...</div>
-    <div style="background:#eee; padding:15px; border-radius:10px; margin-bottom:1rem">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px">
-            <span style="font-size:14px; font-weight:600">Anket Açık:</span>
-            <input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked" checked>
-        </div>
-        <div style="display:flex; gap:5px">
-            <input type="password" id="admin-pass-set" placeholder="Yeni Şifre Belirle" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ccc">
-            <button class="btn-p" style="width:auto" onclick="setAndMaskPass()">Şifre Maskele</button>
-        </div>
-        <p style="font-size:10px; color:gray; margin-top:5px">⚠️ Maskeledikten sonra aşağıdan "AYARLARI KAYDET"e basmalısınız.</p>
+  <div class="status-bar" id="fb-status"><span class="fb-dot"></span>Bağlanıyor...</div>
+  <div class="info-box">Ayarlar ve logolar Firebase'e kaydedilir. Değişikliklerden sonra "Kaydet"e basın.</div>
+  <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Dil</span></div>
+  <div style="display:flex;gap:8px;margin-bottom:1rem">
+    <button class="btn-o" id="lb-tr" onclick="setLang('tr')" style="border-color:#7F77DD;color:#534AB7">Türkçe</button>
+    <button class="btn-o" id="lb-en" onclick="setLang('en')">English</button>
+  </div>
+  <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Anket Durumu</span></div>
+  <div class="toggle-row">
+    <label class="toggle"><input type="checkbox" id="poll-open-chk" checked onchange="cfg.pollOpen=this.checked"><span class="tslider"></span></label>
+    <span id="poll-status-lbl" style="font-size:13px;color:var(--color-text-secondary)">Anket açık</span>
+  </div>
+  <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Yönetici Şifresi</span></div>
+  <div class="pass-row">
+    <input type="password" id="admin-pass-set" placeholder="Yönetici şifresi">
+    <button class="btn-p" onclick="saveAdminPass()">Kaydet</button>
+  </div>
+  <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Sonuç Şifresi <span style="font-size:11px;font-weight:400">(opsiyonel)</span></span></div>
+  <div class="pass-row">
+    <input type="password" id="res-pass-set" placeholder="Boş = şifresiz">
+    <button class="btn-p" onclick="saveResPass()">Kaydet</button>
+  </div>
+  <div class="section-hd"><span class="section-title">Logo Sayısı</span></div>
+  <div class="logo-count-row">
+    <button class="count-btn" onclick="chgCount(-1)">−</button>
+    <span class="count-val" id="cnt-val">10</span>
+    <button class="count-btn" onclick="chgCount(1)">+</button>
+    <span style="font-size:12px;color:var(--color-text-secondary)">logo (2–20)</span>
+  </div>
+  <div class="section-hd">
+    <span class="section-title">Logo Görselleri</span>
+    <div style="display:flex;gap:6px">
+      <button class="btn-o" onclick="clearAll()">Temizle</button>
+      <button class="btn-p" id="save-btn" onclick="saveAdmin()">Kaydet</button>
     </div>
-    <div class="admin-grid" id="admin-grid"></div>
-    <button class="btn-p" id="save-btn" onclick="saveAdmin()">AYARLARI VE MASKELİ ŞİFREYİ KAYDET</button>
-    <button class="btn-o" onclick="clearVotes()" style="color:red; border-color:red; margin-top:10px">Oyları Sıfırla</button>
-</div>
-
-<div class="view active" id="view-poll">
-  <div id="poll-closed-box" style="display:none;text-align:center;padding:3rem"><h2>Anket Kapalı</h2></div>
-  <div id="poll-inner">
-    <h1>Okul Logosu Seçimi</h1>
-    <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
-    <div class="step active" id="s1"><p class="question">Cinsiyetin?</p><div class="options" id="opts-gender"></div><button class="btn-p" id="n1" onclick="go(2)" disabled>Devam Et</button></div>
-    <div class="step" id="s2"><p class="question">Sınıfın?</p><div class="options" id="opts-class"></div><div class="btn-row"><button class="btn-o" onclick="go(1)">Geri</button><button class="btn-p" id="n2" onclick="go(3)" disabled style="flex:1">Devam</button></div></div>
-    <div class="step" id="s3"><p class="question">Hangisi daha iyi?</p><p id="cmp-prog" style="text-align:center;font-size:12px;color:gray;margin-bottom:8px"></p><div class="cmp-outer" id="cmp-area"></div><div class="btn-row"><button class="btn-o" onclick="go(2)">Geri</button><button class="btn-p" id="n3" onclick="go(4)" disabled style="flex:1">Devam</button></div></div>
-    <div class="step" id="s4"><p class="question">Favori Logon?</p><div class="logo-grid" id="poll-logo-grid"></div><div class="btn-row"><button class="btn-o" onclick="go(3)">Geri</button><button class="btn-p" id="n4" onclick="go(5)" disabled style="flex:1">İleri</button></div></div>
-    <div class="step" id="s5"><p class="question">Neden bu seçim?</p><div class="options" id="opts-reason"></div><div class="btn-row"><button class="btn-o" onclick="go(4)">Geri</button><button class="btn-p" id="n5" onclick="go(6)" disabled style="flex:1">Son Adım</button></div></div>
-    <div class="step" id="s6"><p class="question">Puanla ve Bitir</p><div class="star-row"><span class="star" onclick="rateStar(1)">★</span><span class="star" onclick="rateStar(2)">★</span><span class="star" onclick="rateStar(3)">★</span><span class="star" onclick="rateStar(4)">★</span><span class="star" onclick="rateStar(5)">★</span></div><textarea id="yorum" placeholder="Notun..."></textarea><button class="btn-p" id="n6" onclick="submitPoll()" disabled style="background:#3B6D11; margin-top:10px">GÖNDER</button></div>
-    <div class="step" id="s7" style="text-align:center"><h2>Teşekkürler!</h2><button class="btn-p" onclick="location.reload()" style="margin-top:20px">Başa Dön</button></div>
+  </div>
+  <div class="admin-grid" id="admin-grid"></div>
+  <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1.5rem">Her karta tıklayarak logo ve forma görsellerini yükleyebilirsiniz.</div>
+  <div class="section-hd"><span class="section-title">Veri</span></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn-o" onclick="exportCSV()">CSV İndir</button>
+    <button class="btn-o" style="color:#A32D2D" onclick="if(confirm('Tüm oylar silinsin mi?'))clearVotes()">Oyları Sıfırla</button>
   </div>
 </div>
 
-<div class="view" id="view-results"><div id="results-inner" style="padding:10px"></div></div>
+<!-- POLL -->
+<div class="view active" id="view-poll">
+  <div id="poll-closed-box" style="display:none;text-align:center;padding:3rem 1rem">
+    <h2 style="font-size:18px;font-weight:500;margin-bottom:.5rem">Anket Kapalı</h2>
+    <p style="font-size:14px;color:var(--color-text-secondary)">Bu anket şu anda aktif değil.</p>
+  </div>
+  <div id="poll-inner">
+    <h1>Okul Logosu Anketi</h1>
+    <p class="subtitle">Logonu seç, sesini duyur!</p>
+    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:14%"></div></div>
+    <div class="step-label" id="step-lbl">Adım 1 / 7</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="step active" id="s1">
+      <p class="question">Cinsiyetin nedir?</p>
+      <div class="options" id="opts-gender"></div>
+      <div class="btn-row"><button class="nxt" id="n1" onclick="go(2)" disabled>Devam</button></div>
+    </div>
+    <div class="step" id="s2">
+      <p class="question">Kaçıncı sınıftasın?</p>
+      <div class="options" id="opts-class"></div>
+      <div class="btn-row"><button class="back-btn" onclick="go(1)">Geri</button><button class="nxt" id="n2" onclick="go(3)" disabled>Devam</button></div>
+    </div>
+
+    <!-- COMPARE -->
+    <div class="step" id="s3">
+      <p class="question">İkisinden hangisini tercih edersin?</p>
+      <div class="cmp-header">
+        <span class="cmp-prog-txt" id="cmp-prog"></span>
+        <button class="cmp-skip-btn" onclick="skipCmp()">Bu ikilide emin değilim</button>
+      </div>
+      <div class="cmp-outer" id="cmp-area"></div>
+      <button class="cmp-to-vote" onclick="go(4)" id="cmp-to-vote-btn">Karşılaştırmayı atlayıp logo seçimine geç →</button>
+      <div class="btn-row"><button class="back-btn" onclick="go(2)">Geri</button><button class="nxt" id="n3" onclick="go(4)" disabled>Devam</button></div>
+    </div>
+
+    <div class="step" id="s4">
+      <p class="question">En beğendiğin logoyu seç</p>
+      <div class="logo-grid" id="poll-logo-grid"></div>
+      <div class="btn-row"><button class="back-btn" onclick="go(3)">Geri</button><button class="nxt" id="n4" onclick="go(5)" disabled>Devam</button></div>
+    </div>
+    <div class="step" id="s5">
+      <p class="question">Bu logoyu seçmendeki en önemli neden?</p>
+      <div class="options" id="opts-reason"></div>
+      <div class="btn-row"><button class="back-btn" onclick="go(4)">Geri</button><button class="nxt" id="n5" onclick="go(6)" disabled>Devam</button></div>
+    </div>
+    <div class="step" id="s6">
+      <p class="question">Seçtiğin logoya kaç yıldız verirsin?</p>
+      <div class="star-row" id="stars">
+        <span class="star" onclick="rateStar(1)">&#9733;</span>
+        <span class="star" onclick="rateStar(2)">&#9733;</span>
+        <span class="star" onclick="rateStar(3)">&#9733;</span>
+        <span class="star" onclick="rateStar(4)">&#9733;</span>
+        <span class="star" onclick="rateStar(5)">&#9733;</span>
+      </div>
+      <p class="question" style="font-size:14px">Eklemek istediğin bir şey? <span style="font-weight:400;color:var(--color-text-secondary)">(isteğe bağlı)</span></p>
+      <textarea id="yorum" placeholder="Görüşünü yaz..."></textarea>
+      <div class="btn-row"><button class="back-btn" onclick="go(5)">Geri</button><button class="nxt" id="n6" onclick="submitPoll()" disabled>Gönder</button></div>
+    </div>
+    <div class="step" id="s7">
+      <p class="question" style="text-align:center;margin-bottom:.5rem">Teşekkürler!</p>
+      <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Oyun kaydedildi.</p>
+      <div class="btn-row" style="justify-content:center;gap:10px">
+        <button class="btn-o" onclick="resetPoll()">Yeni Anket</button>
+        <button class="btn-p" onclick="switchTab('results')">Sonuçları Gör</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="view" id="view-results">
+  <div class="lock-wrap" id="res-lock-wrap" style="display:none">
+    <div class="lock-card">
+      <h2>Sonuçlar Korumalı</h2>
+      <p>Şifreyi girin.</p>
+      <input type="password" id="res-lock-inp" placeholder="Şifre" onkeydown="if(event.key==='Enter')chkRes()">
+      <div class="err-msg" id="res-err">Yanlış şifre.</div>
+      <button class="btn-p" onclick="chkRes()" style="margin-top:.5rem;width:100%">Gir</button>
+    </div>
+  </div>
+  <div id="results-inner"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
-const FB_URL = 'https://firestore.googleapis.com/v1/projects/okul-logo-anketi/databases/(default)/documents';
+var FB='https://firestore.googleapis.com/v1/projects/okul-logo-anketi/databases/(default)/documents';
+var logos=[],votes=[],cfg={pollOpen:true,lang:'tr',pass:'',adminPass:'admin123',logoCount:10};
+var pdata={cinsiyet:null,sinif:null,logo:null,neden:null,yildiz:0,cmpWins:{}};
+var cmpPairs=[],cmpIdx=0,CMP_MAX=10;
+var adminOK=false,resOK=false,charts={},selLogo=null;
+var STEPS=7;
 
-// KRİTİK: Eğer veritabanında şifre yoksa admin123 varsayılan olsun.
-const DEFAULT_HASH = '240be518fabd2724ddb6f0403f5d59911211dc173595ad3042c1619623048997';
+/* ---- FIRESTORE REST ---- */
+function fbGet(p){return fetch(FB+'/'+p).then(function(r){return r.json();});}
+function fbSet(p,f){return fetch(FB+'/'+p+'?updateMask.fieldPaths='+Object.keys(f).join('&updateMask.fieldPaths='),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:f})}).then(function(r){return r.json();});}
+function fbAdd(col,f){return fetch(FB+'/'+col,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:f})}).then(function(r){return r.json();});}
+function fbDel(p){return fetch(FB+'/'+p,{method:'DELETE'});}
+function fbList(col){return fetch(FB+'/'+col).then(function(r){return r.json();});}
+function toFs(o){var f={};Object.entries(o).forEach(function(e){var v=e[1];if(v===null||v===undefined)f[e[0]]={nullValue:null};else if(typeof v==='boolean')f[e[0]]={booleanValue:v};else if(typeof v==='number')f[e[0]]={integerValue:String(v)};else f[e[0]]={stringValue:String(v)};});return f;}
+function fromFs(flds){var o={};if(!flds)return o;Object.entries(flds).forEach(function(e){var v=e[1];if(v.stringValue!==undefined)o[e[0]]=v.stringValue;else if(v.integerValue!==undefined)o[e[0]]=Number(v.integerValue);else if(v.booleanValue!==undefined)o[e[0]]=v.booleanValue;else if(v.nullValue!==undefined)o[e[0]]=null;});return o;}
+function setStatus(ok,msg){var el=document.getElementById('fb-status');el.innerHTML='<span class="fb-dot" style="background:'+(ok?'#3B6D11':'#A32D2D')+'"></span>'+msg;}
 
-let logos = [], votes = [], cfg = {pollOpen:true, adminPass: DEFAULT_HASH, logoCount:10};
-let pdata = {cinsiyet:null, sinif:null, logo:null, neden:null, yildiz:0, cmpWins:{}}, cmpPairs = [], cmpIdx = 0, adminOK = false;
+async function loadCfg(){
+  try{
+    var r=await fbGet('config/main');
+    if(r.fields){var d=fromFs(r.fields);cfg.pollOpen=d.pollOpen!==undefined?d.pollOpen:true;cfg.lang=d.lang||'tr';cfg.pass=d.pass||'';cfg.adminPass=d.adminPass||'admin123';cfg.logoCount=d.logoCount||10;}
+    var lr=await fbGet('config/logos');
+    if(lr.fields&&lr.fields.list){try{logos=JSON.parse(lr.fields.list.stringValue);}catch(e){logos=[];}}
+    while(logos.length<cfg.logoCount)logos.push({name:'Logo '+(logos.length+1),img:null,formaImg:null});
+    logos=logos.slice(0,cfg.logoCount);
+    setStatus(true,'Firebase bağlı');
+  }catch(e){setStatus(false,'Bağlantı hatası');}
+}
+async function saveCfgFb(){await fbSet('config/main',toFs({pollOpen:cfg.pollOpen,lang:cfg.lang,pass:cfg.pass,adminPass:cfg.adminPass,logoCount:cfg.logoCount}));updatePollStatus();}
+async function saveLogosFb(){await fbSet('config/logos',{list:{stringValue:JSON.stringify(logos)}});}
+async function addVoteFb(v){return fbAdd('votes',toFs(v));}
+async function loadVotes(){try{var r=await fbList('votes');votes=r.documents?r.documents.map(function(d){return fromFs(d.fields);}):[];}catch(e){votes=[];}}
 
-// --- GÜVENLİK (SHA-256) ---
-async function hashText(str) {
-    const msgBuffer = new TextEncoder().encode(str);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+function startLive(){setInterval(async function(){if(document.getElementById('view-results').classList.contains('active')){await loadVotes();renderResults();}},15000);}
+
+/* ---- TABS ---- */
+function switchTab(t){
+  ['admin','poll','results'].forEach(function(n){
+    document.getElementById('tab-'+n).classList.toggle('active',n===t);
+    document.getElementById('view-'+n).classList.toggle('active',n===t);
+  });
+  if(t==='poll'){applyLang();buildPollGrid();}
+  if(t==='results'){loadVotes().then(openResults);}
+}
+function tryAdmin(){
+  if(adminOK){switchTab('admin');return;}
+  document.getElementById('admin-pass-inp').value='';
+  document.getElementById('admin-err').style.display='none';
+  document.getElementById('admin-overlay').style.display='flex';
+}
+function chkAdmin(){
+  if(document.getElementById('admin-pass-inp').value===cfg.adminPass){adminOK=true;closeOverlay('admin-overlay');switchTab('admin');buildAdminGrid();}
+  else document.getElementById('admin-err').style.display='block';
+}
+function closeOverlay(id){document.getElementById(id).style.display='none';}
+
+/* ---- LANG ---- */
+var T={
+  tr:{gOpts:['Kız','Erkek','Belirtmek istemiyorum'],cOpts:['9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf'],rOpts:['Renk uyumu','Sadelik ve temizlik','Anlam ve sembol','Modern görünüm','Forma üzerindeki duruşu']},
+  en:{gOpts:['Girl','Boy','Prefer not to say'],cOpts:['9th Grade','10th Grade','11th Grade','12th Grade'],rOpts:['Color harmony','Simplicity','Meaning & symbol','Modern look','Uniform appearance']}
+};
+function setLang(l){
+  cfg.lang=l;
+  document.getElementById('lb-tr').style.cssText=l==='tr'?'border-color:#7F77DD;color:#534AB7':'';
+  document.getElementById('lb-en').style.cssText=l==='en'?'border-color:#7F77DD;color:#534AB7':'';
+}
+function applyLang(){
+  var t=T[cfg.lang]||T.tr;
+  function bOpts(id,arr,key){var c=document.getElementById(id);c.innerHTML='';arr.forEach(function(o){var b=document.createElement('button');b.className='opt-btn';b.textContent=o;b.onclick=function(){pick(b,key,o);};c.appendChild(b);});}
+  bOpts('opts-gender',t.gOpts,'cinsiyet');
+  bOpts('opts-class',t.cOpts,'sinif');
+  bOpts('opts-reason',t.rOpts,'neden');
+  updatePollStatus();
+}
+function updatePollStatus(){
+  var lbl=document.getElementById('poll-status-lbl'),chk=document.getElementById('poll-open-chk');
+  if(lbl)lbl.textContent=cfg.pollOpen?'Anket açık — öğrenciler oy kullanabilir':'Anket kapalı — yeni oy alınmıyor';
+  if(chk)chk.checked=cfg.pollOpen;
+  var ci=document.getElementById('poll-closed-box'),pi=document.getElementById('poll-inner');
+  if(ci&&pi){if(!cfg.pollOpen){ci.style.display='block';pi.style.display='none';}else{ci.style.display='none';pi.style.display='block';}}
 }
 
-async function chkAdmin() {
-    const input = document.getElementById('admin-pass-inp').value;
-    const hashedInput = await hashText(input);
-    
-    // Veritabanından çekilen (cfg.adminPass) ile senin yazdığının hash halini kıyasla
-    if(hashedInput === cfg.adminPass) {
-        adminOK = true;
-        document.getElementById('admin-overlay').style.display = 'none';
-        switchTab('admin');
-    } else {
-        alert('Hatalı Şifre!');
-    }
+/* ---- ADMIN GRID ---- */
+function buildAdminGrid(){
+  document.getElementById('cnt-val').textContent=cfg.logoCount;
+  var g=document.getElementById('admin-grid');g.innerHTML='';
+  logos.forEach(function(logo,i){
+    var c=document.createElement('div');c.className='admin-card'+(logo.img?' has-img':'');
+    c.innerHTML='<div class="img-box" onclick="trigUp('+i+',\'logo\')">'+(logo.img?'<img src="'+logo.img+'">':'<span>Logo yükle</span>')+'<div class="ov" style="position:absolute;inset:0;background:rgba(83,74,183,.15);display:none;align-items:center;justify-content:center;font-size:11px;color:#534AB7;font-weight:500">Değiştir</div></div><div class="img-type">Logo</div><div class="img-box" onclick="trigUp('+i+',\'forma\')">'+(logo.formaImg?'<img src="'+logo.formaImg+'">':'<span>Forma yükle</span>')+'<div class="ov" style="position:absolute;inset:0;background:rgba(83,74,183,.15);display:none;align-items:center;justify-content:center;font-size:11px;color:#534AB7;font-weight:500">Değiştir</div></div><div class="img-type">Forma</div><input class="logo-name-input" value="'+logo.name+'" onchange="logos['+i+'].name=this.value">'+(logo.img||logo.formaImg?'<button class="del-btn" onclick="clrLogo('+i+')">Temizle</button>':'');
+    g.appendChild(c);
+  });
+  document.getElementById('admin-pass-set').value=cfg.adminPass;
+  document.getElementById('res-pass-set').value=cfg.pass;
+  updatePollStatus();
+}
+function trigUp(i,t){var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){if(t==='logo')logos[i].img=ev.target.result;else logos[i].formaImg=ev.target.result;buildAdminGrid();};r.readAsDataURL(f);};inp.click();}
+function clrLogo(i){logos[i].img=null;logos[i].formaImg=null;buildAdminGrid();}
+function clearAll(){logos.forEach(function(l){l.img=null;l.formaImg=null;});buildAdminGrid();}
+function chgCount(d){var n=Math.min(20,Math.max(2,cfg.logoCount+d));cfg.logoCount=n;while(logos.length<n)logos.push({name:'Logo '+(logos.length+1),img:null,formaImg:null});logos=logos.slice(0,n);buildAdminGrid();}
+function saveAdminPass(){cfg.adminPass=document.getElementById('admin-pass-set').value||'admin123';saveCfgFb();alert('Yönetici şifresi kaydedildi.');}
+function saveResPass(){cfg.pass=document.getElementById('res-pass-set').value;saveCfgFb();alert('Sonuç şifresi kaydedildi.');}
+async function saveAdmin(){var b=document.getElementById('save-btn');b.textContent='Kaydediliyor...';b.disabled=true;await saveLogosFb();await saveCfgFb();b.textContent='Kaydedildi!';setTimeout(function(){b.textContent='Kaydet';b.disabled=false;},1500);}
+function exportCSV(){if(!votes.length){alert('Henüz oy yok.');return;}var h='Cinsiyet,Sinif,Logo,Neden,Yildiz,Yorum,Zaman\n';var rows=votes.map(function(v){return[v.cinsiyet,v.sinif,v.logo,v.neden,v.yildiz,'"'+(v.yorum||'').replace(/"/g,'""')+'"',v.zaman||''].join(',');}).join('\n');var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(h+rows);a.download='logo_anketi.csv';a.click();}
+async function clearVotes(){try{var r=await fbList('votes');if(r.documents){for(var d of r.documents){var nm=d.name.split('/').pop();await fbDel('votes/'+nm);}}votes=[];renderResults();alert('Oylar silindi.');}catch(e){alert('Hata: '+e.message);}}
+
+/* ---- POLL ---- */
+function buildPollGrid(){
+  var g=document.getElementById('poll-logo-grid');g.innerHTML='';
+  logos.forEach(function(logo){
+    var c=document.createElement('div');c.className='logo-card';
+    c.innerHTML='<div class="lc-img">'+(logo.img?'<img src="'+logo.img+'">':logo.name)+'</div><div class="lc-name">'+logo.name+'</div>';
+    c.onclick=function(){document.querySelectorAll('.logo-card').forEach(function(x){x.classList.remove('selected');});c.classList.add('selected');pdata.logo=logo.name;document.getElementById('n4').disabled=false;};
+    g.appendChild(c);
+  });
+  buildCmp();
 }
 
-async function setAndMaskPass() {
-    const newP = document.getElementById('admin-pass-set').value;
-    if(newP.length < 4) return alert('En az 4 karakter.');
-    cfg.adminPass = await hashText(newP);
-    alert('Şifre yeni haliyle maskelendi. Kalıcı olması için aşağıdaki butona basıp kaydedin.');
+/* max CMP_MAX pairs, shuffled */
+function buildCmp(){
+  cmpPairs=[];cmpIdx=0;pdata.cmpWins={};
+  for(var i=0;i<logos.length-1;i++)for(var j=i+1;j<logos.length;j++)cmpPairs.push([i,j]);
+  cmpPairs.sort(function(){return Math.random()-.5;});
+  cmpPairs=cmpPairs.slice(0,CMP_MAX);
+  renderCmpPair();
 }
 
-// --- FIREBASE ---
-const toFs = (o) => ({fields: Object.fromEntries(Object.entries(o).map(([k,v]) => [k, v===null?{nullValue:null}:typeof v==='boolean'?{booleanValue:v}:typeof v==='number'?{integerValue:String(v)}:{stringValue:String(v)}]))});
-const fromFs = (f) => Object.fromEntries(Object.entries(f || {}).map(([k,v]) => [k, v.stringValue ?? (v.integerValue ? Number(v.integerValue) : v.booleanValue)]));
+function renderCmpPair(){
+  var tot=cmpPairs.length;
+  var prog=document.getElementById('cmp-prog');
+  var skipBtn=document.getElementById('cmp-to-vote-btn');
 
-async function loadCfg() {
-    logos = Array.from({length: cfg.logoCount}, (_, i) => ({name:'Logo '+(i+1), img:null}));
-    try {
-        const m = await fetch(`${FB_URL}/config/main`).then(r => r.json());
-        if(m.fields) {
-            const d = fromFs(m.fields);
-            // Eğer veritabanında bir hash varsa onu kullan, yoksa varsayılanı (admin123 hash) tut
-            cfg.adminPass = d.adminPass || DEFAULT_HASH;
-            cfg.pollOpen = d.pollOpen ?? true;
-        }
-        const lRes = await fetch(`${FB_URL}/logos`).then(r => r.json());
-        if(lRes.documents) lRes.documents.forEach(doc => { const idx = parseInt(doc.name.split('_').pop()); if(idx < cfg.logoCount) logos[idx] = fromFs(doc.fields); });
-        document.getElementById('fb-status').innerHTML = "🟢 Veritabanı Maskeleme Aktif";
-    } catch(e) { document.getElementById('fb-status').innerHTML = "🔴 Bağlantı Sorunu"; }
-    updateUI();
+  /* show "skip to vote" after 3 comparisons */
+  if(cmpIdx>=3)skipBtn.style.display='block';
+  else skipBtn.style.display='none';
+
+  if(!tot||cmpIdx>=tot){
+    document.getElementById('n3').disabled=false;
+    prog.textContent='Tüm karşılaştırmalar tamamlandı! ✓';
+    document.getElementById('cmp-area').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1.5rem;font-size:14px;color:var(--color-text-secondary)">Devam edebilirsin.</div>';
+    skipBtn.style.display='none';
+    return;
+  }
+  prog.textContent=(cmpIdx+1)+' / '+tot+' karşılaştırma';
+  var p=cmpPairs[cmpIdx],a=logos[p[0]],b=logos[p[1]];
+  document.getElementById('cmp-area').innerHTML=
+    '<div class="cmp-card" id="ca" onclick="pickCmp(0)">'
+      +'<div class="cmp-img">'+(a.img?'<img src="'+a.img+'">':a.name)+'</div>'
+      +'<div style="font-size:12px;font-weight:500;margin-top:2px">'+a.name+'</div>'
+    +'</div>'
+    +'<div class="vs">VS</div>'
+    +'<div class="cmp-card" id="cb" onclick="pickCmp(1)">'
+      +'<div class="cmp-img">'+(b.img?'<img src="'+b.img+'">':b.name)+'</div>'
+      +'<div style="font-size:12px;font-weight:500;margin-top:2px">'+b.name+'</div>'
+    +'</div>';
+}
+function pickCmp(s){
+  var p=cmpPairs[cmpIdx],w=logos[p[s]].name;
+  pdata.cmpWins[w]=(pdata.cmpWins[w]||0)+1;
+  var ca=document.getElementById('ca'),cb=document.getElementById('cb');
+  (s===0?ca:cb).classList.add('win');(s===0?cb:ca).classList.add('lose');
+  setTimeout(function(){cmpIdx++;renderCmpPair();},350);
+}
+function skipCmp(){cmpIdx++;renderCmpPair();}
+
+function pick(btn,key,val){
+  btn.parentElement.querySelectorAll('.opt-btn').forEach(function(b){b.classList.remove('selected');});
+  btn.classList.add('selected');pdata[key]=val;
+  var sid=btn.closest('.step').id.replace('s','');
+  var nb=document.getElementById('n'+sid);if(nb)nb.disabled=false;
+}
+function rateStar(n){
+  pdata.yildiz=n;
+  document.querySelectorAll('.star').forEach(function(s,i){s.classList.toggle('lit',i<n);});
+  document.getElementById('n6').disabled=false;
+}
+function go(n){
+  document.querySelectorAll('#view-poll .step').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('s'+n).classList.add('active');
+  document.getElementById('prog').style.width=Math.round(n/STEPS*100)+'%';
+  document.getElementById('step-lbl').textContent='Adım '+n+' / '+STEPS;
+  window.scrollTo(0,0);
+}
+async function submitPoll(){
+  var entry={cinsiyet:pdata.cinsiyet,sinif:pdata.sinif,logo:pdata.logo,neden:pdata.neden,yildiz:pdata.yildiz,cmpWins:JSON.stringify(pdata.cmpWins),yorum:document.getElementById('yorum').value,zaman:new Date().toISOString()};
+  var btn=document.getElementById('n6');btn.textContent='Gönderiliyor...';btn.disabled=true;
+  try{await addVoteFb(entry);go(7);}
+  catch(e){btn.textContent='Gönder';btn.disabled=false;alert('Hata, tekrar deneyin.');}
+}
+function resetPoll(){
+  pdata={cinsiyet:null,sinif:null,logo:null,neden:null,yildiz:0,cmpWins:{}};
+  document.querySelectorAll('.opt-btn').forEach(function(b){b.classList.remove('selected');});
+  document.querySelectorAll('.logo-card').forEach(function(c){c.classList.remove('selected');});
+  document.querySelectorAll('.star').forEach(function(s){s.classList.remove('lit');});
+  document.getElementById('yorum').value='';
+  for(var i=1;i<=6;i++){var el=document.getElementById('n'+i);if(el){el.disabled=true;el.textContent=i===6?'Gönder':'Devam';}}
+  buildCmp();go(1);
 }
 
-async function saveAdmin() {
-    const b = document.getElementById('save-btn'); b.textContent = 'Kaydediliyor...'; b.disabled = true;
-    try {
-        await fetch(`${FB_URL}/config/main`, {method:'PATCH', body:JSON.stringify(toFs({adminPass: cfg.adminPass, pollOpen: cfg.pollOpen}))});
-        for(let i=0; i<logos.length; i++) await fetch(`${FB_URL}/logos/logo_${i}`, {method:'PATCH', body:JSON.stringify(toFs(logos[i]))});
-        alert('Yeni maskeli şifre ve ayarlar veritabanına işlendi!');
-    } catch(e) { alert('Hata!'); }
-    b.textContent = 'AYARLARI VE MASKELİ ŞİFREYİ KAYDET'; b.disabled = false;
+/* ---- RESULTS ---- */
+function openResults(){
+  if(cfg.pass&&!resOK){document.getElementById('res-lock-wrap').style.display='flex';document.getElementById('results-inner').innerHTML='';}
+  else{document.getElementById('res-lock-wrap').style.display='none';renderResults();}
+}
+function chkRes(){
+  if(document.getElementById('res-lock-inp').value===cfg.pass){resOK=true;document.getElementById('res-lock-wrap').style.display='none';renderResults();}
+  else document.getElementById('res-err').style.display='block';
 }
 
-// --- DİĞER FONKSİYONLAR ---
-function trigUp(i) {
-    const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
-    inp.onchange = e => {
-        const f = e.target.files[0]; if(!f) return;
-        const r = new FileReader();
-        r.onload = ev => {
-            const img = new Image();
-            img.onload = () => {
-                const cvs = document.createElement('canvas'); const max = 400; let w=img.width, h=img.height;
-                if(w>h) { if(w>max){ h*=max/w; w=max; } } else { if(h>max){ w*=max/h; h=max; } }
-                cvs.width=w; cvs.height=h;
-                cvs.getContext('2d').drawImage(img,0,0,w,h);
-                logos[i].img = cvs.toDataURL('image/jpeg', 0.7); buildAdminGrid();
-            };
-            img.src = ev.target.result;
-        };
-        r.readAsDataURL(f);
+var pal=['#7F77DD','#5DCAA5','#D85A30','#378ADD','#BA7517','#D4537E','#639922','#E24B4A','#888780','#534AB7','#1D9E75','#F09595'];
+
+function renderResults(){
+  var el=document.getElementById('results-inner');
+  var n=votes.length;
+  if(n===0){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--color-text-secondary)">Henüz oy yok.</div>';return;}
+  function cnt(key){var m={};votes.forEach(function(v){if(v[key])m[v[key]]=(m[v[key]]||0)+1;});return m;}
+  var lm=cnt('logo'),top=Object.entries(lm).sort(function(a,b){return b[1]-a[1];})[0]||['—',0];
+  var topL=logos.find(function(l){return l.name===top[0];})||{};
+  var avgS=(votes.reduce(function(a,v){return a+(Number(v.yildiz)||0);},0)/n).toFixed(1);
+  var cmpT={};
+  votes.forEach(function(v){if(v.cmpWins){try{var w=JSON.parse(v.cmpWins);Object.entries(w).forEach(function(e){cmpT[e[0]]=(cmpT[e[0]]||0)+Number(e[1]);});}catch(er){}}});
+  var cmpTop=Object.entries(cmpT).sort(function(a,b){return b[1]-a[1];})[0];
+
+  el.innerHTML=
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
+      +'<span style="font-size:13px;font-weight:500">Sonuçlar</span>'
+      +'<span style="font-size:11px;background:#EAF3DE;color:#3B6D11;padding:3px 9px;border-radius:8px">Canlı · '+n+' katılımcı</span>'
+    +'</div>'
+    +'<div class="winner-box"><div class="winner-img">'+(topL.img?'<img src="'+topL.img+'">':'')+'</div>'
+    +'<div><div style="font-size:11px;color:#534AB7">En çok oy alan logo</div><div style="font-size:16px;font-weight:500;color:#3C3489">'+top[0]+'</div><div style="font-size:12px;color:#7F77DD;margin-top:2px">'+top[1]+' oy</div></div></div>'
+    +'<div class="metric-grid"><div class="metric"><div class="ml">Toplam</div><div class="mv">'+n+'</div></div><div class="metric"><div class="ml">Ort. Puan</div><div class="mv">'+avgS+'</div></div><div class="metric"><div class="ml">Karş. Lideri</div><div class="mv" style="font-size:11px;line-height:1.3">'+(cmpTop?cmpTop[0]:'—')+'</div></div></div>'
+    +'<div class="result-card"><div class="result-title">Logo Bazında Detay</div><div class="logo-detail-grid" id="ldg"></div><div id="ldp"></div></div>'
+    +'<div class="result-card"><div class="result-title">Logo Oy Dağılımı</div><canvas id="ch-logo"></canvas></div>'
+    +'<div class="result-card"><div class="result-title">Cinsiyete Göre</div><canvas id="ch-gender"></canvas></div>'
+    +'<div class="result-card"><div class="result-title">Sınıfa Göre</div><canvas id="ch-class"></canvas></div>'
+    +'<div class="result-card"><div class="result-title">Tercih Nedenleri</div><canvas id="ch-reason"></canvas></div>'
+    +(Object.keys(cmpT).length?'<div class="result-card"><div class="result-title">Karşılaştırma Sonuçları</div><canvas id="ch-cmp"></canvas></div>':'')
+    +'<div class="result-card"><div class="result-title">Yorumlar</div><div id="clist"></div></div>'
+    +'<div class="btn-row"><button class="btn-o" onclick="exportCSV()">CSV İndir</button></div>';
+
+  var ldg=document.getElementById('ldg');
+  logos.forEach(function(logo){
+    var vc=lm[logo.name]||0;
+    var c=document.createElement('div');c.className='lsc';
+    c.innerHTML='<div class="lsc-img">'+(logo.img?'<img src="'+logo.img+'">':logo.name)+'</div><div class="lsc-name">'+logo.name+'</div><div class="lsc-v">'+vc+' oy</div>';
+    c.onclick=function(){
+      document.querySelectorAll('.lsc').forEach(function(x){x.classList.remove('active');});
+      if(selLogo===logo.name){selLogo=null;document.getElementById('ldp').innerHTML='';return;}
+      selLogo=logo.name;c.classList.add('active');renderLogoDetail(logo.name,cmpT);
     };
-    inp.click();
+    ldg.appendChild(c);
+  });
+
+  function mkChart(id,type,labels,data){
+    var ctx=document.getElementById(id);if(!ctx)return;
+    if(charts[id])try{charts[id].destroy();}catch(e){}
+    charts[id]=new Chart(ctx,{type:type,data:{labels:labels,datasets:[{data:data,backgroundColor:pal.slice(0,labels.length),borderWidth:0}]},options:{responsive:true,plugins:{legend:{display:type==='doughnut',position:'right',labels:{font:{size:11},boxWidth:10}}},scales:type==='bar'?{y:{beginAtZero:true,ticks:{stepSize:1,font:{size:10}}},x:{ticks:{font:{size:10},maxRotation:35}}}:{}}});
+  }
+  function mkLogoChart(id,labels,data){
+    var ctx=document.getElementById(id);if(!ctx)return;
+    if(charts[id])try{charts[id].destroy();}catch(e){}
+    var imgs=labels.map(function(name){var l=logos.find(function(x){return x.name===name;});if(l&&l.img){var im=new Image();im.src=l.img;return im;}return null;});
+    var plugin={id:'lp',afterDraw:function(ch){var ax=ch.scales.x,bt=ch.chartArea.bottom,c2=ch.ctx;ax.ticks.forEach(function(_,i){var x=ax.getPixelForTick(i),im=imgs[i];if(im&&im.complete&&im.naturalWidth)c2.drawImage(im,x-10,bt+4,20,20);});}};
+    charts[id]=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[{data:data,backgroundColor:pal.slice(0,labels.length),borderWidth:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,font:{size:10}}},x:{ticks:{font:{size:10},maxRotation:35}}}},plugins:[plugin]});
+  }
+
+  var le=Object.entries(lm).sort(function(a,b){return b[1]-a[1];});
+  mkLogoChart('ch-logo',le.map(function(e){return e[0];}),le.map(function(e){return e[1];}));
+  var ge=Object.entries(cnt('cinsiyet'));mkChart('ch-gender','doughnut',ge.map(function(e){return e[0];}),ge.map(function(e){return e[1];}));
+  var ce=Object.entries(cnt('sinif'));mkChart('ch-class','bar',ce.map(function(e){return e[0];}),ce.map(function(e){return e[1];}));
+  var ne=Object.entries(cnt('neden')).sort(function(a,b){return b[1]-a[1];});mkChart('ch-reason','bar',ne.map(function(e){return e[0];}),ne.map(function(e){return e[1];}));
+  if(Object.keys(cmpT).length){var cme=Object.entries(cmpT).sort(function(a,b){return b[1]-a[1];});mkLogoChart('ch-cmp',cme.map(function(e){return e[0];}),cme.map(function(e){return e[1];}));}
+
+  var cl=document.getElementById('clist');
+  var commented=votes.filter(function(v){return v.yorum&&v.yorum.trim();});
+  if(!commented.length)cl.innerHTML='<div style="font-size:13px;color:var(--color-text-secondary)">Yorum yok.</div>';
+  else commented.forEach(function(v){var l=logos.find(function(x){return x.name===v.logo;})||{};cl.innerHTML+='<div class="comment-item"><div class="comment-meta">'+(l.img?'<img src="'+l.img+'" style="width:14px;height:14px;object-fit:contain;border-radius:2px;vertical-align:middle;margin-right:3px">':'')+v.logo+' · '+v.sinif+' · '+v.cinsiyet+' · '+'★'.repeat(Number(v.yildiz)||0)+'</div>'+v.yorum+'</div>';});
 }
 
-function updateUI() {
-    document.getElementById('poll-closed-box').style.display = cfg.pollOpen ? 'none' : 'block';
-    document.getElementById('poll-inner').style.display = cfg.pollOpen ? 'block' : 'none';
-    const fill = (id, arr, key, nId) => {
-        const c = document.getElementById(id); if(!c) return; c.innerHTML = '';
-        arr.forEach(t => {
-            const b = document.createElement('button'); b.className='opt-btn'; b.textContent=t;
-            b.onclick = () => { c.querySelectorAll('.opt-btn').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); pdata[key]=t; document.getElementById(nId).disabled = false; };
-            c.appendChild(b);
-        });
-    };
-    fill('opts-gender', ['Kız','Erkek','Diğer'], 'cinsiyet', 'n1');
-    fill('opts-class', ['9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf'], 'sinif', 'n2');
-    fill('opts-reason', ['Renk Uyumu','Sadelik ve Temizlik','Modern Görünüm','Anlamlılık'], 'neden', 'n5');
-    const g = document.getElementById('poll-logo-grid'); g.innerHTML = '';
-    logos.filter(l=>l.img).forEach(l => {
-        const d = document.createElement('div'); d.className='logo-card';
-        d.innerHTML = `<div class="lc-img"><img src="${l.img}"></div><p style="font-size:11px;margin-top:5px">${l.name}</p>`;
-        d.onclick = () => { document.querySelectorAll('.logo-card').forEach(x=>x.classList.remove('selected')); d.classList.add('selected'); pdata.logo = l.name; document.getElementById('n4').disabled = false; };
-        g.appendChild(d);
-    });
-    buildCmp(); buildAdminGrid();
+function renderLogoDetail(name,cmpT){
+  var panel=document.getElementById('ldp');
+  var lv=votes.filter(function(v){return v.logo===name;});
+  var n=lv.length,logo=logos.find(function(l){return l.name===name;})||{};
+  if(n===0){panel.innerHTML='<div style="padding:1rem;text-align:center;font-size:13px;color:var(--color-text-secondary)">Bu logo için henüz oy yok.</div>';return;}
+  function cntBy(key){var m={};lv.forEach(function(v){if(v[key])m[v[key]]=(m[v[key]]||0)+1;});return m;}
+  function bars(map){return Object.entries(map).sort(function(a,b){return b[1]-a[1];}).map(function(e){var pct=Math.round(e[1]/n*100);return '<div class="bar-row"><div class="bar-lbl">'+e[0]+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div><div class="bar-pct">'+pct+'%</div></div>';}).join('');}
+  var avgS=(lv.reduce(function(a,v){return a+(Number(v.yildiz)||0);},0)/n).toFixed(1);
+  var cmpW=cmpT&&cmpT[name]?cmpT[name]:0;
+  panel.innerHTML='<div class="detail-panel"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'+(logo.img?'<img src="'+logo.img+'" style="width:42px;height:42px;object-fit:contain;border-radius:6px;border:0.5px solid #ddd">':'')+(logo.formaImg?'<img src="'+logo.formaImg+'" style="width:42px;height:42px;object-fit:contain;border-radius:6px;border:0.5px solid #ddd">':'')+'<div><div style="font-size:14px;font-weight:500">'+name+'</div><div style="font-size:12px;color:var(--color-text-secondary)">'+n+' oy · Ort. '+avgS+' ★ · Karş. '+cmpW+' galibiyet</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div><div style="font-size:10px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase">Cinsiyet</div>'+bars(cntBy('cinsiyet'))+'</div><div><div style="font-size:10px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase">Sınıf</div>'+bars(cntBy('sinif'))+'</div></div><div style="margin-top:10px"><div style="font-size:10px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase">Tercih Nedeni</div>'+bars(cntBy('neden'))+'</div></div>';
 }
 
-function buildCmp() {
-    cmpPairs = []; cmpIdx = 0; const act = logos.filter(l=>l.img);
-    for(let i=0; i<act.length; i++) for(let j=i+1; j<act.length; j++) cmpPairs.push([act[i], act[j]]);
-    cmpPairs.sort(()=>Math.random()-0.5); renderCmp();
-}
-
-function renderCmp() {
-    const c = document.getElementById('cmp-area'); const act = logos.filter(l => l.img);
-    if(act.length < 2) return c.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:gray">En az 2 logo yüklenmeli.</p>';
-    if(cmpIdx >= cmpPairs.length || cmpIdx >= 10) { c.innerHTML = '<div style="grid-column:1/-1;text-align:center;background:#EEEDFE;padding:1rem;border-radius:10px;color:var(--p-dark)">Karşılaştırmalar Tamamlandı.</div>'; document.getElementById('n3').disabled = false; return; }
-    const p = cmpPairs[cmpIdx]; document.getElementById('cmp-prog').textContent = `${cmpIdx+1} / ${Math.min(cmpPairs.length, 10)}`;
-    c.innerHTML = `<div class="cmp-card" onclick="pickCmp('${p[0].name}')"><div class="cmp-img"><img src="${p[0].img}"></div><p style="font-size:11px">${p[0].name}</p></div><div style="font-weight:bold;color:#aaa">VS</div><div class="cmp-card" onclick="pickCmp('${p[1].name}')"><div class="cmp-img"><img src="${p[1].img}"></div><p style="font-size:11px">${p[1].name}</p></div>`;
-}
-
-function pickCmp(n) { pdata.cmpWins[n] = (pdata.cmpWins[n]||0)+1; cmpIdx++; renderCmp(); }
-function rateStar(n) { pdata.yildiz=n; document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('lit', i<n)); document.getElementById('n6').disabled=false; }
-function go(n) { document.querySelectorAll('.step').forEach(s=>s.classList.remove('active')); document.getElementById('s'+n).classList.add('active'); document.getElementById('prog').style.width = (n/7*100)+'%'; window.scrollTo(0,0); }
-
-async function submitPoll() {
-    const b = document.getElementById('n6'); b.disabled = true;
-    try { const entry = {...pdata, cmpWins: JSON.stringify(pdata.cmpWins), yorum: document.getElementById('yorum').value, zaman: new Date().toISOString()}; await fetch(`${FB_URL}/votes`, {method:'POST', body:JSON.stringify(toFs(entry))}); go(7); } catch(e) { alert('Hata!'); b.disabled = false; }
-}
-
-function buildAdminGrid() {
-    const g = document.getElementById('admin-grid'); if(!g) return; g.innerHTML = '';
-    logos.forEach((l, i) => { const d = document.createElement('div'); d.className='admin-card'; d.innerHTML = `<div class="img-box" onclick="trigUp(${i})">${l.img?`<img src="${l.img}">`:'Seç'}</div><input value="${l.name}" onchange="logos[${i}].name=this.value" class="logo-name-input">`; g.appendChild(d); });
-}
-
-function tryAdmin() { document.getElementById('admin-overlay').style.display='flex'; }
-function switchTab(t) { ['admin','poll','results'].forEach(v=>{ document.getElementById('tab-'+v).classList.toggle('active', v===t); document.getElementById('view-'+v).classList.toggle('active', v===t); }); if(t==='results') renderResults(); }
-
-async function renderResults() {
-    const target = document.getElementById('results-inner'); target.innerHTML = '<p style="text-align:center; padding:2rem">Yükleniyor...</p>';
-    try {
-        const res = await fetch(`${FB_URL}/votes`); const data = await res.json();
-        const v = data.documents ? data.documents.map(d => fromFs(d.fields)) : [];
-        if(!v.length) return target.innerHTML = "<p style='text-align:center'>Henüz oy yok.</p>";
-        const counts = (k) => { let m = {}; v.forEach(x => { if(x[k]) m[x[k]] = (m[x[k]]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]); };
-        const logoStats = counts('logo'), genderStats = counts('cinsiyet'), classStats = counts('sinif'), reasonStats = counts('neden');
-        const avgStar = (v.reduce((a,b)=>a+(b.yildiz||0),0)/v.length).toFixed(1);
-        target.innerHTML = `<div class="metric-grid"><div class="metric"><span>Toplam Oy</span><b>${v.length}</b></div><div class="metric"><span>Ort. Puan</span><b>${avgStar} ★</b></div><div class="metric"><span>Katılım</span><b>%100</b></div></div><div class="res-card"><div class="res-title">En Sevilenler</div><canvas id="c1"></canvas></div><div class="res-card"><div class="res-title">Cinsiyet</div><canvas id="c2"></canvas></div><div class="res-card"><div class="res-title">Sınıf</div><canvas id="c3"></canvas></div><div class="res-card"><div class="res-title">Yorumlar</div><div id="cmt"></div></div>`;
-        const mkB = (id, s, color) => { new Chart(document.getElementById(id), { type:'bar', data:{ labels:s.map(x=>x[0]), datasets:[{data:s.map(x=>x[1]), backgroundColor:color}] }, options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}} }); };
-        mkB('c1', logoStats, '#7F77DD'); mkB('c3', classStats, '#534AB7');
-        new Chart(document.getElementById('c2'), { type:'doughnut', data:{ labels:genderStats.map(x=>x[0]), datasets:[{data:genderStats.map(x=>x[1]), backgroundColor:['#FF6384','#36A2EB','#FFCE56']}] } });
-        const cList = document.getElementById('cmt'); v.filter(x => x.yorum && x.yorum.trim()).forEach(x => { cList.innerHTML += `<div class="comment-box"><div style="font-size:10px;color:gray">${x.logo} · ${x.sinif}</div>${x.yorum}</div>`; });
-    } catch(e) { target.innerHTML = "Hata oluştu."; }
-}
-
-async function clearVotes() { if(confirm('Tüm oylar silinecek!')) { const r = await fetch(`${FB_URL}/votes`).then(r=>r.json()); if(r.documents) for(let d of r.documents) await fetch(`https://firestore.googleapis.com/v1/${d.name}`, {method:'DELETE'}); location.reload(); } }
-
-window.onload = loadCfg;
+(async function(){
+  await loadCfg();
+  await loadVotes();
+  applyLang();
+  buildPollGrid();
+  startLive();
+})();
 </script>
-</body>
-</html>
