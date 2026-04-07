@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FSMAL Okul Logosu Anketi Pro</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
-    <script src="https://openfpcdn.io/fingerprintjs/v4/i.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <style>
         /* SİZİN ORİJİNAL STİLLERİNİZ */
-        *{box-sizing:border-box;margin:0;padding:0}html,body{font-family:var(--font-sans,sans-serif);color:var(--color-text-primary);background:transparent;-webkit-tap-highlight-color:transparent}body{padding:.75rem}.tab-bar{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:0.5px solid var(--color-border-tertiary);overflow-x:auto;-webkit-overflow-scrolling:touch}.tab-bar::-webkit-scrollbar{display:none}.tab{padding:10px 13px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:400;white-space:nowrap;-webkit-tap-highlight-color:transparent}.tab.active{color:#534AB7;border-bottom:2px solid #7F77DD;font-weight:500}.view{display:none}.view.active{display:block}.btn-p{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;cursor:pointer;font-weight:500;min-height:44px;touch-action:manipulation}.btn-p:active{background:#534AB7}.btn-o{background:transparent;border:0.5px solid #ccc;border-radius:8px;padding:10px 14px;font-size:14px;cursor:pointer;color:var(--color-text-secondary);min-height:44px;touch-action:manipulation}.btn-o:active{background:var(--color-background-secondary)}.btn-row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.section-title{font-size:15px;font-weight:500}.info-box{background:var(--color-background-secondary);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.5}.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:1rem}@media(max-width:480px){.admin-grid{grid-template-columns:repeat(2,1fr)}}.admin-card{border:0.5px solid #ddd;border-radius:12px;padding:9px;background:var(--color-background-primary);text-align:center}.admin-card.has-img{border-color:#AFA9EC}.img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--color-background-secondary);border:0.5px solid #ddd;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px;cursor:pointer;position:relative;min-height:60px}.img-box img{width:100%;height:100%;object-fit:contain}.img-box:active .ov,.img-box:hover .ov{display:flex!important}.img-type{font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px}.logo-name-input{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:6px 7px;font-size:12px;margin-top:4px;background:var(--color-background-primary);color:var(--color-text-primary)}.del-btn{font-size:11px;color:#A32D2D;background:transparent;border:none;cursor:pointer;padding:4px;margin-top:3px;min-height:32px}.logo-count-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}.count-btn{width:36px;height:36px;border:0.5px solid #ccc;border-radius:8px;background:transparent;cursor:pointer;font-size:18px;color:var(--color-text-primary);display:flex;align-items:center;justify-content:center;line-height:1;touch-action:manipulation;min-height:36px}.count-btn:active{background:var(--color-background-secondary)}.count-val{font-size:15px;font-weight:500;min-width:24px;text-align:center}.toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}.toggle{position:relative;width:44px;height:24px;flex-shrink:0}.toggle input{opacity:0;width:0;height:0;position:absolute}.tslider{position:absolute;inset:0;background:#ccc;border-radius:12px;cursor:pointer;transition:.2s}.tslider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}.toggle input:checked+.tslider{background:#7F77DD}.toggle input:checked+.tslider:before{transform:translateX(20px)}.pass-row{display:flex;gap:8px;margin-bottom:1rem;align-items:center}.pass-row input{flex:1;border:0.5px solid #ccc;border-radius:8px;padding:10px;font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary);min-height:44px}.lock-wrap{min-height:260px;display:flex;align-items:center;justify-content:center;padding:1rem}.lock-card{background:var(--color-background-primary);border:0.5px solid #ddd;border-radius:16px;padding:1.75rem 1.5rem;text-align:center;max-width:320px;width:100%}.lock-card h2{font-size:17px;font-weight:500;margin-bottom:.4rem}.lock-card p{font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem}.lock-card input{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:12px;font-size:16px;background:var(--color-background-primary);color:var(--color-text-primary);text-align:center;margin-bottom:.75rem;min-height:44px}.err-msg{font-size:12px;color:#A32D2D;margin-bottom:.6rem;display:none}/* poll */h1{font-size:22px;font-weight:500;margin-bottom:4px;text-align:center}.subtitle{font-size:13px;color:var(--color-text-secondary);text-align:center;margin-bottom:1.25rem}.step{display:none}.step.active{display:block}.progress-bar{width:100%;height:5px;background:#eee;border-radius:4px;margin-bottom:1.25rem}.progress-fill{height:5px;border-radius:4px;background:#7F77DD;transition:width .4s}.step-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:1.25rem;text-align:right}.question{font-size:16px;font-weight:500;margin-bottom:1rem;line-height:1.4}.options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}.opt-btn{background:var(--color-background-primary);border:0.5px solid #ccc;border-radius:10px;padding:14px 16px;font-size:15px;color:var(--color-text-primary);cursor:pointer;text-align:left;transition:all .15s;min-height:52px;touch-action:manipulation;line-height:1.3}.opt-btn:active,.opt-btn:hover{background:var(--color-background-secondary)}.opt-btn.selected{border:2px solid #7F77DD;background:#EEEDFE;color:#3C3489}.logo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem}@media(max-width:400px){.logo-grid{grid-template-columns:repeat(2,1fr)}}.logo-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;cursor:pointer;text-align:center;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}.logo-card:active,.logo-card:hover{border-color:#AFA9EC}.logo-card.selected{border:2px solid #7F77DD;background:#EEEDFE}.lc-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-tertiary)}.lc-img img{width:100%;height:100%;object-fit:contain}.lc-name{font-size:12px;font-weight:500;margin-top:6px}.cmp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px}.cmp-prog-txt{font-size:12px;color:var(--color-text-secondary)}.cmp-skip-btn{font-size:12px;color:#534AB7;background:transparent;border:0.5px solid #AFA9EC;border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap;min-height:32px;touch-action:manipulation}.cmp-to-vote{display:block;width:100%;text-align:center;font-size:13px;color:#534AB7;background:#EEEDFE;border:0.5px solid #AFA9EC;border-radius:10px;padding:10px;cursor:pointer;margin-bottom:12px;min-height:44px;touch-action:manipulation}.cmp-to-vote:active{background:#dddcf5}.cmp-outer{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin-bottom:8px;align-items:center}.cmp-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;text-align:center;cursor:pointer;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}.cmp-card:active,.cmp-card:hover{border-color:#AFA9EC}.cmp-card.win{border:2px solid #7F77DD;background:#EEEDFE}.cmp-card.lose{opacity:.35}.cmp-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-tertiary);margin-bottom:5px}.cmp-img img{width:100%;height:100%;object-fit:contain}.vs{text-align:center;font-size:12px;font-weight:500;color:var(--color-text-tertiary);padding:4px}.star-row{display:flex;gap:10px;margin-bottom:1.5rem}.star{font-size:32px;cursor:pointer;color:#ddd;transition:color .1s;user-select:none;touch-action:manipulation}.star.lit{color:#F0A500}textarea{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:12px;font-size:15px;resize:vertical;min-height:80px;background:var(--color-background-primary);color:var(--color-text-primary)}button.nxt{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:12px 22px;font-size:15px;cursor:pointer;font-weight:500;min-height:48px;touch-action:manipulation}button.nxt:active{background:#534AB7}button.nxt:disabled{background:#ddd;color:#aaa;cursor:not-allowed}button.back-btn{background:transparent;border:0.5px solid #ccc;border-radius:8px;padding:12px 16px;font-size:15px;cursor:pointer;color:var(--color-text-secondary);min-height:48px;touch-action:manipulation}button.back-btn:active{background:var(--color-background-secondary)}.result-card{background:var(--color-background-primary);border:0.5px solid #ddd;border-radius:12px;padding:1rem;margin-bottom:12px}.result-title{font-size:11px;font-weight:500;margin-bottom:10px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em}.winner-box{background:#EEEDFE;border-radius:12px;padding:1rem;display:flex;align-items:center;gap:12px;margin-bottom:12px}.winner-img{width:52px;height:52px;border-radius:8px;overflow:hidden;background:#fff;border:0.5px solid #AFA9EC;flex-shrink:0;display:flex;align-items:center;justify-content:center}.winner-img img{width:100%;height:100%;object-fit:contain}.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.metric{background:var(--color-background-secondary);border-radius:8px;padding:10px;text-align:center}.metric .ml{font-size:10px;color:var(--color-text-secondary)}.metric .mv{font-size:18px;font-weight:500;margin-top:2px}canvas{width:100%!important;max-height:220px}.logo-detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-bottom:10px}@media(max-width:400px){.logo-detail-grid{grid-template-columns:repeat(3,1fr)}}.lsc{border:0.5px solid #ddd;border-radius:10px;padding:7px;text-align:center;cursor:pointer;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}.lsc:active,.lsc:hover{border-color:#7F77DD;background:#EEEDFE}.lsc.active{border:1.5px solid #7F77DD;background:#EEEDFE}.lsc-img{width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px}.lsc-img img{width:100%;height:100%;object-fit:contain}.lsc-name{font-size:11px;font-weight:500;color:var(--color-text-primary)}.lsc-v{font-size:11px;color:#534AB7}.detail-panel{background:var(--color-background-secondary);border-radius:12px;padding:1rem;margin-top:8px}.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}.bar-lbl{font-size:12px;color:var(--color-text-secondary);min-width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar-track{flex:1;height:7px;background:#eee;border-radius:4px;overflow:hidden}.bar-fill{height:100%;border-radius:4px;background:#7F77DD;transition:width .5s}.bar-pct{font-size:12px;font-weight:500;color:#534AB7;min-width:34px;text-align:right}.comment-item{padding:8px 0;border-bottom:0.5px solid #eee;font-size:13px;line-height:1.5}.comment-item:last-child{border-bottom:none}.comment-meta{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}.live-badge{font-size:10px;background:#EAF3DE;color:#3B6D11;padding:2px 7px;border-radius:8px;margin-left:4px}.status-bar{font-size:11px;color:var(--color-text-secondary);margin-bottom:1rem;display:flex;align-items:center;gap:4px}.fb-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#aaa;margin-right:4px;flex-shrink:0}.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;padding:1rem}
+        *{box-sizing:border-box;margin:0;padding:0}html,body{font-family:var(--font-sans,sans-serif);color:var(--color-text-primary);background:transparent;-webkit-tap-highlight-color:transparent}body{padding:.75rem}.tab-bar{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:0.5px solid var(--color-border-tertiary);overflow-x:auto;-webkit-overflow-scrolling:touch}.tab-bar::-webkit-scrollbar{display:none}.tab{padding:10px 13px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:400;white-space:nowrap;-webkit-tap-highlight-color:transparent}.tab.active{color:#534AB7;border-bottom:2px solid #7F77DD;font-weight:500}.view{display:none}.view.active{display:block}.btn-p{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;cursor:pointer;font-weight:500;min-height:44px;touch-action:manipulation}.btn-p:active{background:#534AB7}.btn-o{background:transparent;border:0.5px solid #ccc;border-radius:8px;padding:10px 14px;font-size:14px;cursor:pointer;color:var(--color-text-secondary);min-height:44px;touch-action:manipulation}.btn-o:active{background:var(--color-background-secondary)}.btn-row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.section-title{font-size:15px;font-weight:500}.info-box{background:var(--color-background-secondary);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.5}.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:1rem}@media(max-width:480px){.admin-grid{grid-template-columns:repeat(2,1fr)}}.admin-card{border:0.5px solid #ddd;border-radius:12px;padding:9px;background:var(--color-background-primary);text-align:center}.admin-card.has-img{border-color:#AFA9EC}.img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--color-background-secondary);border:0.5px solid #ddd;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px;cursor:pointer;position:relative;min-height:60px}.img-box img{width:100%;height:100%;object-fit:contain}.img-box:active .ov,.img-box:hover .ov{display:flex!important}.img-type{font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px}.logo-name-input{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:6px 7px;font-size:12px;margin-top:4px;background:var(--color-background-primary);color:var(--color-text-primary)}.del-btn{font-size:11px;color:#A32D2D;background:transparent;border:none;cursor:pointer;padding:4px;margin-top:3px;min-height:32px}.logo-count-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}.count-btn{width:36px;height:36px;border:0.5px solid #ccc;border-radius:8px;background:transparent;cursor:pointer;font-size:18px;color:var(--color-text-primary);display:flex;align-items:center;justify-content:center;line-height:1;touch-action:manipulation;min-height:36px}.count-btn:active{background:var(--color-background-secondary)}.count-val{font-size:15px;font-weight:500;min-width:24px;text-align:center}.toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}.toggle{position:relative;width:44px;height:24px;flex-shrink:0}.toggle input{opacity:0;width:0;height:0;position:absolute}.tslider{position:absolute;inset:0;background:#ccc;border-radius:12px;cursor:pointer;transition:.2s}.tslider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}.toggle input:checked+.tslider{background:#7F77DD}.toggle input:checked+.tslider:before{transform:translateX(20px)}.pass-row{display:flex;gap:8px;margin-bottom:1rem;align-items:center}.pass-row input{flex:1;border:0.5px solid #ccc;border-radius:8px;padding:10px;font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary);min-height:44px}.lock-wrap{min-height:260px;display:flex;align-items:center;justify-content:center;padding:1rem}.lock-card{background:var(--color-background-primary);border:0.5px solid #ddd;border-radius:16px;padding:1.75rem 1.5rem;text-align:center;max-width:320px;width:100%}.lock-card h2{font-size:17px;font-weight:500;margin-bottom:.4rem}.lock-card p{font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem}.lock-card input{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:12px;font-size:16px;background:var(--color-background-primary);color:var(--color-text-primary);text-align:center;margin-bottom:.75rem;min-height:44px}.err-msg{font-size:12px;color:#A32D2D;margin-bottom:.6rem;display:none}h1{font-size:22px;font-weight:500;margin-bottom:4px;text-align:center}.subtitle{font-size:13px;color:var(--color-text-secondary);text-align:center;margin-bottom:1.25rem}.step{display:none}.step.active{display:block}.progress-bar{width:100%;height:5px;background:#eee;border-radius:4px;margin-bottom:1.25rem}.progress-fill{height:5px;border-radius:4px;background:#7F77DD;transition:width .4s}.step-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:1.25rem;text-align:right}.question{font-size:16px;font-weight:500;margin-bottom:1rem;line-height:1.4}.options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}.opt-btn{background:var(--color-background-primary);border:0.5px solid #ccc;border-radius:10px;padding:14px 16px;font-size:15px;color:var(--color-text-primary);cursor:pointer;text-align:left;transition:all .15s;min-height:52px;touch-action:manipulation;line-height:1.3}.opt-btn:active,.opt-btn:hover{background:var(--color-background-secondary)}.opt-btn.selected{border:2px solid #7F77DD;background:#EEEDFE;color:#3C3489}.logo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem}@media(max-width:400px){.logo-grid{grid-template-columns:repeat(2,1fr)}}.logo-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;cursor:pointer;text-align:center;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}.logo-card:active,.logo-card:hover{border-color:#AFA9EC}.logo-card.selected{border:2px solid #7F77DD;background:#EEEDFE}.lc-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-tertiary)}.lc-img img{width:100%;height:100%;object-fit:contain}.lc-name{font-size:12px;font-weight:500;margin-top:6px}.cmp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px}.cmp-prog-txt{font-size:12px;color:var(--color-text-secondary)}.cmp-skip-btn{font-size:12px;color:#534AB7;background:transparent;border:0.5px solid #AFA9EC;border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap;min-height:32px;touch-action:manipulation}.cmp-to-vote{display:block;width:100%;text-align:center;font-size:13px;color:#534AB7;background:#EEEDFE;border:0.5px solid #AFA9EC;border-radius:10px;padding:10px;cursor:pointer;margin-bottom:12px;min-height:44px;touch-action:manipulation}.cmp-to-vote:active{background:#dddcf5}.cmp-outer{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin-bottom:8px;align-items:center}.cmp-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;text-align:center;cursor:pointer;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}.cmp-card:active,.cmp-card:hover{border-color:#AFA9EC}.cmp-card.win{border:2px solid #7F77DD;background:#EEEDFE}.cmp-card.lose{opacity:.35}.cmp-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-tertiary);margin-bottom:5px}.cmp-img img{width:100%;height:100%;object-fit:contain}.vs{text-align:center;font-size:12px;font-weight:500;color:var(--color-text-tertiary);padding:4px}.star-row{display:flex;gap:10px;margin-bottom:1.5rem}.star{font-size:32px;cursor:pointer;color:#ddd;transition:color .1s;user-select:none;touch-action:manipulation}.star.lit{color:#F0A500}textarea{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:12px;font-size:15px;resize:vertical;min-height:80px;background:var(--color-background-primary);color:var(--color-text-primary)}button.nxt{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:12px 22px;font-size:15px;cursor:pointer;font-weight:500;min-height:48px;touch-action:manipulation}button.nxt:active{background:#534AB7}button.nxt:disabled{background:#ddd;color:#aaa;cursor:not-allowed}button.back-btn{background:transparent;border:0.5px solid #ccc;border-radius:8px;padding:12px 16px;font-size:15px;cursor:pointer;color:var(--color-text-secondary);min-height:48px;touch-action:manipulation}button.back-btn:active{background:var(--color-background-secondary)}.result-card{background:var(--color-background-primary);border:0.5px solid #ddd;border-radius:12px;padding:1rem;margin-bottom:12px}.result-title{font-size:11px;font-weight:500;margin-bottom:10px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em}.winner-box{background:#EEEDFE;border-radius:12px;padding:1rem;display:flex;align-items:center;gap:12px;margin-bottom:12px}.winner-img{width:52px;height:52px;border-radius:8px;overflow:hidden;background:#fff;border:0.5px solid #AFA9EC;flex-shrink:0;display:flex;align-items:center;justify-content:center}.winner-img img{width:100%;height:100%;object-fit:contain}.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.metric{background:var(--color-background-secondary);border-radius:8px;padding:10px;text-align:center}.metric .ml{font-size:10px;color:var(--color-text-secondary)}.metric .mv{font-size:18px;font-weight:500;margin-top:2px}canvas{width:100%!important;max-height:220px}.logo-detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-bottom:10px}@media(max-width:400px){.logo-detail-grid{grid-template-columns:repeat(3,1fr)}}.lsc{border:0.5px solid #ddd;border-radius:10px;padding:7px;text-align:center;cursor:pointer;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}.lsc:active,.lsc:hover{border-color:#7F77DD;background:#EEEDFE}.lsc.active{border:1.5px solid #7F77DD;background:#EEEDFE}.lsc-img{width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px}.lsc-img img{width:100%;height:100%;object-fit:contain}.lsc-name{font-size:11px;font-weight:500;color:var(--color-text-primary)}.lsc-v{font-size:11px;color:#534AB7}.detail-panel{background:var(--color-background-secondary);border-radius:12px;padding:1rem;margin-top:8px}.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}.bar-lbl{font-size:12px;color:var(--color-text-secondary);min-width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar-track{flex:1;height:7px;background:#eee;border-radius:4px;overflow:hidden}.bar-fill{height:100%;border-radius:4px;background:#7F77DD;transition:width .5s}.bar-pct{font-size:12px;font-weight:500;color:#534AB7;min-width:34px;text-align:right}.comment-item{padding:8px 0;border-bottom:0.5px solid #eee;font-size:13px;line-height:1.5}.comment-item:last-child{border-bottom:none}.comment-meta{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}.live-badge{font-size:10px;background:#EAF3DE;color:#3B6D11;padding:2px 7px;border-radius:8px;margin-left:4px}.status-bar{font-size:11px;color:var(--color-text-secondary);margin-bottom:1rem;display:flex;align-items:center;gap:4px}.fb-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#aaa;margin-right:4px;flex-shrink:0}.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;padding:1rem}
 
-        /* YENİ EKLENEN MODERN UX STİLLERİ (FORMA PREVIEW) */
+        /* FORMA PREVIEW MODERN UX */
         .forma-preview-box {
             position: relative;
             width: 180px;
@@ -29,24 +30,23 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            opacity: 0.8;
         }
         .logo-on-forma {
             position: absolute;
-            top: 30%;
+            top: 28%;
             left: 50%;
             transform: translateX(-50%);
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             object-fit: contain;
             mix-blend-mode: multiply;
-            filter: contrast(1.1);
+            opacity: 0.85;
         }
-        .secure-info {
+        .secure-badge {
             font-size: 10px;
             color: #4CAF50;
             text-align: center;
-            margin-top: 5px;
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -73,68 +73,38 @@
 
 <div class="view" id="view-admin">
     <div class="status-bar" id="fb-status"><span class="fb-dot"></span>Bağlanıyor...</div>
-    <div class="info-box">Ayarlar ve logolar Firebase'e kaydedilir. Şifreler <b>bcrypt</b> ile hashlenir.</div>
+    <div class="info-box"><b>Bcrypt</b> ve <b>Fingerprint</b> güvenliği aktif. Veriler Firebase REST API ile senkronize edilir.</div>
     
-    <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Dil</span></div>
-    <div style="display:flex;gap:8px;margin-bottom:1rem">
-        <button class="btn-o" id="lb-tr" onclick="setLang('tr')" style="border-color:#7F77DD;color:#534AB7">Türkçe</button>
-        <button class="btn-o" id="lb-en" onclick="setLang('en')">English</button>
-    </div>
-
-    <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Anket Durumu</span></div>
+    <div class="section-hd"><span class="section-title">Anket Durumu</span></div>
     <div class="toggle-row">
-        <label class="toggle"><input type="checkbox" id="poll-open-chk" checked onchange="cfg.pollOpen=this.checked"><span class="tslider"></span></label>
-        <span id="poll-status-lbl" style="font-size:13px;color:var(--color-text-secondary)">Anket açık</span>
+        <label class="toggle"><input type="checkbox" id="poll-open-chk" checked onchange="cfg.pollOpen=this.checked; saveCfgFb();"><span class="tslider"></span></label>
+        <span id="poll-status-lbl" style="font-size:13px">Anket açık</span>
     </div>
 
-    <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Güvenli Yönetici Şifresi (bcrypt)</span></div>
+    <div class="section-hd"><span class="section-title">Güvenli Şifre Yönetimi</span></div>
     <div class="pass-row">
-        <input type="password" id="admin-pass-set" placeholder="Yeni şifre belirle">
-        <button class="btn-p" onclick="saveAdminPass()">Hashle & Kaydet</button>
+        <input type="password" id="admin-pass-set" placeholder="Yeni yönetici şifresi">
+        <button class="btn-p" onclick="saveAdminPass()">Şifreyi Güncelle</button>
     </div>
 
-    <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Sonuç Şifresi <span style="font-size:11px;font-weight:400">(opsiyonel)</span></span></div>
-    <div class="pass-row">
-        <input type="password" id="res-pass-set" placeholder="Boş = şifresiz">
-        <button class="btn-p" onclick="saveResPass()">Kaydet</button>
-    </div>
-
-    <div class="section-hd"><span class="section-title">Logo Sayısı</span></div>
-    <div class="logo-count-row">
-        <button class="count-btn" onclick="chgCount(-1)">−</button>
-        <span class="count-val" id="cnt-val">10</span>
-        <button class="count-btn" onclick="chgCount(1)">+</button>
-        <span style="font-size:12px;color:var(--color-text-secondary)">logo (2–20)</span>
-    </div>
-
-    <div class="section-hd">
-        <span class="section-title">Logo Görselleri</span>
-        <div style="display:flex;gap:6px">
-            <button class="btn-o" onclick="clearAll()">Temizle</button>
-            <button class="btn-p" id="save-btn" onclick="saveAdmin()">Kaydet</button>
-        </div>
-    </div>
+    <div class="section-hd"><span class="section-title">Logo Görselleri</span></div>
     <div class="admin-grid" id="admin-grid"></div>
-    
-    <div class="section-hd"><span class="section-title">Veri Kontrolü</span></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-o" onclick="exportCSV()">CSV İndir</button>
-        <button class="btn-o" style="color:#A32D2D" onclick="if(confirm('Tüm oylar silinsin mi?'))clearVotes()">Oyları Sıfırla</button>
+    <div class="btn-row">
+        <button class="btn-o" onclick="exportCSV()">CSV Dışa Aktar</button>
+        <button class="btn-p" onclick="saveAdmin()">Değişiklikleri Kaydet</button>
     </div>
 </div>
 
 <div class="view active" id="view-poll">
     <div id="poll-closed-box" style="display:none;text-align:center;padding:3rem 1rem">
-        <h2 style="font-size:18px;font-weight:500;margin-bottom:.5rem">Anket Kapalı</h2>
-        <p style="font-size:14px;color:var(--color-text-secondary)">Bu anket şu anda aktif değil.</p>
+        <h2>Anket Kapalı</h2>
+        <p>Yeni katılım kabul edilmemektedir.</p>
     </div>
-    
     <div id="poll-inner">
         <h1>Okul Logosu Anketi</h1>
-        <p class="subtitle">Logonu seç, sesini duyur!</p>
+        <p class="subtitle">Sesini duyur, geleceği belirle!</p>
         <div class="progress-bar"><div class="progress-fill" id="prog" style="width:14%"></div></div>
-        <div class="step-label" id="step-lbl">Adım 1 / 7</div>
-
+        
         <div class="step active" id="s1">
             <p class="question">Cinsiyetin nedir?</p>
             <div class="options" id="opts-gender"></div>
@@ -148,328 +118,233 @@
         </div>
 
         <div class="step" id="s3">
-            <p class="question">İkisinden hangisini tercih edersin?</p>
-            <div class="cmp-header">
-                <span class="cmp-prog-txt" id="cmp-prog"></span>
-                <button class="cmp-skip-btn" onclick="skipCmp()">Bu ikilide emin değilim</button>
-            </div>
+            <p class="question">Hangi logo daha etkileyici?</p>
+            <div class="cmp-header"><span id="cmp-prog"></span></div>
             <div class="cmp-outer" id="cmp-area"></div>
-            <button class="cmp-to-vote" onclick="go(4)" id="cmp-to-vote-btn">Karşılaştırmayı atlayıp logo seçimine geç →</button>
             <div class="btn-row"><button class="back-btn" onclick="go(2)">Geri</button><button class="nxt" id="n3" onclick="go(4)" disabled>Devam</button></div>
         </div>
 
         <div class="step" id="s4">
-            <p class="question">En beğendiğin logoyu seç</p>
-            <div id="forma-preview-area" style="display:none; margin-bottom: 20px;">
-                </div>
+            <p class="question">Favori logonu seç</p>
+            <div id="forma-preview-area" style="display:none"></div>
             <div class="logo-grid" id="poll-logo-grid"></div>
             <div class="btn-row"><button class="back-btn" onclick="go(3)">Geri</button><button class="nxt" id="n4" onclick="go(5)" disabled>Devam</button></div>
         </div>
 
         <div class="step" id="s5">
-            <p class="question">Bu logoyu seçmendeki en önemli neden?</p>
+            <p class="question">Neden bu logoyu seçtin?</p>
             <div class="options" id="opts-reason"></div>
             <div class="btn-row"><button class="back-btn" onclick="go(4)">Geri</button><button class="nxt" id="n5" onclick="go(6)" disabled>Devam</button></div>
         </div>
 
         <div class="step" id="s6">
-            <p class="question">Seçtiğin logoya kaç yıldız verirsin?</p>
+            <p class="question">Puanın (1-5)</p>
             <div class="star-row" id="stars">
-                <span class="star" onclick="rateStar(1)">&#9733;</span>
-                <span class="star" onclick="rateStar(2)">&#9733;</span>
-                <span class="star" onclick="rateStar(3)">&#9733;</span>
-                <span class="star" onclick="rateStar(4)">&#9733;</span>
-                <span class="star" onclick="rateStar(5)">&#9733;</span>
+                <span class="star" onclick="rateStar(1)">★</span><span class="star" onclick="rateStar(2)">★</span><span class="star" onclick="rateStar(3)">★</span><span class="star" onclick="rateStar(4)">★</span><span class="star" onclick="rateStar(5)">★</span>
             </div>
-            <textarea id="yorum" placeholder="Görüşünü yaz..."></textarea>
-            <div class="secure-info">🛡️ Cihaz doğrulaması aktif.</div>
-            <div class="btn-row"><button class="back-btn" onclick="go(5)">Geri</button><button class="nxt" id="n6" onclick="submitPoll()" disabled>Gönder</button></div>
+            <textarea id="yorum" placeholder="Eklemek istediğin bir not var mı?"></textarea>
+            <div class="secure-badge">🔒 Cihaz bazlı güvenlik doğrulaması yapılıyor.</div>
+            <div class="btn-row"><button class="back-btn" onclick="go(5)">Geri</button><button class="nxt" id="n6" onclick="submitPoll()" disabled>Oyunu Gönder</button></div>
         </div>
 
         <div class="step" id="s7">
-            <p class="question" style="text-align:center;margin-bottom:.5rem">Teşekkürler!</p>
-            <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Oyun güvenli şekilde kaydedildi.</p>
-            <div class="btn-row" style="justify-content:center;gap:10px">
-                <button class="btn-o" onclick="resetPoll()">Yeni Anket</button>
-                <button class="btn-p" onclick="switchTab('results')">Sonuçları Gör</button>
-            </div>
+            <p style="text-align:center">Oyun başarıyla kaydedildi. Teşekkürler!</p>
+            <div class="btn-row" style="justify-content:center"><button class="btn-p" onclick="switchTab('results')">Sonuçları Gör</button></div>
         </div>
     </div>
 </div>
 
 <div class="view" id="view-results">
-    <div class="lock-wrap" id="res-lock-wrap" style="display:none">
+    <div id="res-lock-wrap" style="display:none">
         <div class="lock-card">
-            <h2>Sonuçlar Korumalı</h2>
-            <p>Şifreyi girin.</p>
-            <input type="password" id="res-lock-inp" placeholder="Şifre" onkeydown="if(event.key==='Enter')chkRes()">
-            <div class="err-msg" id="res-err">Yanlış şifre.</div>
-            <button class="btn-p" onclick="chkRes()" style="margin-top:.5rem;width:100%">Gir</button>
+            <h2>Sonuçlar Kilitli</h2>
+            <input type="password" id="res-lock-inp" placeholder="Şifre">
+            <button class="btn-p" onclick="chkRes()">Aç</button>
         </div>
     </div>
     <div id="results-inner"></div>
 </div>
 
 <script>
-/* ---- GLOBAL VARIABLES & CONFIG ---- */
-var FB='https://firestore.googleapis.com/v1/projects/okul-logo-anketi/databases/(default)/documents';
-var logos=[], votes=[], cfg={pollOpen:true, lang:'tr', pass:'', adminPassHash:'', logoCount:10};
-var pdata={cinsiyet:null, sinif:null, logo:null, neden:null, yildiz:0, cmpWins:{}, deviceId:''};
-var cmpPairs=[], cmpIdx=0, CMP_MAX=10;
-var adminOK=false, resOK=false, charts={}, selLogo=null;
-var STEPS=7;
+/* ---- GÜVENLİK VE ALTYAPI ---- */
+const FB = 'https://firestore.googleapis.com/v1/projects/okul-logo-anketi/databases/(default)/documents';
+let logos=[], votes=[], cfg={pollOpen:true, adminPassHash:''}, pdata={deviceId:''};
+let visitorId = "";
 
-/* ---- GÜVENLİK: FINGERPRINT & BCRYPT ---- */
+// 1. FingerprintJS Başlatma (Hata çözümü: try/catch eklendi)
 async function initSecurity() {
-    const fp = await FingerprintJS.load();
-    const result = await fp.get();
-    pdata.deviceId = result.visitorId;
-}
-
-function hashPassword(pass) {
-    var salt = dcodeIO.bcrypt.genSaltSync(10);
-    return dcodeIO.bcrypt.hashSync(pass, salt);
-}
-
-function comparePassword(pass, hash) {
-    return dcodeIO.bcrypt.compareSync(pass, hash);
-}
-
-/* ---- FIRESTORE REST TOOLS ---- */
-function fbGet(p){return fetch(FB+'/'+p).then(r=>r.json());}
-function fbSet(p,f){return fetch(FB+'/'+p+'?updateMask.fieldPaths='+Object.keys(f).join('&updateMask.fieldPaths='),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:f})}).then(r=>r.json());}
-function fbAdd(col,f){return fetch(FB+'/'+col,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:f})}).then(r=>r.json());}
-function fbDel(p){return fetch(FB+'/'+p,{method:'DELETE'});}
-function fbList(col){return fetch(FB+'/'+col).then(r=>r.json());}
-
-function toFs(o){
-    var f={};
-    Object.entries(o).forEach(e=>{
-        var v=e[1];
-        if(v===null||v===undefined)f[e[0]]={nullValue:null};
-        else if(typeof v==='boolean')f[e[0]]={booleanValue:v};
-        else if(typeof v==='number')f[e[0]]={integerValue:String(v)};
-        else f[e[0]]={stringValue:String(v)};
-    });
-    return f;
-}
-
-function fromFs(flds){
-    var o={}; if(!flds) return o;
-    Object.entries(flds).forEach(e=>{
-        var v=e[1];
-        if(v.stringValue!==undefined)o[e[0]]=v.stringValue;
-        else if(v.integerValue!==undefined)o[e[0]]=Number(v.integerValue);
-        else if(v.booleanValue!==undefined)o[e[0]]=v.booleanValue;
-        else if(v.nullValue!==undefined)o[e[0]]=null;
-    });
-    return o;
-}
-
-/* ---- CORE FUNCTIONS ---- */
-async function loadCfg(){
-    try{
-        var r=await fbGet('config/main');
-        if(r.fields){
-            var d=fromFs(r.fields);
-            cfg.pollOpen=d.pollOpen!==undefined?d.pollOpen:true;
-            cfg.lang=d.lang||'tr';
-            cfg.pass=d.pass||'';
-            cfg.adminPassHash=d.adminPassHash || ""; // Bcrypt hash'i
-            cfg.logoCount=d.logoCount||10;
-            // Geriye dönük uyumluluk (Eski şifre varsa)
-            if(!cfg.adminPassHash && d.adminPass) {
-                cfg.adminPassHash = hashPassword(d.adminPass);
-            }
+    try {
+        if (typeof FingerprintJS !== 'undefined') {
+            const fp = await FingerprintJS.load();
+            const result = await fp.get();
+            visitorId = result.visitorId;
+            pdata.deviceId = visitorId;
+        } else {
+            console.warn("FingerprintJS yüklenemedi, alternatif ID üretiliyor.");
+            visitorId = 'anon_' + Math.random().toString(36).substr(2, 9);
+            pdata.deviceId = visitorId;
         }
-        var lr=await fbGet('config/logos');
-        if(lr.fields&&lr.fields.list){try{logos=JSON.parse(lr.fields.list.stringValue);}catch(e){logos=[];}}
-        while(logos.length<cfg.logoCount)logos.push({name:'Logo '+(logos.length+1),img:null,formaImg:null});
-        logos=logos.slice(0,cfg.logoCount);
-        document.getElementById('fb-status').innerHTML='<span class="fb-dot" style="background:#3B6D11"></span>Firebase bağlı';
-    }catch(e){console.error(e);}
+    } catch (e) { console.error("FP Hatası:", e); }
 }
 
-async function saveAdminPass(){
-    var val = document.getElementById('admin-pass-set').value;
-    if(!val) return alert("Şifre boş olamaz");
-    cfg.adminPassHash = hashPassword(val);
-    await fbSet('config/main', toFs({adminPassHash: cfg.adminPassHash}));
-    alert('Şifre bcrypt ile hashlenerek kaydedildi.');
+// 2. Bcrypt Güvenliği
+function hashPass(p) { return dcodeIO.bcrypt.hashSync(p, 10); }
+function comparePass(p, h) { return dcodeIO.bcrypt.compareSync(p, h); }
+
+/* ---- VERİ İŞLEMLERİ ---- */
+const fbSet = (p, f) => fetch(`${FB}/${p}?updateMask.fieldPaths=${Object.keys(f).join('&updateMask.fieldPaths=')}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({fields:f})}).then(r=>r.json());
+const fbAdd = (col, f) => fetch(`${FB}/${col}`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({fields:f})}).then(r=>r.json());
+const fbGet = (p) => fetch(`${FB}/${p}`).then(r=>r.json());
+const fbList = (col) => fetch(`${FB}/${col}`).then(r=>r.json());
+
+const toFs = (o) => {
+    let f={}; Object.entries(o).forEach(([k,v]) => {
+        if(v===null) f[k]={nullValue:null};
+        else if(typeof v==='boolean') f[k]={booleanValue:v};
+        else if(typeof v==='number') f[k]={integerValue:String(v)};
+        else f[k]={stringValue:String(v)};
+    }); return f;
+};
+
+const fromFs = (f) => {
+    let o={}; if(!f) return o; Object.entries(f).forEach(([k,v]) => {
+        if(v.stringValue!==undefined) o[k]=v.stringValue;
+        else if(v.integerValue!==undefined) o[k]=Number(v.integerValue);
+        else if(v.booleanValue!==undefined) o[k]=v.booleanValue;
+    }); return o;
+};
+
+/* ---- ÖZELLİKLER ---- */
+async function saveAdminPass() {
+    const p = document.getElementById('admin-pass-set').value;
+    if(!p) return alert("Şifre boş olamaz.");
+    const h = hashPass(p);
+    await fbSet('config/main', toFs({adminPassHash: h}));
+    alert("Şifre bcrypt ile güvenli hale getirildi.");
 }
 
-function chkAdmin(){
-    var input = document.getElementById('admin-pass-inp').value;
-    // Eğer hash yoksa (ilk kurulum) admin123 ile kıyasla
-    var isOk = cfg.adminPassHash ? comparePassword(input, cfg.adminPassHash) : (input === "admin123");
-    
-    if(isOk){
-        adminOK=true;
-        closeOverlay('admin-overlay');
-        switchTab('admin');
-        buildAdminGrid();
-    } else {
-        document.getElementById('admin-err').style.display='block';
-    }
-}
-
-/* ---- POLL LOGIC ---- */
-function buildPollGrid(){
-    var g=document.getElementById('poll-logo-grid'); g.innerHTML='';
-    logos.forEach(logo=>{
-        var c=document.createElement('div'); c.className='logo-card';
-        c.innerHTML='<div class="lc-img">'+(logo.img?'<img src="'+logo.img+'">':logo.name)+'</div><div class="lc-name">'+logo.name+'</div>';
-        c.onclick=function(){
-            document.querySelectorAll('.logo-card').forEach(x=>x.classList.remove('selected'));
-            c.classList.add('selected');
-            pdata.logo=logo.name;
-            document.getElementById('n4').disabled=false;
-            showFormaPreview(logo);
-        };
-        g.appendChild(c);
-    });
-    buildCmp();
+function chkAdmin() {
+    const p = document.getElementById('admin-pass-inp').value;
+    const ok = cfg.adminPassHash ? comparePass(p, cfg.adminPassHash) : (p === "admin123");
+    if(ok) { document.getElementById('admin-overlay').style.display='none'; switchTab('admin'); buildAdminGrid(); }
+    else document.getElementById('admin-err').style.display='block';
 }
 
 function showFormaPreview(logo) {
-    var area = document.getElementById('forma-preview-area');
+    const area = document.getElementById('forma-preview-area');
     area.style.display = 'block';
     area.innerHTML = `
         <div class="forma-preview-box">
             <img src="https://www.freeiconspng.com/uploads/t-shirt-png-blank-t-shirt-png-transparent-image-8.png" class="base-forma-img">
             ${logo.img ? `<img src="${logo.img}" class="logo-on-forma">` : ''}
         </div>
-        <p style="font-size:11px; color:#534AB7; text-align:center">Forma Üzerinde Ön İzleme</p>
+        <p style="font-size:11px; text-align:center; color:#7F77DD">Forma Üzerinde Görünüm</p>
     `;
 }
 
-async function submitPoll(){
-    var btn=document.getElementById('n6'); btn.textContent='Kontrol ediliyor...'; btn.disabled=true;
-    
-    // Mükerrer Oy Kontrolü (Gereksinim 3)
+async function submitPoll() {
+    const btn = document.getElementById('n6');
+    btn.disabled = true; btn.textContent = "Gönderiliyor...";
+
+    // Mükerrer oy kontrolü
     try {
-        var existingVotes = await fbList('votes');
-        var docs = existingVotes.documents || [];
-        var alreadyVoted = docs.some(d => fromFs(d.fields).deviceId === pdata.deviceId);
-        
-        if(alreadyVoted) {
-            alert("Bu cihazdan zaten oy kullanılmış. Katılımınız için teşekkürler!");
-            btn.textContent='Gönder';
-            return;
-        }
-    } catch(e) { console.log("Cihaz kontrolü atlandı."); }
+        const res = await fbList('votes');
+        const docs = res.documents || [];
+        const double = docs.some(d => fromFs(d.fields).deviceId === visitorId);
+        if(double) { alert("Bu cihazdan zaten oy verilmiş!"); btn.disabled=false; btn.textContent="Oyunu Gönder"; return; }
+    } catch(e) {}
 
-    var entry={
-        cinsiyet:pdata.cinsiyet, sinif:pdata.sinif, logo:pdata.logo,
-        neden:pdata.neden, yildiz:pdata.yildiz, deviceId: pdata.deviceId,
-        cmpWins:JSON.stringify(pdata.cmpWins), yorum:document.getElementById('yorum').value,
-        zaman:new Date().toISOString()
+    const data = {
+        cinsiyet: pdata.cinsiyet, sinif: pdata.sinif, logo: pdata.logo,
+        neden: pdata.neden, yildiz: pdata.yildiz, deviceId: visitorId,
+        zaman: new Date().toISOString(), yorum: document.getElementById('yorum').value
     };
-    
-    try{ await addVoteFb(entry); go(7); }
-    catch(e){ btn.textContent='Gönder'; btn.disabled=false; alert('Hata oluştu.'); }
+
+    await fbAdd('votes', toFs(data));
+    go(7);
 }
 
-/* --- DİĞER FONKSİYONLAR (SİZİN KODUNUZUN DEVAMI) --- */
-function switchTab(t){
-    ['admin','poll','results'].forEach(n=>{
-        document.getElementById('tab-'+n).classList.toggle('active',n===t);
-        document.getElementById('view-'+n).classList.toggle('active',n===t);
-    });
-    if(t==='poll'){applyLang(); buildPollGrid();}
-    if(t==='results'){loadVotes().then(openResults);}
-}
-
-function tryAdmin(){
-    if(adminOK){switchTab('admin');return;}
-    document.getElementById('admin-pass-inp').value='';
-    document.getElementById('admin-err').style.display='none';
-    document.getElementById('admin-overlay').style.display='flex';
-}
-
-function closeOverlay(id){document.getElementById(id).style.display='none';}
-
-var T={
-    tr:{gOpts:['Kız','Erkek','Belirtmek istemiyorum'],cOpts:['9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf'],rOpts:['Renk uyumu','Sadelik ve temizlik','Anlam ve sembol','Modern görünüm','Forma üzerindeki duruşu']},
-    en:{gOpts:['Girl','Boy','Prefer not to say'],cOpts:['9th Grade','10th Grade','11th Grade','12th Grade'],rOpts:['Color harmony','Simplicity','Meaning & symbol','Modern look','Uniform appearance']}
-};
-
-function setLang(l){
-    cfg.lang=l;
-    document.getElementById('lb-tr').style.cssText=l==='tr'?'border-color:#7F77DD;color:#534AB7':'';
-    document.getElementById('lb-en').style.cssText=l==='en'?'border-color:#7F77DD;color:#534AB7':'';
-}
-
-function applyLang(){
-    var t=T[cfg.lang]||T.tr;
-    function bOpts(id,arr,key){
-        var c=document.getElementById(id); c.innerHTML='';
-        arr.forEach(o=>{
-            var b=document.createElement('button'); b.className='opt-btn'; b.textContent=o;
-            b.onclick=function(){pick(b,key,o);}; c.appendChild(b);
-        });
+/* --- STANDART FONKSİYONLAR --- */
+async function loadCfg(){
+    const r = await fbGet('config/main');
+    if(r.fields) {
+        cfg = fromFs(r.fields);
+        if(!cfg.pollOpen) document.getElementById('poll-closed-box').style.display='block';
     }
-    bOpts('opts-gender',t.gOpts,'cinsiyet');
-    bOpts('opts-class',t.cOpts,'sinif');
-    bOpts('opts-reason',t.rOpts,'neden');
+    const lr = await fbGet('config/logos');
+    if(lr.fields && lr.fields.list) logos = JSON.parse(lr.fields.list.stringValue);
 }
 
-/* SİZİN DİĞER YARDIMCI FONKSİYONLARINIZ (go, pick, rateStar, buildAdminGrid vs.) buraya eklenmeli */
-function go(n){
-    document.querySelectorAll('#view-poll .step').forEach(s=>s.classList.remove('active'));
+function go(n) {
+    document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
     document.getElementById('s'+n).classList.add('active');
-    document.getElementById('prog').style.width=Math.round(n/STEPS*100)+'%';
-    document.getElementById('step-lbl').textContent='Adım '+n+' / '+STEPS;
-    window.scrollTo(0,0);
+    document.getElementById('prog').style.width = (n/7*100)+'%';
 }
-function pick(btn,key,val){
+
+function pick(btn, key, val) {
     btn.parentElement.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
-    btn.classList.add('selected'); pdata[key]=val;
-    var sid=btn.closest('.step').id.replace('s','');
-    document.getElementById('n'+sid).disabled=false;
-}
-function rateStar(n){
-    pdata.yildiz=n;
-    document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('lit',i<n));
-    document.getElementById('n6').disabled=false;
+    btn.classList.add('selected'); pdata[key] = val;
+    document.getElementById('n' + btn.closest('.step').id.substring(1)).disabled = false;
 }
 
-// Karşılaştırma Mantığı (Sizin Kodunuz)
-function buildCmp(){
-    cmpPairs=[]; cmpIdx=0; pdata.cmpWins={};
-    for(var i=0;i<logos.length-1;i++)for(var j=i+1;j<logos.length;j++)cmpPairs.push([i,j]);
-    cmpPairs.sort(()=>Math.random()-.5);
-    cmpPairs=cmpPairs.slice(0,CMP_MAX);
-    renderCmpPair();
+function rateStar(n) {
+    pdata.yildiz = n;
+    document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('lit', i<n));
+    document.getElementById('n6').disabled = false;
 }
-function renderCmpPair(){
-    var tot=cmpPairs.length; var prog=document.getElementById('cmp-prog');
-    if(!tot||cmpIdx>=tot){
-        document.getElementById('n3').disabled=false;
-        prog.textContent='Tamamlandı!';
-        document.getElementById('cmp-area').innerHTML='<p>Seçim aşamasına geçebilirsiniz.</p>';
-        return;
-    }
-    prog.textContent=(cmpIdx+1)+' / '+tot;
-    var p=cmpPairs[cmpIdx], a=logos[p[0]], b=logos[p[1]];
-    document.getElementById('cmp-area').innerHTML= `
-        <div class="cmp-card" onclick="pickCmp(0)"><img src="${a.img||''}" style="width:100%"><p>${a.name}</p></div>
-        <div class="vs">VS</div>
-        <div class="cmp-card" onclick="pickCmp(1)"><img src="${b.img||''}" style="width:100%"><p>${b.name}</p></div>
-    `;
-}
-function pickCmp(s){
-    var p=cmpPairs[cmpIdx], w=logos[p[s]].name;
-    pdata.cmpWins[w]=(pdata.cmpWins[w]||0)+1;
-    cmpIdx++; renderCmpPair();
-}
-function skipCmp(){cmpIdx++; renderCmpPair();}
 
-/* BAŞLATICI */
-(async function(){
+function switchTab(t) {
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+t).classList.add('active');
+    if(t==='poll') buildPollGrid();
+}
+
+function buildPollGrid() {
+    const g = document.getElementById('poll-logo-grid'); g.innerHTML='';
+    logos.forEach(l => {
+        const d = document.createElement('div'); d.className='logo-card';
+        d.innerHTML = `<div class="lc-img"><img src="${l.img||''}"></div><div class="lc-name">${l.name}</div>`;
+        d.onclick = () => {
+            document.querySelectorAll('.logo-card').forEach(x=>x.classList.remove('selected'));
+            d.classList.add('selected'); pdata.logo = l.name;
+            document.getElementById('n4').disabled = false;
+            showFormaPreview(l);
+        }; g.appendChild(d);
+    });
+}
+
+// Admin Grid ve Diğer yardımcılar...
+function buildAdminGrid() {
+    const g = document.getElementById('admin-grid'); g.innerHTML='';
+    logos.forEach((l,i) => {
+        const d = document.createElement('div'); d.className='admin-card';
+        d.innerHTML = `<div class="img-box"><img src="${l.img||''}"></div><input class="logo-name-input" value="${l.name}" onchange="logos[${i}].name=this.value">`;
+        g.appendChild(d);
+    });
+}
+
+async function saveAdmin() {
+    await fbSet('config/logos', {list:{stringValue: JSON.stringify(logos)}});
+    alert("Kaydedildi.");
+}
+
+/* INIT */
+(async () => {
     await initSecurity();
     await loadCfg();
-    applyLang();
+    // Dil seçeneklerini doldur
+    const t = {tr:['Kız','Erkek','Belirtilmedi'], en:['Girl','Boy','N/A']};
+    const c = ['9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf'];
+    const r = ['Renkler','Sadelik','Modernlik','Forma Duruşu'];
+    
+    const fill = (id, arr, key) => {
+        const el = document.getElementById(id);
+        arr.forEach(a => {
+            const b = document.createElement('button'); b.className='opt-btn'; b.textContent=a;
+            b.onclick = () => pick(b, key, a); el.appendChild(b);
+        });
+    };
+    fill('opts-gender', t.tr, 'cinsiyet'); fill('opts-class', c, 'sinif'); fill('opts-reason', r, 'neden');
 })();
 </script>
 </body>
