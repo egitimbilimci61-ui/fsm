@@ -17,12 +17,12 @@
         .btn-o{background:none;border:1px solid #ccc;border-radius:8px;padding:12px;font-size:14px;cursor:pointer;color:#666;width:100%}
         .btn-row{display:flex;gap:8px;margin-top:12px}
         .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0}
-        .admin-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center}
-        .img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--bg-s);border:1px solid var(--brd);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+        .admin-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center;background:#fff}
+        .img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--bg-s);border:1px solid var(--brd);overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer}
         .img-box img{width:100%;height:100%;object-fit:contain}
         .logo-name-input{width:100%;border:1px solid #ccc;border-radius:6px;padding:6px;font-size:12px;margin-top:4px}
         .progress-bar{width:100%;height:6px;background:#eee;border-radius:3px;margin-bottom:1.5rem;overflow:hidden}
-        .progress-fill{height:100%;background:var(--p);transition:width .4s;width:14%}
+        .progress-fill{height:100%;background:var(--p);transition:width .4s;width:0%}
         .step{display:none}.step.active{display:block}
         .question{font-size:17px;font-weight:600;margin-bottom:1.2rem}
         .options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
@@ -34,7 +34,7 @@
         .lc-img{width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;background:#f0f0f0}
         .lc-img img{width:100%;height:100%;object-fit:contain}
         .cmp-outer{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:10px}
-        .cmp-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center;cursor:pointer}
+        .cmp-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center;cursor:pointer;background:#fff}
         .star-row{display:flex;gap:10px;margin-bottom:1.5rem;justify-content:center}
         .star{font-size:35px;cursor:pointer;color:#ddd}.star.lit{color:#F0A500}
         textarea{width:100%;border:1px solid #ccc;border-radius:8px;padding:10px;min-height:90px;font-size:14px}
@@ -60,20 +60,20 @@
 </div>
 
 <div class="view" id="view-admin">
-    <div id="fb-status" style="font-size:11px; margin-bottom:10px">Durum: Bekleniyor...</div>
+    <div id="fb-status" style="font-size:11px; margin-bottom:10px">Yükleniyor...</div>
     <div style="background:#eee; padding:10px; border-radius:8px; margin-bottom:10px">
-        <label><input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked"> Anket Açık</label>
+        <label><input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked" checked> Anket Açık</label>
     </div>
     <div class="admin-grid" id="admin-grid"></div>
     <button class="btn-p" id="save-btn" onclick="saveAdmin()">AYARLARI KAYDET</button>
-    <button class="btn-o" onclick="clearVotes()" style="color:red; margin-top:10px">Oyları Sıfırla</button>
+    <button class="btn-o" onclick="clearVotes()" style="color:red; margin-top:10px; border-color:red">Oyları Sıfırla</button>
 </div>
 
 <div class="view active" id="view-poll">
   <div id="poll-closed-box" style="display:none;text-align:center;padding:2rem"><h2>Anket Kapalı</h2></div>
   <div id="poll-inner">
     <h1>FSMAL Logo Seçimi</h1>
-    <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:14%"></div></div>
     
     <div class="step active" id="s1">
       <p class="question">Cinsiyetin?</p>
@@ -89,6 +89,7 @@
 
     <div class="step" id="s3">
       <p class="question">Sence hangisi daha güzel?</p>
+      <p id="cmp-prog" style="text-align:center;font-size:12px;color:gray;margin-bottom:8px"></p>
       <div class="cmp-outer" id="cmp-area"></div>
       <div class="btn-row"><button class="btn-o" onclick="go(2)">Geri</button><button class="btn-p" id="n3" onclick="go(4)" disabled style="flex:1">Devam</button></div>
     </div>
@@ -132,10 +133,10 @@ let logos = [], votes = [], cfg = {pollOpen:true, adminPass:'admin123', logoCoun
 let pdata = {cinsiyet:null, sinif:null, logo:null, neden:null, yildiz:0, cmpWins:{}};
 let cmpIdx = 0, cmpPairs = [], adminOK = false;
 
-// Firebase Dönüştürücüler
-const toFs = (obj) => {
+// Firebase Helpers
+const toFs = (o) => {
     let f = {};
-    Object.entries(obj).forEach(([k,v]) => {
+    Object.entries(o).forEach(([k,v]) => {
         if(v === null) f[k] = {nullValue: null};
         else if(typeof v === 'boolean') f[k] = {booleanValue: v};
         else if(typeof v === 'number') f[k] = {integerValue: String(v)};
@@ -153,8 +154,13 @@ const fromFs = (f) => {
     return o;
 };
 
-// Veri Çekme
+// Başlangıç Logoları (Hata olsa bile kutular görünsün)
+function initLogos() {
+    logos = Array.from({length: cfg.logoCount}, (_, i) => ({name:'Logo '+(i+1), img:null}));
+}
+
 async function loadCfg() {
+    initLogos();
     try {
         const mRes = await fetch(`${FB_URL}/config/main`);
         const mData = await mRes.json();
@@ -162,8 +168,6 @@ async function loadCfg() {
         
         const lRes = await fetch(`${FB_URL}/logos`);
         const lData = await lRes.json();
-        
-        logos = Array.from({length: cfg.logoCount}, (_, i) => ({name:'Logo '+(i+1), img:null}));
         if(lData.documents) {
             lData.documents.forEach(doc => {
                 const idx = parseInt(doc.name.split('_').pop());
@@ -171,8 +175,10 @@ async function loadCfg() {
             });
         }
         document.getElementById('fb-status').innerHTML = "🟢 Bağlı";
-        updateUI();
-    } catch(e) { document.getElementById('fb-status').innerHTML = "🔴 Bağlantı Kurulamadı"; }
+    } catch(e) { 
+        document.getElementById('fb-status').innerHTML = "🔴 Çevrimdışı (Kaydet yapınca düzelir)";
+    }
+    updateUI();
 }
 
 async function saveAdmin() {
@@ -183,7 +189,8 @@ async function saveAdmin() {
             await fetch(`${FB_URL}/logos/logo_${i}`, {method:'PATCH', body:JSON.stringify(toFs(logos[i]))});
         }
         alert('Kaydedildi!');
-    } catch(e) { alert('Kaydetme hatası!'); }
+        loadCfg();
+    } catch(e) { alert('Hata: Kaydedilemedi!'); }
     b.textContent = 'AYARLARI KAYDET'; b.disabled = false;
 }
 
@@ -228,7 +235,7 @@ function updateUI() {
         });
     };
     fill('opts-gender', ['Kız','Erkek','Diğer'], 'cinsiyet', 'n1');
-    fill('opts-class', ['9','10','11','12'], 'sinif', 'n2');
+    fill('opts-class', ['9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf'], 'sinif', 'n2');
     fill('opts-reason', ['Renk Uyumu','Sadelik','Modern Görünüm'], 'neden', 'n5');
 
     const g = document.getElementById('poll-logo-grid'); g.innerHTML = '';
@@ -243,35 +250,40 @@ function updateUI() {
         g.appendChild(d);
     });
     
+    buildCmp();
+    buildAdminGrid();
+}
+
+function buildCmp() {
     cmpPairs = []; cmpIdx = 0; const act = logos.filter(l=>l.img);
     for(let i=0; i<act.length; i++) for(let j=i+1; j<act.length; j++) cmpPairs.push([act[i], act[j]]);
     cmpPairs.sort(()=>Math.random()-0.5);
     renderCmp();
-    buildAdminGrid();
 }
 
 function renderCmp() {
     const c = document.getElementById('cmp-area');
     const actLogos = logos.filter(l => l.img);
     if(actLogos.length < 2) {
-        c.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:gray">Lütfen admin panelinden en az 2 logo yükleyin.</p>';
+        c.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:gray;padding:1rem">Karşılaştırma için en az 2 logo yüklenmeli.</p>';
         return;
     }
     if(cmpIdx >= cmpPairs.length || cmpIdx >= 10) {
-        c.innerHTML = '<p style="grid-column:1/-1;text-align:center;background:#eee;padding:1rem;border-radius:10px">Yeterli karşılaştırma yapıldı.</p>';
+        c.innerHTML = '<div style="grid-column:1/-1;text-align:center;background:#EEEDFE;padding:1.5rem;border-radius:12px;color:var(--p-dark);font-weight:600">Karşılaştırmalar Tamamlandı.</div>';
         document.getElementById('n3').disabled = false; return;
     }
     const p = cmpPairs[cmpIdx];
     document.getElementById('cmp-prog').textContent = `${cmpIdx+1} / ${Math.min(cmpPairs.length, 10)}`;
     c.innerHTML = `
         <div class="cmp-card" onclick="pickCmp('${p[0].name}')"><div class="cmp-img"><img src="${p[0].img}"></div>${p[0].name}</div>
-        <div class="vs">VS</div>
+        <div style="font-weight:bold;color:#aaa">VS</div>
         <div class="cmp-card" onclick="pickCmp('${p[1].name}')"><div class="cmp-img"><img src="${p[1].img}"></div>${p[1].name}</div>
     `;
 }
 
 function pickCmp(n) { pdata.cmpWins[n] = (pdata.cmpWins[n]||0)+1; cmpIdx++; renderCmp(); }
 function rateStar(n) { pdata.yildiz=n; document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('lit', i<n)); document.getElementById('n6').disabled=false; }
+
 function go(n) { 
     document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
     document.getElementById('s'+n).classList.add('active');
@@ -293,13 +305,13 @@ function buildAdminGrid() {
     g.innerHTML = '';
     logos.forEach((l, i) => {
         const d = document.createElement('div'); d.className='admin-card';
-        d.innerHTML = `<div class="img-box" onclick="trigUp(${i})">${l.img?`<img src="${l.img}">`:'Seç'}</div><input value="${l.name}" onchange="logos[${i}].name=this.value" class="logo-name-input">`;
+        d.innerHTML = `<div class="img-box" onclick="trigUp(${i})">${l.img?`<img src="${l.img}">`:'Logo Seç'}</div><input value="${l.name}" onchange="logos[${i}].name=this.value" class="logo-name-input">`;
         g.appendChild(d);
     });
 }
 
 function tryAdmin() { document.getElementById('admin-overlay').style.display='flex'; }
-function chkAdmin() { if(document.getElementById('admin-pass-inp').value === cfg.adminPass) { adminOK=true; document.getElementById('admin-overlay').style.display='none'; switchTab('admin'); } else alert('Hatalı şifre'); }
+function chkAdmin() { if(document.getElementById('admin-pass-inp').value === cfg.adminPass) { adminOK=true; document.getElementById('admin-overlay').style.display='none'; switchTab('admin'); } else alert('Şifre Hatalı!'); }
 
 function switchTab(t) {
     ['admin','poll','results'].forEach(v => {
@@ -324,7 +336,7 @@ async function renderResults() {
     });
 }
 
-async function clearVotes() { if(confirm('Tüm oylar silinsin mi?')) { const r = await fetch(`${FB_URL}/votes`).then(r=>r.json()); if(r.documents) for(let d of r.documents) await fetch(`https://firestore.googleapis.com/v1/${d.name}`, {method:'DELETE'}); location.reload(); } }
+async function clearVotes() { if(confirm('Tüm oylar silinecek!')) { const r = await fetch(`${FB_URL}/votes`).then(r=>r.json()); if(r.documents) for(let d of r.documents) await fetch(`https://firestore.googleapis.com/v1/${d.name}`, {method:'DELETE'}); location.reload(); } }
 
 window.onload = loadCfg;
 </script>
