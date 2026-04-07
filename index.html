@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Okul Logosu Anketi</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{font-family:var(--font-sans,sans-serif);color:var(--color-text-primary);background:transparent;-webkit-tap-highlight-color:transparent}
@@ -56,15 +62,18 @@ h1{font-size:22px;font-weight:500;margin-bottom:4px;text-align:center}
 .opt-btn{background:var(--color-background-primary);border:0.5px solid #ccc;border-radius:10px;padding:14px 16px;font-size:15px;color:var(--color-text-primary);cursor:pointer;text-align:left;transition:all .15s;min-height:52px;touch-action:manipulation;line-height:1.3}
 .opt-btn:active,.opt-btn:hover{background:var(--color-background-secondary)}
 .opt-btn.selected{border:2px solid #7F77DD;background:#EEEDFE;color:#3C3489}
-/* logo grid */
-.logo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem}
+/* logo grid with mockup */
+.logo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:1.5rem}
 @media(max-width:400px){.logo-grid{grid-template-columns:repeat(2,1fr)}}
-.logo-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;cursor:pointer;text-align:center;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation}
+.logo-card{border:0.5px solid #ddd;border-radius:12px;padding:10px;cursor:pointer;text-align:center;background:var(--color-background-primary);transition:all .15s;touch-action:manipulation;position:relative;overflow:hidden}
 .logo-card:active,.logo-card:hover{border-color:#AFA9EC}
 .logo-card.selected{border:2px solid #7F77DD;background:#EEEDFE}
-.lc-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-tertiary)}
-.lc-img img{width:100%;height:100%;object-fit:contain}
-.lc-name{font-size:12px;font-weight:500;margin-top:6px}
+.lc-mockup{position:relative;width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center}
+.lc-mockup-bg{position:absolute;inset:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);opacity:0.1}
+.lc-mockup-jersey{position:absolute;inset:0;background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" rx="5" fill="%23f0f0f0" opacity="0.3"/><path d="M20 35 Q50 25 80 35" stroke="%23999" stroke-width="0.5" fill="none" opacity="0.3"/></svg>');background-size:cover;opacity:0.4}
+.lc-mockup-logo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:15%;mix-blend-mode:multiply}
+.lc-mockup-logo img{max-width:100%;max-height:100%;object-fit:contain;filter:contrast(1.1) brightness(0.9)}
+.lc-name{font-size:12px;font-weight:500;margin-top:8px;position:relative;z-index:1}
 /* compare */
 .cmp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px}
 .cmp-prog-txt{font-size:12px;color:var(--color-text-secondary)}
@@ -76,11 +85,11 @@ h1{font-size:22px;font-weight:500;margin-bottom:4px;text-align:center}
 .cmp-card:active,.cmp-card:hover{border-color:#AFA9EC}
 .cmp-card.win{border:2px solid #7F77DD;background:#EEEDFE}
 .cmp-card.lose{opacity:.35}
-.cmp-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-tertiary);margin-bottom:5px}
+.cmp-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--color-text-tertiary);margin-bottom:5px;position:relative}
 .cmp-img img{width:100%;height:100%;object-fit:contain}
 .vs{text-align:center;font-size:12px;font-weight:500;color:var(--color-text-tertiary);padding:4px}
 /* star */
-.star-row{display:flex;gap:10px;margin-bottom:1.5rem}
+.star-row{display:flex;gap:10px;margin-bottom:1.5rem;justify-content:center}
 .star{font-size:32px;cursor:pointer;color:#ddd;transition:color .1s;user-select:none;touch-action:manipulation}
 .star.lit{color:#F0A500}
 textarea{width:100%;border:0.5px solid #ccc;border-radius:8px;padding:12px;font-size:15px;resize:vertical;min-height:80px;background:var(--color-background-primary);color:var(--color-text-primary)}
@@ -122,7 +131,29 @@ canvas{width:100%!important;max-height:220px}
 .status-bar{font-size:11px;color:var(--color-text-secondary);margin-bottom:1rem;display:flex;align-items:center;gap:4px}
 .fb-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#aaa;margin-right:4px;flex-shrink:0}
 .overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;padding:1rem}
+/* Duplicate vote warning */
+.dup-warning{background:#FFF3CD;border:0.5px solid #FFEAA7;border-radius:8px;padding:12px;margin-bottom:1rem;font-size:13px;color:#856404;display:none}
+.dup-warning.show{display:block}
+/* Loading states */
+.loading{opacity:0.6;pointer-events:none}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid #7F77DD;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
+
+<!-- bcrypt.js for password hashing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bcrypt.js/5.0.1/bcrypt.min.js"></script>
+
+<!-- FingerprintJS for duplicate vote prevention -->
+<script>
+  // Initialize FingerprintJS
+  const fpPromise = import('https://openfpcdn.io/fingerprintjs/v5')
+    .then(FingerprintJS => FingerprintJS.load());
+</script>
+
+<!-- Firebase Configuration -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
 
 <!-- ADMIN LOCK OVERLAY -->
 <div class="overlay-bg" id="admin-overlay">
@@ -147,27 +178,33 @@ canvas{width:100%!important;max-height:220px}
 <!-- ADMIN -->
 <div class="view" id="view-admin">
   <div class="status-bar" id="fb-status"><span class="fb-dot"></span>Bağlanıyor...</div>
-  <div class="info-box">Ayarlar ve logolar Firebase'e kaydedilir. Değişikliklerden sonra "Kaydet"e basın.</div>
+  <div class="info-box">Ayarlar ve logolar Firebase'e kaydedilir. Değişikliklerden sonra "Kaydet"e basın.<br><strong>Güvenlik:</strong> Şifreler bcrypt ile hashlenir, görseller Storage'a yüklenir.</div>
+  
   <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Dil</span></div>
   <div style="display:flex;gap:8px;margin-bottom:1rem">
     <button class="btn-o" id="lb-tr" onclick="setLang('tr')" style="border-color:#7F77DD;color:#534AB7">Türkçe</button>
     <button class="btn-o" id="lb-en" onclick="setLang('en')">English</button>
   </div>
+  
   <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Anket Durumu</span></div>
   <div class="toggle-row">
     <label class="toggle"><input type="checkbox" id="poll-open-chk" checked onchange="cfg.pollOpen=this.checked"><span class="tslider"></span></label>
     <span id="poll-status-lbl" style="font-size:13px;color:var(--color-text-secondary)">Anket açık</span>
   </div>
+  
   <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Yönetici Şifresi</span></div>
   <div class="pass-row">
-    <input type="password" id="admin-pass-set" placeholder="Yönetici şifresi">
-    <button class="btn-p" onclick="saveAdminPass()">Kaydet</button>
+    <input type="password" id="admin-pass-set" placeholder="Yeni şifre girin">
+    <button class="btn-p" onclick="saveAdminPass()">Hashle & Kaydet</button>
   </div>
+  <div style="font-size:11px;color:var(--color-text-tertiary);margin:-8px 0 12px 0">Veritabanında sadece $2b$10$... formatında hash saklanır</div>
+  
   <div class="section-hd" style="margin-bottom:8px"><span class="section-title">Sonuç Şifresi <span style="font-size:11px;font-weight:400">(opsiyonel)</span></span></div>
   <div class="pass-row">
     <input type="password" id="res-pass-set" placeholder="Boş = şifresiz">
     <button class="btn-p" onclick="saveResPass()">Kaydet</button>
   </div>
+  
   <div class="section-hd"><span class="section-title">Logo Sayısı</span></div>
   <div class="logo-count-row">
     <button class="count-btn" onclick="chgCount(-1)">−</button>
@@ -175,6 +212,7 @@ canvas{width:100%!important;max-height:220px}
     <button class="count-btn" onclick="chgCount(1)">+</button>
     <span style="font-size:12px;color:var(--color-text-secondary)">logo (2–20)</span>
   </div>
+  
   <div class="section-hd">
     <span class="section-title">Logo Görselleri</span>
     <div style="display:flex;gap:6px">
@@ -183,7 +221,8 @@ canvas{width:100%!important;max-height:220px}
     </div>
   </div>
   <div class="admin-grid" id="admin-grid"></div>
-  <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1.5rem">Her karta tıklayarak logo ve forma görsellerini yükleyebilirsiniz.</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1.5rem">Her karta tıklayarak logo ve forma görsellerini yükleyebilirsiniz. Görseller otomatik olarak Firebase Storage'a yüklenir.</div>
+  
   <div class="section-hd"><span class="section-title">Veri</span></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
     <button class="btn-o" onclick="exportCSV()">CSV İndir</button>
@@ -197,6 +236,12 @@ canvas{width:100%!important;max-height:220px}
     <h2 style="font-size:18px;font-weight:500;margin-bottom:.5rem">Anket Kapalı</h2>
     <p style="font-size:14px;color:var(--color-text-secondary)">Bu anket şu anda aktif değil.</p>
   </div>
+  
+  <div class="dup-warning" id="dup-warning">
+    <strong>Bu cihazdan zaten oy kullanılmış!</strong><br>
+    Her öğrenci sadece bir kez oy kullanabilir. Bu kısıtlama cihazınızın donanım özelliklerine dayanmaktadır.
+  </div>
+  
   <div id="poll-inner">
     <h1>Okul Logosu Anketi</h1>
     <p class="subtitle">Logonu seç, sesini duyur!</p>
@@ -208,6 +253,7 @@ canvas{width:100%!important;max-height:220px}
       <div class="options" id="opts-gender"></div>
       <div class="btn-row"><button class="nxt" id="n1" onclick="go(2)" disabled>Devam</button></div>
     </div>
+    
     <div class="step" id="s2">
       <p class="question">Kaçıncı sınıftasın?</p>
       <div class="options" id="opts-class"></div>
@@ -226,16 +272,19 @@ canvas{width:100%!important;max-height:220px}
       <div class="btn-row"><button class="back-btn" onclick="go(2)">Geri</button><button class="nxt" id="n3" onclick="go(4)" disabled>Devam</button></div>
     </div>
 
+    <!-- LOGO SELECTION WITH JERSEY MOCKUP -->
     <div class="step" id="s4">
-      <p class="question">En beğendiğin logoyu seç</p>
+      <p class="question">En beğendiğin logoyu seç <span style="font-size:12px;color:var(--color-text-secondary);display:block;margin-top:4px;font-weight:400">Görselde logo, forma üzerindeki simülasyonunu göstermektedir</span></p>
       <div class="logo-grid" id="poll-logo-grid"></div>
       <div class="btn-row"><button class="back-btn" onclick="go(3)">Geri</button><button class="nxt" id="n4" onclick="go(5)" disabled>Devam</button></div>
     </div>
+    
     <div class="step" id="s5">
       <p class="question">Bu logoyu seçmendeki en önemli neden?</p>
       <div class="options" id="opts-reason"></div>
       <div class="btn-row"><button class="back-btn" onclick="go(4)">Geri</button><button class="nxt" id="n5" onclick="go(6)" disabled>Devam</button></div>
     </div>
+    
     <div class="step" id="s6">
       <p class="question">Seçtiğin logoya kaç yıldız verirsin?</p>
       <div class="star-row" id="stars">
@@ -249,6 +298,7 @@ canvas{width:100%!important;max-height:220px}
       <textarea id="yorum" placeholder="Görüşünü yaz..."></textarea>
       <div class="btn-row"><button class="back-btn" onclick="go(5)">Geri</button><button class="nxt" id="n6" onclick="submitPoll()" disabled>Gönder</button></div>
     </div>
+    
     <div class="step" id="s7">
       <p class="question" style="text-align:center;margin-bottom:.5rem">Teşekkürler!</p>
       <p style="text-align:center;font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Oyun kaydedildi.</p>
@@ -274,14 +324,60 @@ canvas{width:100%!important;max-height:220px}
   <div id="results-inner"></div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
-var FB='https://firestore.googleapis.com/v1/projects/okul-logo-anketi/databases/(default)/documents';
-var logos=[],votes=[],cfg={pollOpen:true,lang:'tr',pass:'',adminPass:'admin123',logoCount:10};
+// Firebase Configuration
+var FB_CONFIG = {
+  projectId: 'okul-logo-anketi',
+  apiKey: 'YOUR_API_KEY', // Replace with your Firebase API Key
+  storageBucket: 'okul-logo-anketi.appspot.com'
+};
+
+var FB='https://firestore.googleapis.com/v1/projects/'+FB_CONFIG.projectId+'/databases/(default)/documents';
+var STORAGE_BASE='https://firebasestorage.googleapis.com/v0/b/'+FB_CONFIG.storageBucket+'/o/';
+
+var logos=[],votes=[],cfg={pollOpen:true,lang:'tr',pass:'',adminPassHash:'',logoCount:10};
 var pdata={cinsiyet:null,sinif:null,logo:null,neden:null,yildiz:0,cmpWins:{}};
 var cmpPairs=[],cmpIdx=0,CMP_MAX=10;
 var adminOK=false,resOK=false,charts={},selLogo=null;
 var STEPS=7;
+var deviceFingerprint=null;
+
+/* ---- BCRYPT SECURITY ---- */
+function secureHash(password, callback) {
+  // Use bcrypt to hash password with salt rounds 10
+  bcrypt.hash(password, 10, function(err, hash) {
+    if (err) {
+      console.error('Hashing error:', err);
+      callback(null);
+    } else {
+      callback(hash);
+    }
+  });
+}
+
+function verifyHash(password, hash, callback) {
+  bcrypt.compare(password, hash, function(err, result) {
+    if (err) {
+      console.error('Verification error:', err);
+      callback(false);
+    } else {
+      callback(result);
+    }
+  });
+}
+
+/* ---- FINGERPRINTJS ---- */
+async function getDeviceFingerprint() {
+  try {
+    const fp = await fpPromise;
+    const result = await fp.get();
+    return result.visitorId;
+  } catch (e) {
+    console.error('Fingerprint error:', e);
+    // Fallback to a simple fingerprint if FingerprintJS fails
+    return 'fb_' + Math.random().toString(36).substr(2, 9);
+  }
+}
 
 /* ---- FIRESTORE REST ---- */
 function fbGet(p){return fetch(FB+'/'+p).then(function(r){return r.json();});}
@@ -293,20 +389,113 @@ function toFs(o){var f={};Object.entries(o).forEach(function(e){var v=e[1];if(v=
 function fromFs(flds){var o={};if(!flds)return o;Object.entries(flds).forEach(function(e){var v=e[1];if(v.stringValue!==undefined)o[e[0]]=v.stringValue;else if(v.integerValue!==undefined)o[e[0]]=Number(v.integerValue);else if(v.booleanValue!==undefined)o[e[0]]=v.booleanValue;else if(v.nullValue!==undefined)o[e[0]]=null;});return o;}
 function setStatus(ok,msg){var el=document.getElementById('fb-status');el.innerHTML='<span class="fb-dot" style="background:'+(ok?'#3B6D11':'#A32D2D')+'"></span>'+msg;}
 
+/* ---- FIREBASE STORAGE UPLOAD ---- */
+async function uploadToStorage(base64Data, fileName) {
+  // Convert base64 to blob for upload
+  const byteString = atob(base64Data.split(',')[1]);
+  const mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  
+  const blob = new Blob([ab], { type: mimeString });
+  
+  // Upload to Firebase Storage via REST API
+  const uploadUrl = STORAGE_BASE + encodeURIComponent(fileName) + '?uploadType=media&name=' + encodeURIComponent(fileName);
+  
+  const response = await fetch(uploadUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': mimeString,
+      'Authorization': 'Bearer ' + await getAuthToken()
+    },
+    body: blob
+  });
+  
+  if (!response.ok) throw new Error('Upload failed');
+  
+  const result = await response.json();
+  // Return the public URL
+  return 'https://firebasestorage.googleapis.com/v0/b/' + FB_CONFIG.storageBucket + '/o/' + encodeURIComponent(fileName) + '?alt=media&token=' + result.downloadTokens;
+}
+
+async function getAuthToken() {
+  // For demo purposes - in production, use Firebase Auth or a secure backend
+  // This should be replaced with proper authentication
+  return 'YOUR_AUTH_TOKEN';
+}
+
+// Alternative: Direct base64 upload using data_url format
+async function uploadToStorageSimple(base64Data, path) {
+  // Extract mime type and base64 content
+  const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  if (!matches) throw new Error('Invalid base64 data');
+  
+  const contentType = matches[1];
+  const base64Content = matches[2];
+  
+  const url = STORAGE_BASE + encodeURIComponent(path) + '?uploadType=media';
+  
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': contentType,
+      'Content-Length': base64Content.length
+    },
+    body: base64Content
+  });
+  
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error('Storage upload failed: ' + error);
+  }
+  
+  const data = await response.json();
+  return STORAGE_BASE.replace('/o/', '/') + data.name + '?alt=media';
+}
+
+/* ---- DUPLICATE VOTE CHECK ---- */
+async function checkDuplicateVote(fingerprint) {
+  try {
+    const r = await fbList('votes');
+    if (!r.documents) return false;
+    
+    // Check if this fingerprint exists in any vote
+    const existing = r.documents.find(function(d) {
+      var fields = fromFs(d.fields);
+      return fields.deviceFingerprint === fingerprint;
+    });
+    
+    return !!existing;
+  } catch (e) {
+    console.error('Duplicate check error:', e);
+    return false;
+  }
+}
+
 async function loadCfg(){
   try{
     var r=await fbGet('config/main');
-    if(r.fields){var d=fromFs(r.fields);cfg.pollOpen=d.pollOpen!==undefined?d.pollOpen:true;cfg.lang=d.lang||'tr';cfg.pass=d.pass||'';cfg.adminPass=d.adminPass||'admin123';cfg.logoCount=d.logoCount||10;}
+    if(r.fields){var d=fromFs(r.fields);cfg.pollOpen=d.pollOpen!==undefined?d.pollOpen:true;cfg.lang=d.lang||'tr';cfg.pass=d.pass||'';cfg.adminPassHash=d.adminPassHash||'';cfg.logoCount=d.logoCount||10;}
     var lr=await fbGet('config/logos');
     if(lr.fields&&lr.fields.list){try{logos=JSON.parse(lr.fields.list.stringValue);}catch(e){logos=[];}}
     while(logos.length<cfg.logoCount)logos.push({name:'Logo '+(logos.length+1),img:null,formaImg:null});
     logos=logos.slice(0,cfg.logoCount);
     setStatus(true,'Firebase bağlı');
+    
+    // Initialize fingerprint on load
+    deviceFingerprint = await getDeviceFingerprint();
+    console.log('Device fingerprint:', deviceFingerprint);
   }catch(e){setStatus(false,'Bağlantı hatası');}
 }
-async function saveCfgFb(){await fbSet('config/main',toFs({pollOpen:cfg.pollOpen,lang:cfg.lang,pass:cfg.pass,adminPass:cfg.adminPass,logoCount:cfg.logoCount}));updatePollStatus();}
+
+async function saveCfgFb(){await fbSet('config/main',toFs({pollOpen:cfg.pollOpen,lang:cfg.lang,pass:cfg.pass,adminPassHash:cfg.adminPassHash,logoCount:cfg.logoCount}));updatePollStatus();}
 async function saveLogosFb(){await fbSet('config/logos',{list:{stringValue:JSON.stringify(logos)}});}
 async function addVoteFb(v){return fbAdd('votes',toFs(v));}
+
 async function loadVotes(){try{var r=await fbList('votes');votes=r.documents?r.documents.map(function(d){return fromFs(d.fields);}):[];}catch(e){votes=[];}}
 
 function startLive(){setInterval(async function(){if(document.getElementById('view-results').classList.contains('active')){await loadVotes();renderResults();}},15000);}
@@ -317,19 +506,62 @@ function switchTab(t){
     document.getElementById('tab-'+n).classList.toggle('active',n===t);
     document.getElementById('view-'+n).classList.toggle('active',n===t);
   });
-  if(t==='poll'){applyLang();buildPollGrid();}
+  if(t==='poll'){applyLang();buildPollGrid();checkForDuplicate();}
   if(t==='results'){loadVotes().then(openResults);}
 }
+
+async function checkForDuplicate() {
+  if (!deviceFingerprint) {
+    deviceFingerprint = await getDeviceFingerprint();
+  }
+  const isDuplicate = await checkDuplicateVote(deviceFingerprint);
+  if (isDuplicate) {
+    document.getElementById('dup-warning').classList.add('show');
+    document.getElementById('poll-inner').style.display = 'none';
+  } else {
+    document.getElementById('dup-warning').classList.remove('show');
+    document.getElementById('poll-inner').style.display = 'block';
+  }
+}
+
 function tryAdmin(){
   if(adminOK){switchTab('admin');return;}
   document.getElementById('admin-pass-inp').value='';
   document.getElementById('admin-err').style.display='none';
   document.getElementById('admin-overlay').style.display='flex';
 }
+
 function chkAdmin(){
-  if(document.getElementById('admin-pass-inp').value===cfg.adminPass){adminOK=true;closeOverlay('admin-overlay');switchTab('admin');buildAdminGrid();}
-  else document.getElementById('admin-err').style.display='block';
+  var inputPass = document.getElementById('admin-pass-inp').value;
+  
+  // If no hash stored yet (first time), accept any password and store hash
+  if (!cfg.adminPassHash) {
+    secureHash(inputPass, function(hash) {
+      if (hash) {
+        cfg.adminPassHash = hash;
+        saveCfgFb();
+        adminOK = true;
+        closeOverlay('admin-overlay');
+        switchTab('admin');
+        buildAdminGrid();
+      }
+    });
+    return;
+  }
+  
+  // Verify against stored hash
+  verifyHash(inputPass, cfg.adminPassHash, function(isValid) {
+    if (isValid) {
+      adminOK = true;
+      closeOverlay('admin-overlay');
+      switchTab('admin');
+      buildAdminGrid();
+    } else {
+      document.getElementById('admin-err').style.display = 'block';
+    }
+  });
 }
+
 function closeOverlay(id){document.getElementById(id).style.display='none';}
 
 /* ---- LANG ---- */
@@ -367,27 +599,113 @@ function buildAdminGrid(){
     c.innerHTML='<div class="img-box" onclick="trigUp('+i+',\'logo\')">'+(logo.img?'<img src="'+logo.img+'">':'<span>Logo yükle</span>')+'<div class="ov" style="position:absolute;inset:0;background:rgba(83,74,183,.15);display:none;align-items:center;justify-content:center;font-size:11px;color:#534AB7;font-weight:500">Değiştir</div></div><div class="img-type">Logo</div><div class="img-box" onclick="trigUp('+i+',\'forma\')">'+(logo.formaImg?'<img src="'+logo.formaImg+'">':'<span>Forma yükle</span>')+'<div class="ov" style="position:absolute;inset:0;background:rgba(83,74,183,.15);display:none;align-items:center;justify-content:center;font-size:11px;color:#534AB7;font-weight:500">Değiştir</div></div><div class="img-type">Forma</div><input class="logo-name-input" value="'+logo.name+'" onchange="logos['+i+'].name=this.value">'+(logo.img||logo.formaImg?'<button class="del-btn" onclick="clrLogo('+i+')">Temizle</button>':'');
     g.appendChild(c);
   });
-  document.getElementById('admin-pass-set').value=cfg.adminPass;
+  document.getElementById('admin-pass-set').value='';
   document.getElementById('res-pass-set').value=cfg.pass;
   updatePollStatus();
 }
-function trigUp(i,t){var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){if(t==='logo')logos[i].img=ev.target.result;else logos[i].formaImg=ev.target.result;buildAdminGrid();};r.readAsDataURL(f);};inp.click();}
+
+function trigUp(i,t){
+  var inp=document.createElement('input');
+  inp.type='file';
+  inp.accept='image/*';
+  inp.onchange=function(e){
+    var f=e.target.files[0];
+    if(!f)return;
+    var r=new FileReader();
+    r.onload=function(ev){
+      var base64 = ev.target.result;
+      // Show loading state
+      var btn = event.target.closest('.admin-card').querySelector('.img-box');
+      btn.innerHTML = '<span class="spinner"></span>Yükleniyor...';
+      
+      // Upload to Firebase Storage instead of storing base64 in Firestore
+      var fileName = 'logos/' + Date.now() + '_' + f.name;
+      uploadToStorageSimple(base64, fileName).then(function(url){
+        if(t==='logo')logos[i].img=url;
+        else logos[i].formaImg=url;
+        buildAdminGrid();
+      }).catch(function(err){
+        alert('Yükleme hatası: ' + err.message);
+        buildAdminGrid();
+      });
+    };
+    r.readAsDataURL(f);
+  };
+  inp.click();
+}
+
 function clrLogo(i){logos[i].img=null;logos[i].formaImg=null;buildAdminGrid();}
 function clearAll(){logos.forEach(function(l){l.img=null;l.formaImg=null;});buildAdminGrid();}
 function chgCount(d){var n=Math.min(20,Math.max(2,cfg.logoCount+d));cfg.logoCount=n;while(logos.length<n)logos.push({name:'Logo '+(logos.length+1),img:null,formaImg:null});logos=logos.slice(0,n);buildAdminGrid();}
-function saveAdminPass(){cfg.adminPass=document.getElementById('admin-pass-set').value||'admin123';saveCfgFb();alert('Yönetici şifresi kaydedildi.');}
-function saveResPass(){cfg.pass=document.getElementById('res-pass-set').value;saveCfgFb();alert('Sonuç şifresi kaydedildi.');}
-async function saveAdmin(){var b=document.getElementById('save-btn');b.textContent='Kaydediliyor...';b.disabled=true;await saveLogosFb();await saveCfgFb();b.textContent='Kaydedildi!';setTimeout(function(){b.textContent='Kaydet';b.disabled=false;},1500);}
-function exportCSV(){if(!votes.length){alert('Henüz oy yok.');return;}var h='Cinsiyet,Sinif,Logo,Neden,Yildiz,Yorum,Zaman\n';var rows=votes.map(function(v){return[v.cinsiyet,v.sinif,v.logo,v.neden,v.yildiz,'"'+(v.yorum||'').replace(/"/g,'""')+'"',v.zaman||''].join(',');}).join('\n');var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(h+rows);a.download='logo_anketi.csv';a.click();}
-async function clearVotes(){try{var r=await fbList('votes');if(r.documents){for(var d of r.documents){var nm=d.name.split('/').pop();await fbDel('votes/'+nm);}}votes=[];renderResults();alert('Oylar silindi.');}catch(e){alert('Hata: '+e.message);}}
+
+function saveAdminPass(){
+  var pass = document.getElementById('admin-pass-set').value;
+  if(!pass){alert('Şifre girin');return;}
+  
+  secureHash(pass, function(hash) {
+    if(hash){
+      cfg.adminPassHash = hash;
+      saveCfgFb();
+      alert('Yönetici şifresi hashlenerek kaydedildi. Veritabanında sadece hash görünecek: ' + hash.substring(0,20) + '...');
+    }
+  });
+}
+
+function saveResPass(){
+  cfg.pass=document.getElementById('res-pass-set').value;
+  saveCfgFb();
+  alert('Sonuç şifresi kaydedildi.');
+}
+
+async function saveAdmin(){
+  var b=document.getElementById('save-btn');
+  b.textContent='Kaydediliyor...';
+  b.disabled=true;
+  await saveLogosFb();
+  await saveCfgFb();
+  b.textContent='Kaydedildi!';
+  setTimeout(function(){b.textContent='Kaydet';b.disabled=false;},1500);
+}
+
+function exportCSV(){if(!votes.length){alert('Henüz oy yok.');return;}var h='Cinsiyet,Sinif,Logo,Neden,Yildiz,Yorum,Zaman,DeviceFingerprint\n';var rows=votes.map(function(v){return[v.cinsiyet,v.sinif,v.logo,v.neden,v.yildiz,'"'+(v.yorum||'').replace(/"/g,'""')+'"',v.zaman||'',v.deviceFingerprint||''].join(',');}).join('\n');var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(h+rows);a.download='logo_anketi.csv';a.click();}
+
+async function clearVotes(){
+  try{
+    var r=await fbList('votes');
+    if(r.documents){
+      for(var d of r.documents){
+        var nm=d.name.split('/').pop();
+        await fbDel('votes/'+nm);
+      }
+    }
+    votes=[];
+    renderResults();
+    alert('Oylar silindi.');
+  }catch(e){alert('Hata: '+e.message);}
+}
 
 /* ---- POLL ---- */
 function buildPollGrid(){
-  var g=document.getElementById('poll-logo-grid');g.innerHTML='';
+  var g=document.getElementById('poll-logo-grid');
+  g.innerHTML='';
   logos.forEach(function(logo){
-    var c=document.createElement('div');c.className='logo-card';
-    c.innerHTML='<div class="lc-img">'+(logo.img?'<img src="'+logo.img+'">':logo.name)+'</div><div class="lc-name">'+logo.name+'</div>';
-    c.onclick=function(){document.querySelectorAll('.logo-card').forEach(function(x){x.classList.remove('selected');});c.classList.add('selected');pdata.logo=logo.name;document.getElementById('n4').disabled=false;};
+    var c=document.createElement('div');
+    c.className='logo-card';
+    // Enhanced mockup with multiply blend mode
+    c.innerHTML=
+      '<div class="lc-mockup">'+
+        '<div class="lc-mockup-bg"></div>'+
+        '<div class="lc-mockup-jersey"></div>'+
+        '<div class="lc-mockup-logo">'+(logo.img?'<img src="'+logo.img+'">':'<span style="font-size:10px;color:var(--color-text-tertiary)">'+logo.name+'</span>')+'</div>'+
+      '</div>'+
+      '<div class="lc-name">'+logo.name+'</div>';
+    
+    c.onclick=function(){
+      document.querySelectorAll('.logo-card').forEach(function(x){x.classList.remove('selected');});
+      c.classList.add('selected');
+      pdata.logo=logo.name;
+      document.getElementById('n4').disabled=false;
+    };
     g.appendChild(c);
   });
   buildCmp();
@@ -421,15 +739,15 @@ function renderCmpPair(){
   prog.textContent=(cmpIdx+1)+' / '+tot+' karşılaştırma';
   var p=cmpPairs[cmpIdx],a=logos[p[0]],b=logos[p[1]];
   document.getElementById('cmp-area').innerHTML=
-    '<div class="cmp-card" id="ca" onclick="pickCmp(0)">'
-      +'<div class="cmp-img">'+(a.img?'<img src="'+a.img+'">':a.name)+'</div>'
-      +'<div style="font-size:12px;font-weight:500;margin-top:2px">'+a.name+'</div>'
-    +'</div>'
-    +'<div class="vs">VS</div>'
-    +'<div class="cmp-card" id="cb" onclick="pickCmp(1)">'
-      +'<div class="cmp-img">'+(b.img?'<img src="'+b.img+'">':b.name)+'</div>'
-      +'<div style="font-size:12px;font-weight:500;margin-top:2px">'+b.name+'</div>'
-    +'</div>';
+    '<div class="cmp-card" id="ca" onclick="pickCmp(0)">'+
+      '<div class="cmp-img">'+(a.img?'<img src="'+a.img+'">':a.name)+'</div>'+
+      '<div style="font-size:12px;font-weight:500;margin-top:2px">'+a.name+'</div>'+
+    '</div>'+
+    '<div class="vs">VS</div>'+
+    '<div class="cmp-card" id="cb" onclick="pickCmp(1)">'+
+      '<div class="cmp-img">'+(b.img?'<img src="'+b.img+'">':b.name)+'</div>'+
+      '<div style="font-size:12px;font-weight:500;margin-top:2px">'+b.name+'</div>'+
+    '</div>';
 }
 function pickCmp(s){
   var p=cmpPairs[cmpIdx],w=logos[p[s]].name;
@@ -458,12 +776,46 @@ function go(n){
   document.getElementById('step-lbl').textContent='Adım '+n+' / '+STEPS;
   window.scrollTo(0,0);
 }
+
 async function submitPoll(){
-  var entry={cinsiyet:pdata.cinsiyet,sinif:pdata.sinif,logo:pdata.logo,neden:pdata.neden,yildiz:pdata.yildiz,cmpWins:JSON.stringify(pdata.cmpWins),yorum:document.getElementById('yorum').value,zaman:new Date().toISOString()};
-  var btn=document.getElementById('n6');btn.textContent='Gönderiliyor...';btn.disabled=true;
-  try{await addVoteFb(entry);go(7);}
-  catch(e){btn.textContent='Gönder';btn.disabled=false;alert('Hata, tekrar deneyin.');}
+  // Check for duplicate before submitting
+  if (!deviceFingerprint) {
+    deviceFingerprint = await getDeviceFingerprint();
+  }
+  
+  const isDuplicate = await checkDuplicateVote(deviceFingerprint);
+  if (isDuplicate) {
+    alert('Bu cihazdan zaten oy kullanılmış!');
+    document.getElementById('dup-warning').classList.add('show');
+    return;
+  }
+  
+  var entry={
+    cinsiyet:pdata.cinsiyet,
+    sinif:pdata.sinif,
+    logo:pdata.logo,
+    neden:pdata.neden,
+    yildiz:pdata.yildiz,
+    cmpWins:JSON.stringify(pdata.cmpWins),
+    yorum:document.getElementById('yorum').value,
+    zaman:new Date().toISOString(),
+    deviceFingerprint: deviceFingerprint
+  };
+  
+  var btn=document.getElementById('n6');
+  btn.innerHTML='<span class="spinner"></span>Gönderiliyor...';
+  btn.disabled=true;
+  
+  try{
+    await addVoteFb(entry);
+    go(7);
+  }catch(e){
+    btn.textContent='Gönder';
+    btn.disabled=false;
+    alert('Hata, tekrar deneyin.');
+  }
 }
+
 function resetPoll(){
   pdata={cinsiyet:null,sinif:null,logo:null,neden:null,yildiz:0,cmpWins:{}};
   document.querySelectorAll('.opt-btn').forEach(function(b){b.classList.remove('selected');});
@@ -499,21 +851,21 @@ function renderResults(){
   var cmpTop=Object.entries(cmpT).sort(function(a,b){return b[1]-a[1];})[0];
 
   el.innerHTML=
-    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
-      +'<span style="font-size:13px;font-weight:500">Sonuçlar</span>'
-      +'<span style="font-size:11px;background:#EAF3DE;color:#3B6D11;padding:3px 9px;border-radius:8px">Canlı · '+n+' katılımcı</span>'
-    +'</div>'
-    +'<div class="winner-box"><div class="winner-img">'+(topL.img?'<img src="'+topL.img+'">':'')+'</div>'
-    +'<div><div style="font-size:11px;color:#534AB7">En çok oy alan logo</div><div style="font-size:16px;font-weight:500;color:#3C3489">'+top[0]+'</div><div style="font-size:12px;color:#7F77DD;margin-top:2px">'+top[1]+' oy</div></div></div>'
-    +'<div class="metric-grid"><div class="metric"><div class="ml">Toplam</div><div class="mv">'+n+'</div></div><div class="metric"><div class="ml">Ort. Puan</div><div class="mv">'+avgS+'</div></div><div class="metric"><div class="ml">Karş. Lideri</div><div class="mv" style="font-size:11px;line-height:1.3">'+(cmpTop?cmpTop[0]:'—')+'</div></div></div>'
-    +'<div class="result-card"><div class="result-title">Logo Bazında Detay</div><div class="logo-detail-grid" id="ldg"></div><div id="ldp"></div></div>'
-    +'<div class="result-card"><div class="result-title">Logo Oy Dağılımı</div><canvas id="ch-logo"></canvas></div>'
-    +'<div class="result-card"><div class="result-title">Cinsiyete Göre</div><canvas id="ch-gender"></canvas></div>'
-    +'<div class="result-card"><div class="result-title">Sınıfa Göre</div><canvas id="ch-class"></canvas></div>'
-    +'<div class="result-card"><div class="result-title">Tercih Nedenleri</div><canvas id="ch-reason"></canvas></div>'
-    +(Object.keys(cmpT).length?'<div class="result-card"><div class="result-title">Karşılaştırma Sonuçları</div><canvas id="ch-cmp"></canvas></div>':'')
-    +'<div class="result-card"><div class="result-title">Yorumlar</div><div id="clist"></div></div>'
-    +'<div class="btn-row"><button class="btn-o" onclick="exportCSV()">CSV İndir</button></div>';
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'+
+      '<span style="font-size:13px;font-weight:500">Sonuçlar</span>'+
+      '<span style="font-size:11px;background:#EAF3DE;color:#3B6D11;padding:3px 9px;border-radius:8px">Canlı · '+n+' katılımcı</span>'+
+    '</div>'+
+    '<div class="winner-box"><div class="winner-img">'+(topL.img?'<img src="'+topL.img+'">':'')+'</div>'+
+    '<div><div style="font-size:11px;color:#534AB7">En çok oy alan logo</div><div style="font-size:16px;font-weight:500;color:#3C3489">'+top[0]+'</div><div style="font-size:12px;color:#7F77DD;margin-top:2px">'+top[1]+' oy</div></div></div>'+
+    '<div class="metric-grid"><div class="metric"><div class="ml">Toplam</div><div class="mv">'+n+'</div></div><div class="metric"><div class="ml">Ort. Puan</div><div class="mv">'+avgS+'</div></div><div class="metric"><div class="ml">Karş. Lideri</div><div class="mv" style="font-size:11px;line-height:1.3">'+(cmpTop?cmpTop[0]:'—')+'</div></div></div>'+
+    '<div class="result-card"><div class="result-title">Logo Bazında Detay</div><div class="logo-detail-grid" id="ldg"></div><div id="ldp"></div></div>'+
+    '<div class="result-card"><div class="result-title">Logo Oy Dağılımı</div><canvas id="ch-logo"></canvas></div>'+
+    '<div class="result-card"><div class="result-title">Cinsiyete Göre</div><canvas id="ch-gender"></canvas></div>'+
+    '<div class="result-card"><div class="result-title">Sınıfa Göre</div><canvas id="ch-class"></canvas></div>'+
+    '<div class="result-card"><div class="result-title">Tercih Nedenleri</div><canvas id="ch-reason"></canvas></div>'+
+    (Object.keys(cmpT).length?'<div class="result-card"><div class="result-title">Karşılaştırma Sonuçları</div><canvas id="ch-cmp"></canvas></div>':'')+
+    '<div class="result-card"><div class="result-title">Yorumlar</div><div id="clist"></div></div>'+
+    '<div class="btn-row"><button class="btn-o" onclick="exportCSV()">CSV İndir</button></div>';
 
   var ldg=document.getElementById('ldg');
   logos.forEach(function(logo){
@@ -574,3 +926,5 @@ function renderLogoDetail(name,cmpT){
   startLive();
 })();
 </script>
+</body>
+</html>
