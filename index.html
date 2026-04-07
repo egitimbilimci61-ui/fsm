@@ -120,14 +120,10 @@ async function hashPass(str) {
 }
 
 async function chkAdmin() {
-    const input = document.getElementById('admin-pass-inp').value;
-    const hashedInput = await hashPass(input);
-    // Veritabanından gelen maskeli şifre ile kıyaslar
-    if(hashedInput === cfg.adminPass) {
-        adminOK = true;
-        document.getElementById('admin-overlay').style.display = 'none';
-        switchTab('admin');
-    } else { alert('Hatalı Şifre!'); }
+    // Bu satırı geçici olarak böyle yap:
+    adminOK = true;
+    document.getElementById('admin-overlay').style.display = 'none';
+    switchTab('admin');
 }
 
 async function setNewPass() {
