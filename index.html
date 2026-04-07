@@ -20,6 +20,7 @@
         .admin-card{border:1px solid var(--brd);border-radius:12px;padding:10px;text-align:center}
         .img-box{width:100%;aspect-ratio:1;border-radius:6px;background:var(--bg-s);border:1px solid var(--brd);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
         .img-box img{width:100%;height:100%;object-fit:contain}
+        .logo-name-input{width:100%;border:1px solid #ccc;border-radius:6px;padding:6px;font-size:12px;margin-top:4px}
         .progress-bar{width:100%;height:6px;background:#eee;border-radius:3px;margin-bottom:1.5rem;overflow:hidden}
         .progress-fill{height:100%;background:var(--p);transition:width .4s;width:14%}
         .step{display:none}.step.active{display:block}
@@ -40,8 +41,6 @@
         .overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center}
         .lock-card{background:#fff;padding:2rem;border-radius:15px;width:90%;max-width:320px;text-align:center}
         .lock-card input{width:100%;padding:12px;margin:15px 0;border-radius:8px;border:1px solid #ccc;text-align:center}
-        .metric-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:15px}
-        .metric{background:var(--bg-s);padding:10px;border-radius:8px;text-align:center;font-size:12px}
     </style>
 </head>
 <body>
@@ -67,6 +66,7 @@
     </div>
     <div class="admin-grid" id="admin-grid"></div>
     <button class="btn-p" id="save-btn" onclick="saveAdmin()">AYARLARI KAYDET</button>
+    <button class="btn-o" onclick="clearVotes()" style="color:red; margin-top:10px">Oyları Sıfırla</button>
 </div>
 
 <div class="view active" id="view-poll">
@@ -132,7 +132,7 @@ let logos = [], votes = [], cfg = {pollOpen:true, adminPass:'admin123', logoCoun
 let pdata = {cinsiyet:null, sinif:null, logo:null, neden:null, yildiz:0, cmpWins:{}};
 let cmpIdx = 0, cmpPairs = [], adminOK = false;
 
-// Helpers
+// Firebase Dönüştürücüler
 const toFs = (obj) => {
     let f = {};
     Object.entries(obj).forEach(([k,v]) => {
@@ -153,41 +153,44 @@ const fromFs = (f) => {
     return o;
 };
 
-// Data
+// Veri Çekme
 async function loadCfg() {
     try {
-        const m = await fetch(`${FB_URL}/config/main`).then(r => r.json());
-        if(m.fields) Object.assign(cfg, fromFs(m.fields));
+        const mRes = await fetch(`${FB_URL}/config/main`);
+        const mData = await mRes.json();
+        if(mData.fields) Object.assign(cfg, fromFs(mData.fields));
         
-        const lRes = await fetch(`${FB_URL}/logos`).then(r => r.json());
+        const lRes = await fetch(`${FB_URL}/logos`);
+        const lData = await lRes.json();
+        
         logos = Array.from({length: cfg.logoCount}, (_, i) => ({name:'Logo '+(i+1), img:null}));
-        if(lRes.documents) {
-            lRes.documents.forEach(doc => {
+        if(lData.documents) {
+            lData.documents.forEach(doc => {
                 const idx = parseInt(doc.name.split('_').pop());
                 if(idx < cfg.logoCount) logos[idx] = fromFs(doc.fields);
             });
         }
         document.getElementById('fb-status').innerHTML = "🟢 Bağlı";
         updateUI();
-    } catch(e) { document.getElementById('fb-status').innerHTML = "🔴 Hata"; }
+    } catch(e) { document.getElementById('fb-status').innerHTML = "🔴 Bağlantı Kurulamadı"; }
 }
 
 async function saveAdmin() {
-    const b = document.getElementById('save-btn'); b.textContent = '...';
+    const b = document.getElementById('save-btn'); b.textContent = 'Kaydediliyor...'; b.disabled = true;
     try {
         await fetch(`${FB_URL}/config/main`, {method:'PATCH', body:JSON.stringify(toFs(cfg))});
         for(let i=0; i<logos.length; i++) {
             await fetch(`${FB_URL}/logos/logo_${i}`, {method:'PATCH', body:JSON.stringify(toFs(logos[i]))});
         }
         alert('Kaydedildi!');
-    } catch(e) { alert('Hata!'); }
-    b.textContent = 'AYARLARI KAYDET';
+    } catch(e) { alert('Kaydetme hatası!'); }
+    b.textContent = 'AYARLARI KAYDET'; b.disabled = false;
 }
 
 function trigUp(i) {
     const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
     inp.onchange = e => {
-        const f = e.target.files[0];
+        const f = e.target.files[0]; if(!f) return;
         const r = new FileReader();
         r.onload = ev => {
             const img = new Image();
@@ -212,7 +215,8 @@ function updateUI() {
     document.getElementById('poll-inner').style.display = cfg.pollOpen ? 'block' : 'none';
     
     const fill = (id, arr, key, nId) => {
-        const c = document.getElementById(id); c.innerHTML = '';
+        const c = document.getElementById(id); if(!c) return;
+        c.innerHTML = '';
         arr.forEach(t => {
             const b = document.createElement('button'); b.className='opt-btn'; b.textContent=t;
             b.onclick = () => {
@@ -225,12 +229,12 @@ function updateUI() {
     };
     fill('opts-gender', ['Kız','Erkek','Diğer'], 'cinsiyet', 'n1');
     fill('opts-class', ['9','10','11','12'], 'sinif', 'n2');
-    fill('opts-reason', ['Renk','Modern','Anlam'], 'neden', 'n5');
+    fill('opts-reason', ['Renk Uyumu','Sadelik','Modern Görünüm'], 'neden', 'n5');
 
     const g = document.getElementById('poll-logo-grid'); g.innerHTML = '';
     logos.filter(l=>l.img).forEach(l => {
         const d = document.createElement('div'); d.className='logo-card';
-        d.innerHTML = `<div class="lc-img"><img src="${l.img}"></div><p>${l.name}</p>`;
+        d.innerHTML = `<div class="lc-img"><img src="${l.img}"></div><p style="font-size:12px;margin-top:5px">${l.name}</p>`;
         d.onclick = () => {
             document.querySelectorAll('.logo-card').forEach(x=>x.classList.remove('selected'));
             d.classList.add('selected'); pdata.logo = l.name;
@@ -248,12 +252,17 @@ function updateUI() {
 
 function renderCmp() {
     const c = document.getElementById('cmp-area');
+    const actLogos = logos.filter(l => l.img);
+    if(actLogos.length < 2) {
+        c.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:gray">Lütfen admin panelinden en az 2 logo yükleyin.</p>';
+        return;
+    }
     if(cmpIdx >= cmpPairs.length || cmpIdx >= 10) {
-        c.innerHTML = '<p style="grid-column:1/-1;text-align:center">Yeterli karşılaştırma yapıldı.</p>';
+        c.innerHTML = '<p style="grid-column:1/-1;text-align:center;background:#eee;padding:1rem;border-radius:10px">Yeterli karşılaştırma yapıldı.</p>';
         document.getElementById('n3').disabled = false; return;
     }
     const p = cmpPairs[cmpIdx];
-    document.getElementById('cmp-prog').textContent = `${cmpIdx+1} / 10`;
+    document.getElementById('cmp-prog').textContent = `${cmpIdx+1} / ${Math.min(cmpPairs.length, 10)}`;
     c.innerHTML = `
         <div class="cmp-card" onclick="pickCmp('${p[0].name}')"><div class="cmp-img"><img src="${p[0].img}"></div>${p[0].name}</div>
         <div class="vs">VS</div>
@@ -271,16 +280,17 @@ function go(n) {
 }
 
 async function submitPoll() {
-    document.getElementById('n6').disabled = true;
+    const b = document.getElementById('n6'); b.disabled = true; b.textContent = '...';
     try {
         const entry = {...pdata, cmpWins: JSON.stringify(pdata.cmpWins), yorum: document.getElementById('yorum').value, zaman: new Date().toISOString()};
         await fetch(`${FB_URL}/votes`, {method:'POST', body:JSON.stringify(toFs(entry))});
         go(7);
-    } catch(e) { alert('Hata!'); }
+    } catch(e) { alert('Hata!'); b.disabled = false; b.textContent = 'GÖNDER'; }
 }
 
 function buildAdminGrid() {
-    const g = document.getElementById('admin-grid'); g.innerHTML = '';
+    const g = document.getElementById('admin-grid'); if(!g) return;
+    g.innerHTML = '';
     logos.forEach((l, i) => {
         const d = document.createElement('div'); d.className='admin-card';
         d.innerHTML = `<div class="img-box" onclick="trigUp(${i})">${l.img?`<img src="${l.img}">`:'Seç'}</div><input value="${l.name}" onchange="logos[${i}].name=this.value" class="logo-name-input">`;
@@ -288,30 +298,9 @@ function buildAdminGrid() {
     });
 }
 
-async function renderResults() {
-    const rRes = await fetch(`${FB_URL}/votes`).then(r => r.json());
-    const vts = rRes.documents ? rRes.documents.map(d => fromFs(d.fields)) : [];
-    const container = document.getElementById('results-inner');
-    if(!vts.length) { container.innerHTML = "Henüz oy yok."; return; }
-
-    const m = {}; vts.forEach(x => m[x.logo] = (m[x.logo]||0)+1);
-    const sorted = Object.entries(m).sort((a,b)=>b[1]-a[1]);
-
-    container.innerHTML = `
-        <div class="metric-grid">
-            <div class="metric"><span>Toplam Oy</span><b>${vts.length}</b></div>
-            <div class="metric"><span>Lider</span><b>${sorted[0][0]}</b></div>
-            <div class="metric"><span>Puan Ort.</span><b>4.5</b></div>
-        </div>
-        <canvas id="resChart"></canvas>
-    `;
-    new Chart(document.getElementById('resChart'), {
-        type: 'bar', data: { labels: sorted.map(x=>x[0]), datasets: [{ label:'Oy', data: sorted.map(x=>x[1]), backgroundColor:'#7F77DD' }] }
-    });
-}
-
 function tryAdmin() { document.getElementById('admin-overlay').style.display='flex'; }
-function chkAdmin() { if(document.getElementById('admin-pass-inp').value === cfg.adminPass) { adminOK=true; document.getElementById('admin-overlay').style.display='none'; switchTab('admin'); } }
+function chkAdmin() { if(document.getElementById('admin-pass-inp').value === cfg.adminPass) { adminOK=true; document.getElementById('admin-overlay').style.display='none'; switchTab('admin'); } else alert('Hatalı şifre'); }
+
 function switchTab(t) {
     ['admin','poll','results'].forEach(v => {
         document.getElementById('tab-'+v).classList.toggle('active', v===t);
@@ -319,6 +308,23 @@ function switchTab(t) {
     });
     if(t==='results') renderResults();
 }
+
+async function renderResults() {
+    const res = await fetch(`${FB_URL}/votes`).then(r => r.json());
+    const v = res.documents ? res.documents.map(d => fromFs(d.fields)) : [];
+    const target = document.getElementById('results-inner');
+    if(!v.length) { target.innerHTML = "Henüz oy yok."; return; }
+
+    const m = {}; v.forEach(x => m[x.logo] = (m[x.logo]||0)+1);
+    const s = Object.entries(m).sort((a,b)=>b[1]-a[1]);
+
+    target.innerHTML = `<h3>Sonuçlar (${v.length} Katılım)</h3><canvas id="resChart" style="margin-top:1rem"></canvas>`;
+    new Chart(document.getElementById('resChart'), {
+        type: 'bar', data: { labels: s.map(x=>x[0]), datasets: [{ label:'Oy', data: s.map(x=>x[1]), backgroundColor:'#7F77DD' }] }
+    });
+}
+
+async function clearVotes() { if(confirm('Tüm oylar silinsin mi?')) { const r = await fetch(`${FB_URL}/votes`).then(r=>r.json()); if(r.documents) for(let d of r.documents) await fetch(`https://firestore.googleapis.com/v1/${d.name}`, {method:'DELETE'}); location.reload(); } }
 
 window.onload = loadCfg;
 </script>
