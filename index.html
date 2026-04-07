@@ -36,7 +36,7 @@
         .step{display:none}.step.active{display:block}
         .question{font-size:17px;font-weight:600;margin-bottom:1.2rem}
         
-        /* Mobilde Butonları Full Width Yapar */
+        /* Mobilde Butonlar */
         .options{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
         .opt-btn{background:var(--bg);border:1px solid #ccc;border-radius:10px;padding:14px;font-size:15px;cursor:pointer;text-align:left;transition:0.2s}
         .opt-btn.selected{border:2px solid var(--p);background:#EEEDFE;color:var(--p-dark);font-weight:600}
@@ -61,9 +61,11 @@
         .lock-card{background:#fff;padding:2rem;border-radius:15px;width:90%;max-width:320px;text-align:center}
         .lock-card input{width:100%;padding:12px;margin:15px 0;border-radius:8px;border:1px solid #ccc;text-align:center}
         
+        /* Mobile Specific Adjustment */
         @media (max-width: 480px) {
             .btn-row{flex-direction:column-reverse}
-            .btn-p, .btn-o {width: 100%; padding: 14px;}
+            .btn-p, .btn-o {width: 100%; padding: 14px; font-size: 15px;}
+            .admin-grid {grid-template-columns: 1fr 1fr;}
         }
     </style>
 </head>
@@ -89,50 +91,52 @@
 <div class="view" id="view-admin">
     <div id="fb-status" style="font-size:11px; margin-bottom:10px">Durum: Bekleniyor...</div>
     
-    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:1rem">
-        <span style="font-size:14px">Anket Açık:</span>
-        <input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked" style="width:20px;height:20px">
-    </div>
-
-    <div style="margin-bottom:1rem">
-        <p style="font-size:13px; margin-bottom:5px">Yönetici Şifresi Değiştir:</p>
-        <div style="display:flex; gap:5px">
-            <input type="text" id="admin-pass-set" placeholder="Yeni Şifre" style="flex:1; padding:8px; border-radius:5px; border:1px solid #ccc">
+    <div style="background:var(--bg-s); padding:1rem; border-radius:10px; margin-bottom:1rem">
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:10px">
+            <span style="font-size:14px; font-weight:600">Anket Durumu:</span>
+            <input type="checkbox" id="poll-open-chk" onchange="cfg.pollOpen=this.checked" style="width:22px;height:22px">
+        </div>
+        <div style="display:flex; gap:5px; margin-bottom:10px">
+            <input type="password" id="admin-pass-set" placeholder="Yeni Yönetici Şifresi" style="flex:1; padding:8px; border-radius:6px; border:1px solid #ccc">
             <button class="btn-p" onclick="saveAdminPass()">Güncelle</button>
+        </div>
+        <div style="display:flex; gap:5px">
+            <input type="password" id="res-pass-set" placeholder="Sonuç Şifresi (Opsiyonel)" style="flex:1; padding:8px; border-radius:6px; border:1px solid #ccc">
+            <button class="btn-p" onclick="saveResPass()">Güncelle</button>
         </div>
     </div>
 
-    <div style="margin-bottom:1rem; border-top:1px solid #eee; padding-top:1rem">
+    <div style="margin-bottom:1rem">
         <div style="display:flex; justify-content: space-between; align-items: center">
-            <h3>Logolar</h3>
-            <div style="display:flex; gap:5px">
-                <button class="btn-o" onclick="chgCount(-1)">-</button>
-                <span id="cnt-val" style="font-weight:bold">10</span>
-                <button class="btn-o" onclick="chgCount(1)">+</button>
+            <span class="section-title">Logo Sayısı:</span>
+            <div style="display:flex; gap:8px; align-items:center">
+                <button class="btn-o" style="padding:5px 12px" onclick="chgCount(-1)">-</button>
+                <span id="cnt-val" style="font-weight:bold; min-width:20px; text-align:center">10</span>
+                <button class="btn-o" style="padding:5px 12px" onclick="chgCount(1)">+</button>
             </div>
         </div>
         <div class="admin-grid" id="admin-grid"></div>
         <div style="display:flex; gap:10px">
-            <button class="btn-o" style="flex:1" onclick="clearAll()">Tümünü Temizle</button>
-            <button class="btn-p" id="save-btn" style="flex:2" onclick="saveAdmin()">DEĞİŞİKLİKLERİ KAYDET</button>
+            <button class="btn-o" style="flex:1" onclick="clearAll()">Görselleri Temizle</button>
+            <button class="btn-p" id="save-btn" style="flex:2" onclick="saveAdmin()">KAYDET</button>
         </div>
     </div>
 
     <div style="margin-top:2rem; border-top:1px solid #eee; padding-top:1rem">
-        <button class="btn-o" onclick="exportCSV()" style="margin-bottom:5px">Verileri Dışa Aktar (CSV)</button>
-        <button class="btn-o" style="color:red" onclick="clearVotes()">Oyları Sıfırla</button>
+        <button class="btn-o" onclick="exportCSV()" style="margin-bottom:8px">CSV Olarak İndir</button>
+        <button class="btn-o" style="color:red; border-color:red" onclick="clearVotes()">Tüm Oyları Sıfırla</button>
     </div>
 </div>
 
 <div class="view active" id="view-poll">
   <div id="poll-closed-box" style="display:none;text-align:center;padding:3rem 1rem">
-    <h2>Anket Kapalı</h2>
-    <p>Şu an katılım kabul edilmiyor.</p>
+    <h2>Anket Şu An Kapalı</h2>
+    <p style="color:gray">Katılım için teşekkür ederiz.</p>
   </div>
 
   <div id="poll-inner">
-    <h1>Okul Logosu Seçimi</h1>
-    <p class="subtitle">En beğendiğin logoyu seç, okulumuzun yüzü olsun!</p>
+    <h1>FSMAL Logo Seçimi</h1>
+    <p class="subtitle">Okulumuzun yeni yüzünü sen belirle!</p>
     <div class="progress-bar"><div class="progress-fill" id="prog" style="width:14%"></div></div>
     
     <div class="step active" id="s1">
@@ -142,43 +146,44 @@
     </div>
 
     <div class="step" id="s2">
-      <p class="question">Kaçıncı Sınıftasın?</p>
+      <p class="question">Hangi Sınıftasın?</p>
       <div class="options" id="opts-class"></div>
       <div class="btn-row"><button class="btn-o" onclick="go(1)">Geri</button><button class="btn-p" id="n2" onclick="go(3)" disabled style="flex:1">Devam</button></div>
     </div>
 
     <div class="step" id="s3">
-      <p class="question">Sence hangisi daha güzel?</p>
+      <p class="question">Hangisi daha iyi?</p>
       <p id="cmp-prog" style="text-align:center;font-size:12px;color:gray;margin-bottom:10px"></p>
       <div class="cmp-outer" id="cmp-area"></div>
-      <button class="btn-o" style="width:100%;margin-top:10px;font-size:12px" onclick="skipCmp()">Kararsızım / Geç</button>
-      <div class="btn-row"><button class="btn-o" onclick="go(2)">Geri</button><button class="btn-p" id="n3" onclick="go(4)" disabled style="flex:1">Sonraki Adım</button></div>
+      <button class="btn-o" style="width:100%;margin-top:10px;font-size:12px" onclick="skipCmp()">Fark Etmez / Geç</button>
+      <div class="btn-row"><button class="btn-o" onclick="go(2)">Geri</button><button class="btn-p" id="n3" onclick="go(4)" disabled style="flex:1">Logolara Bak</button></div>
     </div>
 
     <div class="step" id="s4">
-        <p class="question">Kesin Favorin Hangisi?</p>
+        <p class="question">Favori Logon?</p>
         <div class="logo-grid" id="poll-logo-grid"></div>
-        <div class="btn-row"><button class="btn-o" onclick="go(3)">Geri</button><button class="btn-p" id="n4" onclick="go(5)" disabled style="flex:1">Seçimimi Yaptım</button></div>
+        <div class="btn-row"><button class="btn-o" onclick="go(3)">Geri</button><button class="btn-p" id="n4" onclick="go(5)" disabled style="flex:1">İleri</button></div>
     </div>
 
     <div class="step" id="s5">
-      <p class="question">Seçme Nedenin?</p>
+      <p class="question">Neden bu seçim?</p>
       <div class="options" id="opts-reason"></div>
-      <div class="btn-row"><button class="btn-o" onclick="go(4)">Geri</button><button class="btn-p" id="n5" onclick="go(6)" disabled style="flex:1">Devam</button></div>
+      <div class="btn-row"><button class="btn-o" onclick="go(4)">Geri</button><button class="btn-p" id="n5" onclick="go(6)" disabled style="flex:1">Son Adım</button></div>
     </div>
 
     <div class="step" id="s6">
-      <p class="question">Puanla ve Görüşünü Yaz</p>
+      <p class="question">Puanla ve Bitir</p>
       <div class="star-row">
         <span class="star" onclick="rateStar(1)">★</span><span class="star" onclick="rateStar(2)">★</span><span class="star" onclick="rateStar(3)">★</span><span class="star" onclick="rateStar(4)">★</span><span class="star" onclick="rateStar(5)">★</span>
       </div>
-      <textarea id="yorum" placeholder="Eklemek istediğin bir not var mı?"></textarea>
-      <div class="btn-row"><button class="btn-o" onclick="go(5)">Geri</button><button class="btn-p" id="n6" onclick="submitPoll()" disabled style="flex:1;background:#3B6D11">GÖNDER</button></div>
+      <textarea id="yorum" placeholder="Varsa eklemek istediğin bir görüş..."></textarea>
+      <div class="btn-row"><button class="btn-o" onclick="go(5)">Geri</button><button class="btn-p" id="n6" onclick="submitPoll()" disabled style="flex:1;background:#3B6D11">ANKETİ GÖNDER</button></div>
     </div>
 
     <div class="step" id="s7" style="text-align:center">
-      <p class="question">Katılımın İçin Teşekkürler!</p>
-      <button class="btn-p" onclick="location.reload()">Başa Dön</button>
+      <p class="question">Teşekkürler!</p>
+      <p>Oyun başarıyla kaydedildi.</p><br>
+      <button class="btn-p" onclick="location.reload()">Yeni Anket</button>
     </div>
   </div>
 </div>
@@ -190,7 +195,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const FB_URL = 'https://firestore.googleapis.com/v1/projects/okul-logo-anketi/databases/(default)/documents';
-let logos = [], votes = [], cfg = {pollOpen:true, adminPass:'admin123', logoCount:10};
+let logos = [], votes = [], cfg = {pollOpen:true, adminPass:'admin123', pass:'', logoCount:10};
 let pdata = {cinsiyet:null, sinif:null, logo:null, neden:null, yildiz:0, cmpWins:{}};
 let cmpPairs = [], cmpIdx = 0, adminOK = false;
 
@@ -198,7 +203,7 @@ let cmpPairs = [], cmpIdx = 0, adminOK = false;
 const toFs = (obj) => {
     let f = {};
     Object.entries(obj).forEach(([k,v]) => {
-        if(v === null) f[k] = {nullValue: null};
+        if(v === null || v === undefined) f[k] = {nullValue: null};
         else if(typeof v === 'boolean') f[k] = {booleanValue: v};
         else if(typeof v === 'number') f[k] = {integerValue: String(v)};
         else f[k] = {stringValue: v};
@@ -215,15 +220,13 @@ const fromFs = (f) => {
     return o;
 };
 
-// Data Management
+// Data Core
 async function loadCfg() {
     try {
         const m = await fetch(`${FB_URL}/config/main`).then(r => r.json());
         if(m.fields) {
             const d = fromFs(m.fields);
-            cfg.pollOpen = d.pollOpen ?? true;
-            cfg.logoCount = d.logoCount || 10;
-            cfg.adminPass = d.adminPass || 'admin123';
+            Object.assign(cfg, d);
         }
         
         const lRes = await fetch(`${FB_URL}/logos`).then(r => r.json());
@@ -234,13 +237,13 @@ async function loadCfg() {
                 if(!isNaN(idx) && idx < cfg.logoCount) logos[idx] = fromFs(doc.fields);
             });
         }
-        document.getElementById('fb-status').innerHTML = "🟢 Sistem Hazır";
+        document.getElementById('fb-status').innerHTML = "🟢 Bağlı";
         updatePollStatus();
         applyLang();
         buildPollGrid();
         buildAdminGrid();
     } catch(e) { 
-        document.getElementById('fb-status').innerHTML = "🔴 Bağlantı Hatası";
+        document.getElementById('fb-status').innerHTML = "🔴 Hata";
     }
 }
 
@@ -251,9 +254,9 @@ async function saveAdmin() {
         for(let i=0; i<logos.length; i++) {
             await fetch(`${FB_URL}/logos/logo_${i}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(toFs(logos[i]))});
         }
-        alert('Kaydedildi!');
-    } catch(e) { alert('Hata!'); }
-    b.textContent = 'DEĞİŞİKLİKLERİ KAYDET'; b.disabled = false;
+        alert('Tüm veriler kaydedildi!');
+    } catch(e) { alert('Kaydetme hatası!'); }
+    b.textContent = 'KAYDET'; b.disabled = false;
 }
 
 function trigUp(i, t) {
@@ -265,7 +268,7 @@ function trigUp(i, t) {
             const img = new Image();
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                const max = 500; let w = img.width, h = img.height;
+                const max = 400; let w = img.width, h = img.height;
                 if(w > h) { if(w > max){ h *= max/w; w = max; } }
                 else { if(h > max){ w *= max/h; h = max; } }
                 canvas.width = w; canvas.height = h;
@@ -281,18 +284,6 @@ function trigUp(i, t) {
     inp.click();
 }
 
-function buildAdminGrid() {
-    document.getElementById('cnt-val').textContent = cfg.logoCount;
-    const g = document.getElementById('admin-grid'); g.innerHTML = '';
-    logos.forEach((l, i) => {
-        const d = document.createElement('div'); d.className = 'admin-card';
-        d.innerHTML = `<div class="img-box" onclick="trigUp(${i},'logo')">${l.img?`<img src="${l.img}">`:'Logo Seç'}</div>
-                       <div class="img-box" onclick="trigUp(${i},'forma')">${l.formaImg?`<img src="${l.formaImg}">`:'Forma Seç'}</div>
-                       <input class="logo-name-input" value="${l.name}" onchange="logos[${i}].name=this.value">`;
-        g.appendChild(d);
-    });
-}
-
 function chgCount(v) {
     cfg.logoCount = Math.min(20, Math.max(2, cfg.logoCount + v));
     while(logos.length < cfg.logoCount) logos.push({name:'Logo '+(logos.length+1), img:null, formaImg:null});
@@ -300,12 +291,13 @@ function chgCount(v) {
     buildAdminGrid();
 }
 
-function clearAll() { if(confirm('Tüm resimler silinsin mi?')) { logos.forEach(l=>{l.img=null; l.formaImg=null;}); buildAdminGrid(); } }
-function saveAdminPass() { const v = document.getElementById('admin-pass-set').value; if(v) { cfg.adminPass = v; alert('Şifre güncellendi. Kaydet butonuna basmayı unutmayın.'); } }
+function saveAdminPass() { cfg.adminPass = document.getElementById('admin-pass-set').value; alert('Şifre hazır, kaydetmeyi unutma.'); }
+function saveResPass() { cfg.pass = document.getElementById('res-pass-set').value; alert('Şifre hazır, kaydetmeyi unutma.'); }
+function clearAll() { logos.forEach(l=>{l.img=null; l.formaImg=null;}); buildAdminGrid(); }
 
-// Poll Logic
+// Poll UI
 function applyLang() {
-    const opts = { gender:['Kız','Erkek','Diğer'], classes:['9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf'], reasons:['Renkler','Sadelik','Modern Görünüm','Anlam'] };
+    const opts = { gender:['Kız','Erkek','Belirtmek İstemiyorum'], classes:['9. Sınıf','10. Sınıf','11. Sınıf','12. Sınıf'], reasons:['Renk Uyumu','Sadelik ve Temizlik','Modern Görünüm','Anlam ve Sembol'] };
     const fill = (id, arr, key) => {
         const c = document.getElementById(id); if(!c) return; c.innerHTML = '';
         arr.forEach(t => {
@@ -343,7 +335,7 @@ function buildCmp() {
 function renderCmpPair() {
     const a = document.getElementById('cmp-area'); const lim = 10;
     if(cmpIdx >= cmpPairs.length || cmpIdx >= lim) {
-        a.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:1.5rem;background:#f0f0f0;border-radius:10px">Yeterli karşılaştırma yapıldı.</div>';
+        a.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:1.5rem;background:#f8f9fa;border-radius:10px;font-size:14px">Karşılaştırmalar Tamamlandı.</div>';
         document.getElementById('n3').disabled = false; return;
     }
     const pair = cmpPairs[cmpIdx];
@@ -358,45 +350,45 @@ function renderCmpPair() {
 function pickCmp(n) { pdata.cmpWins[n] = (pdata.cmpWins[n]||0)+1; cmpIdx++; renderCmpPair(); }
 function skipCmp() { cmpIdx++; renderCmpPair(); }
 function rateStar(n) { pdata.yildiz = n; document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('lit', i<n)); document.getElementById('n6').disabled = false; }
-function go(n) { document.querySelectorAll('.step').forEach(s=>s.classList.remove('active')); document.getElementById('s'+n).classList.add('active'); document.getElementById('prog').style.width = (n/7*100)+'%'; }
+function go(n) { document.querySelectorAll('.step').forEach(s=>s.classList.remove('active')); document.getElementById('s'+n).classList.add('active'); document.getElementById('prog').style.width = (n/7*100)+'%'; window.scrollTo(0,0); }
 
 async function submitPoll() {
     const b = document.getElementById('n6'); b.disabled = true; b.textContent='...';
     const entry = {...pdata, cmpWins: JSON.stringify(pdata.cmpWins), yorum: document.getElementById('yorum').value, zaman: new Date().toISOString()};
-    try { await fetch(`${FB_URL}/votes`, {method:'POST', body:JSON.stringify(toFs(entry))}); go(7); } catch(e) { alert('Hata!'); b.disabled=false; b.textContent='GÖNDER'; }
+    try { await fetch(`${FB_URL}/votes`, {method:'POST', body:JSON.stringify(toFs(entry))}); go(7); } catch(e) { alert('Hata!'); b.disabled=false; b.textContent='ANKETİ GÖNDER'; }
 }
 
 // Global UI
 function tryAdmin() { document.getElementById('admin-overlay').style.display='flex'; }
 function chkAdmin() { if(document.getElementById('admin-pass-inp').value === cfg.adminPass) { adminOK=true; closeOverlay('admin-overlay'); switchTab('admin'); buildAdminGrid(); } else alert('Hatalı şifre'); }
 function closeOverlay(id) { document.getElementById(id).style.display='none'; }
-function updatePollStatus() { 
-    document.getElementById('poll-closed-box').style.display = cfg.pollOpen ? 'none' : 'block'; 
-    document.getElementById('poll-inner').style.display = cfg.pollOpen ? 'block' : 'none'; 
-}
-function switchTab(t) { 
-    ['admin','poll','results'].forEach(v=>{ 
-        document.getElementById('tab-'+v).classList.toggle('active', v===t); 
-        document.getElementById('view-'+v).classList.toggle('active', v===t); 
-    }); 
-    if(t==='results') renderResults();
+function updatePollStatus() { document.getElementById('poll-closed-box').style.display = cfg.pollOpen ? 'none' : 'block'; document.getElementById('poll-inner').style.display = cfg.pollOpen ? 'block' : 'none'; }
+function switchTab(t) { ['admin','poll','results'].forEach(v=>{ document.getElementById('tab-'+v).classList.toggle('active', v===t); document.getElementById('view-'+v).classList.toggle('active', v===t); }); if(t==='results') renderResults(); }
+function buildAdminGrid() {
+    const g = document.getElementById('admin-grid'); g.innerHTML = '';
+    logos.forEach((l, i) => {
+        const d = document.createElement('div'); d.className = 'admin-card';
+        d.innerHTML = `<div class="img-box" onclick="trigUp(${i},'logo')">${l.img?`<img src="${l.img}">`:'Logo'}</div>
+                       <div class="img-box" onclick="trigUp(${i},'forma')">${l.formaImg?`<img src="${l.formaImg}">`:'Forma'}</div>
+                       <input class="logo-name-input" value="${l.name}" onchange="logos[${i}].name=this.value">`;
+        g.appendChild(d);
+    });
 }
 
 async function renderResults() {
     const r = await fetch(`${FB_URL}/votes`).then(r => r.json());
     const v = r.documents ? r.documents.map(d => fromFs(d.fields)) : [];
     const c = document.getElementById('results-inner');
-    if(!v.length) { c.innerHTML = 'Henüz oy yok.'; return; }
-    const counts = {}; v.forEach(v => counts[v.logo] = (counts[v.logo]||0)+1);
-    const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-    c.innerHTML = `<h3>Sonuçlar (${v.length} Katılım)</h3><canvas id="resChart" style="margin-top:1rem"></canvas>`;
-    new Chart(document.getElementById('resChart'), { type:'bar', data: { labels: sorted.map(x=>x[0]), datasets: [{label:'Oylar', data:sorted.map(x=>x[1]), backgroundColor:'#7F77DD'}] } });
+    if(!v.length) { c.innerHTML = 'Henüz veri yok.'; return; }
+    const m = {}; v.forEach(x => m[x.logo] = (m[x.logo]||0)+1);
+    const s = Object.entries(m).sort((a,b)=>b[1]-a[1]);
+    c.innerHTML = `<h3>Sonuçlar (${v.length} Katılım)</h3><canvas id="resChart"></canvas>`;
+    new Chart(document.getElementById('resChart'), { type:'bar', data:{labels:s.map(x=>x[0]), datasets:[{label:'Oylar', data:s.map(x=>x[1]), backgroundColor:'#7F77DD'}]} });
 }
 
-async function clearVotes() { if(confirm('TÜM oylar silinecek! Emin misiniz?')) { const r = await fetch(`${FB_URL}/votes`).then(r=>r.json()); if(r.documents) for(let d of r.documents) await fetch(`https://firestore.googleapis.com/v1/${d.name}`, {method:'DELETE'}); alert('Sıfırlandı'); location.reload(); } }
-function exportCSV() { alert('Bu özellik masaüstü tarayıcılarda daha sağlıklı çalışır.'); }
+async function clearVotes() { if(confirm('TÜM oylar kalıcı olarak silinecek! Emin misiniz?')) { const r = await fetch(`${FB_URL}/votes`).then(r=>r.json()); if(r.documents) for(let d of r.documents) await fetch(`https://firestore.googleapis.com/v1/${d.name}`, {method:'DELETE'}); location.reload(); } }
+function exportCSV() { alert('Masaüstü cihazlarda indirmeniz önerilir.'); }
 
-// Init
 window.addEventListener('load', loadCfg);
 </script>
 </body>
