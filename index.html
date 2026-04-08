@@ -383,6 +383,7 @@ input:checked + .tslider::before { transform: translateX(22px); }
 
 <script>
 // ==================== BASİT HASH FONKSİYONU ====================
+// ==================== DÜZELTİLMİŞ HASH FONKSİYONLARI ====================
 function simpleHash(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -390,16 +391,23 @@ function simpleHash(str) {
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash;
   }
-  return 'hash_' + Math.abs(hash).toString(16) + '_2024';
+  return 'hash_' + Math.abs(hash).toString(16) + '_salt2024';
 }
 
 function secureHash(password) {
-  return simpleHash(password + 'salt_okul_anketi');
+  // Basit ama tutarlı hash
+  return simpleHash(password);
 }
 
 function verifyHash(password, hash) {
-  if (!hash) return password === 'admin123';
-  return simpleHash(password + 'salt_okul_anketi') === hash;
+  // İlk giriş veya boş hash durumu
+  if (!hash || hash === '') {
+    return password === 'admin123';
+  }
+  
+  // Basit hash kontrolü
+  const testHash = simpleHash(password);
+  return testHash === hash;
 }
 
 // ==================== FIREBASE YAPILANDIRMA ====================
@@ -667,8 +675,15 @@ function tryAdmin() {
 function chkAdmin() {
   var input = document.getElementById('admin-pass-inp').value;
   var err = document.getElementById('admin-err');
-  if (!input) { err.style.display = 'block'; err.textContent = '❌ Şifre girin!'; return; }
-  if (!cfg.adminPassHash) {
+  
+  if (!input) { 
+    err.style.display = 'block'; 
+    err.textContent = '❌ Şifre girin!'; 
+    return; 
+  }
+  
+  // İlk kurulum - hash yoksa
+  if (!cfg.adminPassHash || cfg.adminPassHash === '') {
     var hash = secureHash(input);
     cfg.adminPassHash = hash;
     saveCfgFb();
@@ -679,6 +694,8 @@ function chkAdmin() {
     updateHashBadge();
     return;
   }
+  
+  // Hash varsa doğrula
   if (verifyHash(input, cfg.adminPassHash)) {
     adminOK = true;
     closeOverlay('admin-overlay');
@@ -690,7 +707,6 @@ function chkAdmin() {
     err.textContent = '❌ Yanlış şifre!';
   }
 }
-
 function updateHashBadge() {
   var badge = document.getElementById('hash-badge');
   if (badge) badge.style.display = cfg.adminPassHash ? 'inline-flex' : 'none';
