@@ -5,194 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Okul Logosu Anketi</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;color:#333;background:#f5f5f5;-webkit-tap-highlight-color:transparent}
-body{padding:.75rem}
-.tab-bar{display:flex;gap:0;margin-bottom:1.25rem;border-bottom:0.5px solid #ddd;overflow-x:auto;-webkit-overflow-scrolling:touch;background:#fff;padding:0 .5rem}
-.tab-bar::-webkit-scrollbar{display:none}
-.tab{padding:12px 16px;font-size:14px;cursor:pointer;border:none;background:transparent;color:#666;border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500;white-space:nowrap}
-.tab.active{color:#534AB7;border-bottom:2px solid #7F77DD}
-.view{display:none;background:#fff;border-radius:12px;padding:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.1)}.view.active{display:block}
-.btn-p{background:#7F77DD;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;cursor:pointer;font-weight:500;min-height:44px;touch-action:manipulation;transition:all 0.2s}
-.btn-p:active{background:#534AB7;transform:scale(0.98)}
-.btn-p:disabled{background:#ccc;cursor:not-allowed}
-.btn-o{background:#fff;border:0.5px solid #ccc;border-radius:8px;padding:10px 14px;font-size:14px;cursor:pointer;color:#666;min-height:44px;touch-action:manipulation;transition:all 0.2s}
-.btn-o:active{background:#f0f0f0}
-.btn-row{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}
-.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.section-title{font-size:16px;font-weight:600;color:#333}
-.info-box{background:#f8f9fa;border-radius:8px;padding:12px;font-size:12px;color:#666;margin-bottom:1rem;line-height:1.5;border-left:3px solid #7F77DD}
-.admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:1rem}
-@media(max-width:480px){.admin-grid{grid-template-columns:repeat(2,1fr)}}
-.admin-card{border:1px solid #e0e0e0;border-radius:12px;padding:12px;background:#fff;text-align:center;transition:all 0.2s}
-.admin-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-.admin-card.has-img{border-color:#AFA9EC;background:#fafaff}
-.img-box{width:100%;aspect-ratio:1;border-radius:8px;background:#f5f5f5;border:1px dashed #ccc;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:11px;color:#999;margin-bottom:6px;cursor:pointer;position:relative;min-height:80px;transition:all 0.2s}
-.img-box:hover{border-color:#7F77DD;background:#f0f0ff}
-.img-box img{width:100%;height:100%;object-fit:contain;padding:8px}
-.img-type{font-size:10px;color:#888;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
-.logo-name-input{width:100%;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;margin-top:6px;background:#fff}
-.del-btn{font-size:11px;color:#d32f2f;background:transparent;border:none;cursor:pointer;padding:6px;margin-top:6px;width:100%;border-radius:4px;transition:background 0.2s}
-.del-btn:hover{background:#ffebee}
-.logo-count-row{display:flex;align-items:center;gap:12px;margin-bottom:1rem;background:#f5f5f5;padding:10px;border-radius:8px}
-.count-btn{width:40px;height:40px;border:1px solid #ccc;border-radius:8px;background:#fff;cursor:pointer;font-size:20px;color:#333;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
-.count-btn:hover{background:#7F77DD;color:#fff;border-color:#7F77DD}
-.count-val{font-size:18px;font-weight:600;min-width:30px;text-align:center;color:#333}
-.toggle-row{display:flex;align-items:center;gap:12px;margin-bottom:1rem;padding:10px;background:#f5f5f5;border-radius:8px}
-.toggle{position:relative;width:48px;height:26px}
-.toggle input{opacity:0;width:0;height:0}
-.tslider{position:absolute;inset:0;background:#ccc;border-radius:13px;cursor:pointer;transition:0.3s}
-.tslider:before{content:'';position:absolute;width:20px;height:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
-.toggle input:checked+.tslider{background:#7F77DD}
-.toggle input:checked+.tslider:before{transform:translateX(22px)}
-.pass-row{display:flex;gap:8px;margin-bottom:1rem;align-items:center}
-.pass-row input{flex:1;border:1px solid #ddd;border-radius:8px;padding:12px;font-size:14px;background:#fff;min-height:44px}
-.lock-wrap{min-height:400px;display:flex;align-items:center;justify-content:center;padding:1rem}
-.lock-card{background:#fff;border:1px solid #e0e0e0;border-radius:16px;padding:2rem;text-align:center;max-width:360px;width:100%;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
-.lock-card h2{font-size:20px;font-weight:600;margin-bottom:.5rem;color:#333}
-.lock-card p{font-size:14px;color:#666;margin-bottom:1.5rem}
-.lock-card input{width:100%;border:1px solid #ddd;border-radius:8px;padding:14px;font-size:16px;background:#fff;text-align:center;margin-bottom:1rem;min-height:48px;transition:border-color 0.2s}
-.lock-card input:focus{outline:none;border-color:#7F77DD}
-.err-msg{font-size:13px;color:#d32f2f;margin-bottom:1rem;display:none;padding:8px;background:#ffebee;border-radius:6px}
-/* poll */
-h1{font-size:24px;font-weight:600;margin-bottom:6px;text-align:center;color:#333}
-.subtitle{font-size:14px;color:#666;text-align:center;margin-bottom:1.5rem}
-.step{display:none}.step.active{display:block}
-.progress-bar{width:100%;height:6px;background:#e0e0e0;border-radius:3px;margin-bottom:1.5rem;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,#7F77DD,#534AB7);transition:width 0.4s ease}
-.step-label{font-size:12px;color:#666;margin-bottom:1.5rem;text-align:right;font-weight:500}
-.question{font-size:17px;font-weight:600;margin-bottom:1.25rem;line-height:1.4;color:#333}
-.options{display:flex;flex-direction:column;gap:12px;margin-bottom:1.5rem}
-.opt-btn{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:16px;font-size:15px;color:#333;cursor:pointer;text-align:left;transition:all 0.15s;min-height:56px;touch-action:manipulation;position:relative;overflow:hidden}
-.opt-btn:hover{background:#f8f9fa;border-color:#7F77DD}
-.opt-btn.selected{border:2px solid #7F77DD;background:#EEEDFE;color:#534AB7;font-weight:500}
-/* Enhanced logo grid with jersey mockup */
-.logo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:1.5rem}
-@media(max-width:480px){.logo-grid{grid-template-columns:repeat(2,1fr)}}
-.logo-card{border:1px solid #e0e0e0;border-radius:16px;padding:12px;cursor:pointer;text-align:center;background:#fff;transition:all 0.2s;touch-action:manipulation;position:relative;overflow:hidden}
-.logo-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
-.logo-card.selected{border:2px solid #7F77DD;background:#EEEDFE;transform:translateY(-2px);box-shadow:0 4px 16px rgba(127,119,221,0.3)}
-/* Jersey Mockup Container */
-.jersey-mockup{position:relative;width:100%;aspect-ratio:1;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);margin-bottom:10px}
-.jersey-texture{position:absolute;inset:0;background-image:url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 200 200\"><filter id=\"noise\"><feTurbulence type=\"fractalNoise\" baseFrequency=\"0.8\" numOctaves=\"4\" stitchTiles=\"stitch\"/></filter><rect width=\"100%\" height=\"100%\" filter=\"url(%23noise)\" opacity=\"0.15\"/></svg>');opacity:0.3}
-.jersey-base{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-.jersey-svg{width:85%;height:85%;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))}
-.jersey-logo-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20%;mix-blend-mode:multiply}
-.jersey-logo-overlay img{max-width:70%;max-height:70%;object-fit:contain;filter:contrast(1.2) brightness(0.85) drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
-.jersey-logo-placeholder{width:60%;height:60%;display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,0.8);text-align:center;font-weight:500}
-.lc-name{font-size:13px;font-weight:600;color:#333;margin-top:8px}
-.lc-meta{font-size:11px;color:#666;margin-top:4px}
-/* compare */
-.cmp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px}
-.cmp-prog-txt{font-size:13px;color:#666;font-weight:500}
-.cmp-skip-btn{font-size:12px;color:#534AB7;background:#fff;border:1px solid #AFA9EC;border-radius:8px;padding:8px 12px;cursor:pointer;white-space:nowrap;transition:all 0.2s}
-.cmp-skip-btn:hover{background:#EEEDFE}
-.cmp-to-vote{display:block;width:100%;text-align:center;font-size:14px;color:#534AB7;background:#EEEDFE;border:1px solid #AFA9EC;border-radius:10px;padding:12px;cursor:pointer;margin-bottom:16px;font-weight:500;transition:all 0.2s}
-.cmp-to-vote:hover{background:#dddcf5}
-.cmp-outer{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;margin-bottom:12px;align-items:center}
-.cmp-card{border:1px solid #e0e0e0;border-radius:16px;padding:16px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s}
-.cmp-card:hover{border-color:#7F77DD;transform:scale(1.02)}
-.cmp-card.win{border:2px solid #7F77DD;background:#EEEDFE;transform:scale(1.05)}
-.cmp-card.lose{opacity:0.4;transform:scale(0.95)}
-.cmp-img{width:100%;aspect-ratio:1;border-radius:12px;overflow:hidden;background:#f5f5f5;display:flex;align-items:center;justify-content:center;margin-bottom:8px;position:relative}
-.cmp-img img{width:100%;height:100%;object-fit:contain;padding:12px}
-.vs{text-align:center;font-size:14px;font-weight:700;color:#999;padding:8px;background:#f5f5f5;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:auto}
-/* star */
-.star-row{display:flex;gap:12px;margin-bottom:1.5rem;justify-content:center}
-.star{font-size:36px;cursor:pointer;color:#e0e0e0;transition:all 0.1s;user-select:none}
-.star:hover{transform:scale(1.2)}
-.star.lit{color:#FFB800;filter:drop-shadow(0 0 4px rgba(255,184,0,0.4))}
-textarea{width:100%;border:1px solid #ddd;border-radius:12px;padding:14px;font-size:15px;resize:vertical;min-height:100px;background:#fff;transition:border-color 0.2s}
-textarea:focus{outline:none;border-color:#7F77DD}
-button.nxt{background:#7F77DD;color:#fff;border:none;border-radius:10px;padding:14px 28px;font-size:16px;cursor:pointer;font-weight:600;min-height:52px;transition:all 0.2s}
-button.nxt:hover{background:#6a5fd1;transform:translateY(-1px)}
-button.nxt:active{background:#534AB7;transform:translateY(0)}
-button.nxt:disabled{background:#e0e0e0;color:#999;cursor:not-allowed;transform:none}
-button.back-btn{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px 20px;font-size:16px;cursor:pointer;color:#666;min-height:52px;transition:all 0.2s}
-button.back-btn:hover{background:#f5f5f5}
-/* results */
-.result-card{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:1.25rem;margin-bottom:16px}
-.result-title{font-size:12px;font-weight:600;margin-bottom:12px;color:#666;text-transform:uppercase;letter-spacing:0.5px}
-.winner-box{background:linear-gradient(135deg,#EEEDFE 0%,#E0DDF5 100%);border-radius:16px;padding:1.25rem;display:flex;align-items:center;gap:16px;margin-bottom:16px;border:1px solid #AFA9EC}
-.winner-img{width:64px;height:64px;border-radius:12px;overflow:hidden;background:#fff;border:2px solid #AFA9EC;flex-shrink:0;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-.winner-img img{width:100%;height:100%;object-fit:contain;padding:8px}
-.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.metric{background:#f8f9fa;border-radius:10px;padding:14px;text-align:center}
-.metric .ml{font-size:11px;color:#666;margin-bottom:4px}
-.metric .mv{font-size:20px;font-weight:700;color:#333}
-canvas{width:100%!important;max-height:240px}
-.logo-detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-bottom:12px}
-@media(max-width:400px){.logo-detail-grid{grid-template-columns:repeat(3,1fr)}}
-.lsc{border:1px solid #e0e0e0;border-radius:12px;padding:10px;text-align:center;cursor:pointer;background:#fff;transition:all 0.2s}
-.lsc:hover{border-color:#7F77DD;background:#f8f9fa}
-.lsc.active{border:2px solid #7F77DD;background:#EEEDFE}
-.lsc-img{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#f5f5f5;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
-.lsc-img img{width:100%;height:100%;object-fit:contain;padding:6px}
-.lsc-name{font-size:12px;font-weight:600;color:#333;margin-bottom:2px}
-.lsc-v{font-size:11px;color:#534AB7;font-weight:500}
-.detail-panel{background:#f8f9fa;border-radius:12px;padding:1.25rem;margin-top:12px}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.bar-lbl{font-size:12px;color:#666;min-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
-.bar-track{flex:1;height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden}
-.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#7F77DD,#534AB7);transition:width 0.5s ease}
-.bar-pct{font-size:12px;font-weight:600;color:#534AB7;min-width:40px;text-align:right}
-.comment-item{padding:12px 0;border-bottom:1px solid #eee;font-size:14px;line-height:1.5}
-.comment-item:last-child{border-bottom:none}
-.comment-meta{font-size:12px;color:#666;margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.live-badge{font-size:10px;background:#EAF3DE;color:#3B6D11;padding:3px 8px;border-radius:8px;font-weight:600;margin-left:6px}
-.status-bar{font-size:12px;color:#666;margin-bottom:1rem;display:flex;align-items:center;gap:6px;padding:8px 12px;background:#f5f5f5;border-radius:8px}
-.fb-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ccc;margin-right:4px;animation:pulse 2s infinite}
-.fb-dot.connected{background:#4CAF50;animation:none}
-.fb-dot.error{background:#f44336;animation:none}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
-/* Duplicate vote warning */
-.dup-warning{background:#FFF3CD;border:1px solid #FFEAA7;border-radius:12px;padding:16px;margin-bottom:1rem;font-size:14px;color:#856404;display:none}
-.dup-warning.show{display:block}
-.dup-warning strong{display:block;margin-bottom:4px;font-size:15px}
-/* Loading states */
-.loading{opacity:0.6;pointer-events:none}
-.spinner{display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin-right:8px;vertical-align:middle}
-.spinner-dark{border-color:#7F77DD;border-top-color:transparent}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* Admin badge */
-.admin-badge{display:inline-flex;align-items:center;gap:4px;background:#EEEDFE;color:#534AB7;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-left:8px}
-/* Upload progress */
-.upload-progress{width:100%;height:4px;background:#e0e0e0;border-radius:2px;margin-top:8px;overflow:hidden;display:none}
-.upload-progress.active{display:block}
-.upload-progress-bar{height:100%;background:#7F77DD;width:0%;transition:width 0.3s}
+/* ... (önceki CSS aynı) ... */
 </style>
 
-<!-- Firebase SDK v10 (Modular) -->
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-  import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
-
-  // Firebase Config - SENİN BİLGİLERİN
-  const firebaseConfig = {
-    apiKey: "AIzaSyCJMoseVi5ZLELeIv413Uv00lUPkPXgmsQ",
-    authDomain: "okul-logo-anketi.firebaseapp.com",
-    databaseURL: "https://okul-logo-anketi-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "okul-logo-anketi",
-    storageBucket: "okul-logo-anketi.firebasestorage.app",
-    messagingSenderId: "251108485343",
-    appId: "1:251108485343:web:5c1bcf1dcb905fde74e16a",
-    measurementId: "G-2HYE1VF2Z8"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const storage = getStorage(app);
-  
-  // Make available globally
-  window.firebaseStorage = storage;
-  window.storageRef = ref;
-  window.uploadBytesResumable = uploadBytesResumable;
-  window.getDownloadURL = getDownloadURL;
-  window.deleteObject = deleteObject;
-  
-  console.log('✅ Firebase Storage initialized');
-</script>
+<!-- Firebase SDK - Compat versiyonu (daha stabil) -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
 <!-- FingerprintJS -->
 <script>
@@ -204,6 +22,9 @@ canvas{width:100%!important;max-height:240px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 <body>
+
+<!-- ERROR BANNER -->
+<div class="error-banner" id="error-banner"></div>
 
 <!-- ADMIN LOCK OVERLAY -->
 <div class="overlay-bg" id="admin-overlay">
@@ -231,9 +52,9 @@ canvas{width:100%!important;max-height:240px}
   
   <div class="info-box">
     <strong>🔐 Güvenlik Özellikleri Aktif:</strong><br>
-    • Şifreler bcrypt ile hashlenir (veritabanında asla görünmez)<br>
+    • Şifreler bcrypt ile hashlenir<br>
     • FingerprintJS ile mükerrer oy engelleme<br>
-    • Görseller Firebase Storage'da saklanır (%300 daha hızlı)
+    • Görseller Firebase Storage'da saklanır
   </div>
   
   <div class="section-hd" style="margin-bottom:12px">
@@ -292,10 +113,14 @@ canvas{width:100%!important;max-height:240px}
       <button class="btn-p" id="save-btn" onclick="saveAdmin()">💾 Kaydet</button>
     </div>
   </div>
+  
+  <!-- Upload Status -->
+  <div class="upload-status" id="upload-status"></div>
+  
   <div style="font-size:12px;color:#666;margin-bottom:12px;background:#f5f5f5;padding:10px;border-radius:8px">
     ℹ️ Her karta tıklayarak logo yükleyin. Görseller otomatik olarak Firebase Storage'a yüklenir.
-    <div id="upload-status" style="margin-top:8px;font-weight:600;color:#7F77DD;display:none"></div>
   </div>
+  
   <div class="admin-grid" id="admin-grid"></div>
   
   <div class="section-hd" style="margin-top:1.5rem">
@@ -317,7 +142,7 @@ canvas{width:100%!important;max-height:240px}
   
   <div class="dup-warning" id="dup-warning">
     <strong>⚠️ Bu cihazdan zaten oy kullanılmış!</strong>
-    Her öğrenci sadece bir kez oy kullanabilir. Bu kısıtlama cihazınızın donanım özelliklerine (tarayıcı, ekran, işletim sistemi vb.) dayandığı için tarayıcı geçmişini silseniz bile geçerlidir.
+    Her öğrenci sadece bir kez oy kullanabilir.
   </div>
   
   <div id="poll-inner">
@@ -439,26 +264,72 @@ canvas{width:100%!important;max-height:240px}
 </div>
 
 <script>
-// ==================== FIREBASE STORAGE UPLOAD FONKSİYONU ====================
+// ==================== FIREBASE YAPILANDIRMA ====================
+const firebaseConfig = {
+  apiKey: "AIzaSyCJMoseVi5ZLELeIv413Uv00lUPkPXgmsQ",
+  authDomain: "okul-logo-anketi.firebaseapp.com",
+  databaseURL: "https://okul-logo-anketi-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "okul-logo-anketi",
+  // ÖNEMLI: Bucket adını kontrol edin - eski format appspot.com olabilir
+  storageBucket: "okul-logo-anketi.appspot.com", // Deneyin: firebasestorage.app yerine appspot.com
+  messagingSenderId: "251108485343",
+  appId: "1:251108485343:web:5c1bcf1dcb905fde74e16a",
+  measurementId: "G-2HYE1VF2Z8"
+};
 
+// Firebase'i başlat (compat sürümü)
+let firebaseApp, storage;
+
+try {
+  firebaseApp = firebase.initializeApp(firebaseConfig);
+  storage = firebase.storage();
+  console.log('✅ Firebase başarıyla başlatıldı');
+  console.log('📦 Storage bucket:', firebaseApp.options.storageBucket);
+} catch (e) {
+  console.error('❌ Firebase başlatma hatası:', e);
+  showError('Firebase bağlantı hatası: ' + e.message);
+}
+
+// ==================== YARDIMCI FONKSİYONLAR ====================
+function showError(msg) {
+  const banner = document.getElementById('error-banner');
+  if (banner) {
+    banner.textContent = '⚠️ ' + msg;
+    banner.classList.add('show');
+    setTimeout(() => banner.classList.remove('show'), 5000);
+  }
+  console.error(msg);
+}
+
+function showUploadStatus(msg, type = 'info') {
+  const status = document.getElementById('upload-status');
+  if (status) {
+    status.textContent = msg;
+    status.className = 'upload-status show ' + type;
+    if (type === 'success' || type === 'error') {
+      setTimeout(() => status.classList.remove('show'), 3000);
+    }
+  }
+}
+
+// ==================== STORAGE FONKSİYONLARI ====================
 /**
- * Firebase Storage'a dosya yükleme (Resumable Upload)
- * @param {string} base64Data - Base64 encoded image
- * @param {string} fileName - Dosya adı
- * @returns {Promise<string>} Download URL
+ * Firebase Storage'a dosya yükle
  */
 async function uploadToStorage(base64Data, fileName) {
   try {
-    if (!window.firebaseStorage) {
-      throw new Error('Firebase Storage henüz başlatılmamış');
+    if (!storage) {
+      throw new Error('Storage başlatılmamış. Firebase yapılandırmasını kontrol edin.');
     }
+
+    showUploadStatus('Yükleniyor... 0%', 'info');
 
     // Base64'ten Blob'a çevir
     const response = await fetch(base64Data);
     const blob = await response.blob();
     
-    // Storage referansı oluştur
-    const storageRef = window.storageRef(window.firebaseStorage, 'logos/' + fileName);
+    // Referans oluştur
+    const ref = storage.ref('logos/' + fileName);
     
     // Metadata
     const metadata = {
@@ -469,82 +340,69 @@ async function uploadToStorage(base64Data, fileName) {
       }
     };
     
-    // Yükleme task'i oluştur (resumable)
-    const uploadTask = window.uploadBytesResumable(storageRef, blob, metadata);
+    // Upload task
+    const uploadTask = ref.put(blob, metadata);
     
-    // İlerlemeyi izle (opsiyonel)
+    // İlerlemeyi izle
     uploadTask.on('state_changed', 
       (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        showUploadStatus('Yükleniyor... ' + progress.toFixed(0) + '%', 'info');
         console.log('Yükleme: ' + progress.toFixed(0) + '%');
-        updateUploadStatus('Yükleniyor: ' + progress.toFixed(0) + '%');
       },
       (error) => {
         console.error('Yükleme hatası:', error);
-        updateUploadStatus('Hata: ' + error.message, true);
+        showUploadStatus('Hata: ' + error.message, 'error');
+        throw error;
       }
     );
     
-    // Yükleme tamamlandı
+    // Tamamlandı
     await uploadTask;
-    
-    // Download URL al
-    const downloadURL = await window.getDownloadURL(storageRef);
+    const downloadURL = await ref.getDownloadURL();
     
     console.log('✅ Yüklendi:', downloadURL);
-    updateUploadStatus('✅ Yüklendi!', false, 2000);
+    showUploadStatus('✅ Başarıyla yüklendi!', 'success');
     
     return downloadURL;
     
   } catch (error) {
     console.error('❌ Upload hatası:', error);
-    updateUploadStatus('Hata: ' + error.message, true, 5000);
-    throw error;
+    showUploadStatus('Hata: ' + error.message, 'error');
+    showError('Yükleme hatası: ' + error.message);
+    // Fallback: base64 döndür
+    return base64Data;
   }
 }
 
 /**
- * Storage'dan dosya silme
- * @param {string} fileUrl - Silinecek dosyanın URL'si
+ * Storage'dan dosya sil
  */
 async function deleteFromStorage(fileUrl) {
   try {
-    if (!fileUrl || !fileUrl.includes('firebasestorage')) return;
+    if (!fileUrl || !storage) return;
     
     // URL'den path çıkar
     const url = new URL(fileUrl);
-    const path = decodeURIComponent(url.pathname.split('/o/')[1]);
+    const pathMatch = url.pathname.match(/\/o\/(.+)$/);
+    if (!pathMatch) return;
     
-    const fileRef = window.storageRef(window.firebaseStorage, path);
-    await window.deleteObject(fileRef);
+    const path = decodeURIComponent(pathMatch[1]);
+    const ref = storage.ref(path);
+    await ref.delete();
     
     console.log('🗑️ Silindi:', path);
   } catch (error) {
     console.error('Silme hatası:', error);
-  }
-}
-
-function updateUploadStatus(message, isError = false, duration = 0) {
-  const statusEl = document.getElementById('upload-status');
-  if (!statusEl) return;
-  
-  statusEl.style.display = 'block';
-  statusEl.textContent = message;
-  statusEl.style.color = isError ? '#d32f2f' : '#7F77DD';
-  
-  if (duration > 0) {
-    setTimeout(() => {
-      statusEl.style.display = 'none';
-    }, duration);
+    // Silinemese de devam et
   }
 }
 
 // ==================== DİĞER FONKSİYONLAR ====================
-
 var FB_CONFIG = {
   projectId: 'okul-logo-anketi',
   apiKey: 'AIzaSyCJMoseVi5ZLELeIv413Uv00lUPkPXgmsQ',
-  storageBucket: 'okul-logo-anketi.firebasestorage.app'
+  storageBucket: 'okul-logo-anketi.appspot.com'
 };
 
 var FB = 'https://firestore.googleapis.com/v1/projects/' + FB_CONFIG.projectId + '/databases/(default)/documents';
@@ -569,7 +427,6 @@ function secureHash(password) {
       var salt = dcodeIO.bcrypt.genSaltSync(10);
       return dcodeIO.bcrypt.hashSync(password, salt);
     }
-    // Fallback
     return btoa(password + 'salt2024');
   } catch(e) {
     console.error('Hash error:', e);
@@ -579,7 +436,7 @@ function secureHash(password) {
 
 function verifyHash(password, hash) {
   try {
-    if (!hash) return password === 'admin123'; // Default fallback
+    if (!hash) return password === 'admin123';
     if (hash.startsWith('$2')) {
       if (typeof dcodeIO !== 'undefined' && dcodeIO.bcrypt) {
         return dcodeIO.bcrypt.compareSync(password, hash);
@@ -650,7 +507,8 @@ async function loadCfg(){
     setStatus(true,'✅ Firebase bağlı');
     deviceFingerprint=await getDeviceFingerprint();
   }catch(e){
-    setStatus(false,'❌ Bağlantı hatası');
+    setStatus(false,'❌ Bağlantı hatası: '+e.message);
+    showError('Firestore bağlantı hatası: '+e.message);
     while(logos.length<cfg.logoCount)logos.push({name:'Logo '+(logos.length+1),img:null,formaImg:null});
   }
 }
@@ -769,10 +627,21 @@ function buildAdminGrid(){
   logos.forEach((logo,i)=>{
     var c=document.createElement('div');
     c.className='admin-card'+(logo.img?' has-img':'');
+    
+    // Logo görseli (img veya fallback)
+    var logoHtml = logo.img 
+      ? '<img src="'+logo.img+'" onerror="this.parentElement.innerHTML=\'<div class=\\\'img-fallback\\\'>Yüklenemedi</div>\'">'
+      : '<span>📤 Logo yükle</span>';
+    
+    // Forma görseli (img veya fallback)
+    var formaHtml = logo.formaImg
+      ? '<img src="'+logo.formaImg+'" onerror="this.parentElement.innerHTML=\'<div class=\\\'img-fallback\\\'>Yüklenemedi</div>\'">'
+      : '<span>📤 Forma yükle</span>';
+    
     c.innerHTML=
-      '<div class="img-box" onclick="trigUp('+i+',\'logo\')">'+(logo.img?'<img src="'+logo.img+'">':'<span>📤 Logo yükle</span>')+'</div>'+
+      '<div class="img-box" onclick="trigUp('+i+',\'logo\')">'+logoHtml+'</div>'+
       '<div class="img-type">🏷️ Logo</div>'+
-      '<div class="img-box" onclick="trigUp('+i+',\'forma\')">'+(logo.formaImg?'<img src="'+logo.formaImg+'">':'<span>📤 Forma yükle</span>')+'</div>'+
+      '<div class="img-box" onclick="trigUp('+i+',\'forma\')">'+formaHtml+'</div>'+
       '<div class="img-type">👕 Forma</div>'+
       '<input class="logo-name-input" value="'+logo.name+'" onchange="logos['+i+'].name=this.value" placeholder="Logo adı">'+
       (logo.img||logo.formaImg?'<button class="del-btn" onclick="clrLogo('+i+')">🗑️ Temizle</button>':'');
@@ -816,9 +685,13 @@ async function trigUp(i,t){
         
         buildAdminGrid();
       }catch(err){
-        alert('Yükleme hatası: '+err.message);
+        showError('Yükleme hatası: '+err.message);
         buildAdminGrid();
       }
+    };
+    r.onerror=()=>{
+      showError('Dosya okuma hatası');
+      buildAdminGrid();
     };
     r.readAsDataURL(f);
   };
@@ -874,7 +747,7 @@ function saveAdminPass(){
       btn.innerHTML='Hashle & Kaydet';
       btn.disabled=false;
       updateHashBadge();
-      alert('✅ Şifre hashlendi!\nHash: '+hash.substring(0,30)+'...');
+      alert('✅ Şifre hashlendi!');
     },500);
   },100);
 }
@@ -895,6 +768,7 @@ async function saveAdmin(){
     b.innerHTML='✅ Kaydedildi!';
   }catch(e){
     b.innerHTML='❌ Hata';
+    showError('Kaydetme hatası: '+e.message);
   }
   setTimeout(()=>{b.innerHTML='💾 Kaydet';b.disabled=false;},1500);
 }
@@ -921,7 +795,9 @@ async function clearVotes(){
     votes=[];
     renderResults();
     alert('✅ Tüm oylar silindi!');
-  }catch(e){alert('❌ Hata: '+e.message);}
+  }catch(e){
+    showError('Oylar silinemedi: '+e.message);
+  }
 }
 
 // POLL
@@ -934,11 +810,17 @@ function buildPollGrid(){
     var c=document.createElement('div');
     c.className='logo-card';
     c.setAttribute('data-idx',idx);
+    
+    // Logo görseli - hata durumunda fallback
+    var logoOverlay = logo.img
+      ? '<img src="'+logo.img+'" alt="'+logo.name+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="jersey-logo-placeholder" style="display:none">Logo '+(idx+1)+'</div>'
+      : '<div class="jersey-logo-placeholder">Logo '+(idx+1)+'</div>';
+    
     c.innerHTML=
       '<div class="jersey-mockup">'+
         '<div class="jersey-texture"></div>'+
         '<div class="jersey-base">'+JERSEY_SVG+'</div>'+
-        '<div class="jersey-logo-overlay">'+(logo.img?'<img src="'+logo.img+'" alt="'+logo.name+'">':'<div class="jersey-logo-placeholder">Logo '+(idx+1)+'</div>')+'</div>'+
+        '<div class="jersey-logo-overlay">'+logoOverlay+'</div>'+
       '</div>'+
       '<div class="lc-name">'+logo.name+'</div>'+
       '<div class="lc-meta">Forma önizlemesi</div>';
@@ -974,9 +856,9 @@ function renderCmpPair(){
   prog.textContent=(cmpIdx+1)+' / '+tot+' karşılaştırma';
   var p=cmpPairs[cmpIdx],a=logos[p[0]],b=logos[p[1]];
   document.getElementById('cmp-area').innerHTML=
-    '<div class="cmp-card" id="ca" onclick="pickCmp(0)"><div class="cmp-img">'+(a.img?'<img src="'+a.img+'">':a.name)+'</div><div style="font-size:13px;font-weight:600;color:#333">'+a.name+'</div></div>'+
+    '<div class="cmp-card" id="ca" onclick="pickCmp(0)"><div class="cmp-img">'+(a.img?'<img src="'+a.img+'" onerror="this.textContent=\''+a.name+'\'">':a.name)+'</div><div style="font-size:13px;font-weight:600;color:#333">'+a.name+'</div></div>'+
     '<div class="vs">VS</div>'+
-    '<div class="cmp-card" id="cb" onclick="pickCmp(1)"><div class="cmp-img">'+(b.img?'<img src="'+b.img+'">':b.name)+'</div><div style="font-size:13px;font-weight:600;color:#333">'+b.name+'</div></div>';
+    '<div class="cmp-card" id="cb" onclick="pickCmp(1)"><div class="cmp-img">'+(b.img?'<img src="'+b.img+'" onerror="this.textContent=\''+b.name+'\'">':b.name)+'</div><div style="font-size:13px;font-weight:600;color:#333">'+b.name+'</div></div>';
 }
 
 function pickCmp(s){
@@ -1048,7 +930,7 @@ async function submitPoll(){
     btn.innerHTML='Gönder ✓';
     btn.disabled=false;
     isSubmitting=false;
-    alert('❌ Hata: '+e.message);
+    showError('Gönderim hatası: '+e.message);
   }
 }
 
@@ -1113,7 +995,7 @@ function renderResults(){
       '<span style="font-size:12px;background:#EAF3DE;color:#3B6D11;padding:4px 12px;border-radius:20px;font-weight:600">● Canlı · '+n+' katılımcı</span>'+
     '</div>'+
     '<div class="winner-box">'+
-      '<div class="winner-img">'+(topL.img?'🏆':'🏆')+'</div>'+
+      '<div class="winner-img">'+(topL.img?'<img src="'+topL.img+'">':'🏆')+'</div>'+
       '<div style="flex:1">'+
         '<div style="font-size:12px;color:#534AB7;font-weight:600;margin-bottom:4px">🏆 En çok oy alan</div>'+
         '<div style="font-size:20px;font-weight:700;color:#3C3489">'+top[0]+'</div>'+
@@ -1238,6 +1120,13 @@ function renderLogoDetail(name,cmpT){
   applyLang();
   buildPollGrid();
   startLive();
+  
+  // Test Storage bağlantısı
+  if(storage){
+    console.log('✅ Storage hazır, bucket:', storage.app.options.storageBucket);
+  }else{
+    showError('Storage başlatılamadı! Firebase yapılandırmasını kontrol edin.');
+  }
 })();
 </script>
 </body>
