@@ -391,7 +391,7 @@ textarea:focus { outline: none; border-color: #534AB7; background: white; }
       <p class="question">İkisinden hangisini tercih edersin?</p>
       <div class="cmp-header">
         <span class="cmp-prog-txt" id="cmp-prog"></span>
-        <button class="cmp-skip-btn" onclick="skipCmp()">Emin değilim →</button>
+        <button class="cmp-skip-btn" onclick="skipComparison()">Emin değilim →</button>
       </div>
       <div class="cmp-outer" id="cmp-area"></div>
       <button class="cmp-to-vote" onclick="go(4)" id="cmp-to-vote-btn">Karşılaştırmayı atlayıp logo seçimine geç →</button>
@@ -480,7 +480,7 @@ textarea:focus { outline: none; border-color: #534AB7; background: white; }
 // ==================== FIREBASE YAPILANDIRMA ====================
 // KENDİ FIREBASE PROJENİZİN BİLGİLERİNİ BURAYA GİRİN
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+// import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -489,7 +489,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAToSujd5jhKdL53SmUgb4TMh77obQHanM",
   authDomain: "logoanket61.firebaseapp.com",
   projectId: "logoanket61",
-  storageBucket: "logoanket61.firebasestorage.app",
+  storageBucket: "logoanket61.appspot.com",
   messagingSenderId: "59188836261",
   appId: "1:59188836261:web:6ec7c9ef6e3c25ad151a4c"
 };
@@ -1286,9 +1286,15 @@ function selectOption(btn, key, value) {
 }
 
 async function checkDuplicateVote() {
-  if (!AppState.deviceFingerprint) {
-    AppState.deviceFingerprint = await getDeviceFingerprint();
-  }
+  ...
+  const isDuplicate = !snapshot.empty;
+  document.getElementById('dup-warning').classList.toggle('show', isDuplicate);
+  document.getElementById('poll-inner').style.display = isDuplicate ? 'none' : 'block';
+-
+-}
++  return isDuplicate;
++}
+
   
   try {
     const snapshot = await db.collection('votes')
