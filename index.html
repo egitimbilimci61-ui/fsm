@@ -1118,33 +1118,46 @@ function buildPollGrid() {
   grid.innerHTML = '';
   
   state.logos.forEach((logo, index) => {
+    // Eğer hiçbir görsel yoksa bu kartı oluşturma
     if (!logo.img && !logo.formaImg) return;
     
     const card = document.createElement('div');
     card.className = 'logo-card';
     
-    const logoOverlay = logo.img
-      ? `<img src="${logo.img}" alt="${logo.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="jersey-logo-placeholder" style="display:none">Logo ${index + 1}</div>`
-      : `<div class="jersey-logo-placeholder">Logo ${index + 1}</div>`;
+    // Görsel Mantığı: Forma resmi varsa onu bas, yoksa logoyu SVG formaya giydir
+    let displayContent = '';
     
+    if (logo.formaImg) {
+        // Doğrudan yüklenen forma görselini göster
+        displayContent = `<img src="${logo.formaImg}" style="width:100%; height:100%; object-fit:contain;">`;
+    } else {
+        // Logo varsa, SVG forma üzerine logoyu yerleştir (Eski mantık)
+        const logoOverlay = logo.img 
+          ? `<img src="${logo.img}" onerror="this.style.display='none'">` 
+          : `<div class="jersey-logo-placeholder">Logo ${index + 1}</div>`;
+          
+        displayContent = `
+            <div class="jersey-base">
+              <svg viewBox="0 0 200 240" style="width:100%;height:100%">
+                <defs>
+                  <linearGradient id="grad${index}" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#667eea"/>
+                    <stop offset="100%" style="stop-color:#764ba2"/>
+                  </linearGradient>
+                </defs>
+                <path d="M50 20 Q100 5 150 20 L180 50 L170 70 L150 55 L150 220 Q100 235 50 220 L50 55 L30 70 L20 50 Z" 
+                      fill="url(#grad${index})" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="jersey-logo-overlay">${logoOverlay}</div>`;
+    }
+
     card.innerHTML = `
       <div class="jersey-mockup">
-        <div class="jersey-base">
-          <svg viewBox="0 0 200 240" style="width:100%;height:100%">
-            <defs>
-              <linearGradient id="grad${index}" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#667eea"/>
-                <stop offset="100%" style="stop-color:#764ba2"/>
-              </linearGradient>
-            </defs>
-            <path d="M50 20 Q100 5 150 20 L180 50 L170 70 L150 55 L150 220 Q100 235 50 220 L50 55 L30 70 L20 50 Z" 
-                  fill="url(#grad${index})" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
-          </svg>
-        </div>
-        <div class="jersey-logo-overlay">${logoOverlay}</div>
+        ${displayContent}
       </div>
       <div class="lc-name">${logo.name}</div>
-      <div class="lc-meta">Forma önizlemesi</div>
+      <div class="lc-meta">${logo.formaImg ? 'Tasarım Ön İzlemesi' : 'Forma Üzerinde Duruş'}</div>
     `;
     
     card.onclick = () => {
