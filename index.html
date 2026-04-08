@@ -688,16 +688,19 @@ async function initApp() {
     // Veritabanı kontrol ve kurulum
     await checkDatabaseSetup();
     
-    // Verileri yükle
+    // Verileri yükle (Buradaki await'ler verinin gelmesini bekler)
     await loadConfig();
     await loadLogos();
     await loadVotes();
     
-    // UI hazırla
-    applyLanguage();
-    buildAdminGrid();
+    // --- UI HAZIRLA ---
+    applyLanguage();     // Dil seçeneklerini uygular
+    buildAdminGrid();    // Yönetim panelindeki logoları çizer
+    buildPollGrid();     // ANKET SAYFASINDAKİ LOGOLARI ÇİZER (Eksik olan buydu)
     
-    console.log('✅ Uygulama hazır');
+    updatePollStatus();  // Anketin açık mı kapalı mı olduğunu kontrol eder
+    
+    console.log('✅ Uygulama ve logolar hazır');
     
   } catch (error) {
     console.error('❌ Başlatma hatası:', error);
@@ -705,7 +708,6 @@ async function initApp() {
     showError('Uygulama başlatılamadı: ' + error.message);
   }
 }
-
 // ==================== YARDIMCI FONKSİYONLAR ====================
 
 function generateFingerprint() {
@@ -856,6 +858,13 @@ async function loadLogos() {
       });
     }
     state.logos = state.logos.slice(0, state.config.logoCount);
+
+    // --- KRİTİK EKLEME: UI GÜNCELLEME ---
+    buildPollGrid(); // Anket sayfasındaki logoları anında oluştur
+    if (isAdmin) buildAdminGrid(); // Eğer yönetici giriş yapmışsa orayı da güncelle
+    
+    console.log("✅ Logolar Firebase'den yüklendi ve ekran güncellendi.");
+    // ------------------------------------
     
   } catch (error) {
     console.error('Logo yükleme hatası:', error);
