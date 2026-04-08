@@ -170,7 +170,26 @@ textarea:focus { outline: none; border-color: #534AB7; background: white; }
   .options { grid-template-columns: 1fr; }
   .winner-box { flex-direction: column; text-align: center; }
 .logo-card { position: relative; }
+.logo-card {
+    background: #1a1a1a !important; /* Kartın arka planı */
+    border: 2px solid #333 !important;
+    transition: all 0.3s ease;
+}
 
+.logo-card .lc-name {
+    color: #ffffff !important; /* Yazı rengi beyaz */
+}
+
+.logo-card.selected {
+    border-color: #534AB7 !important;
+    background: #252525 !important;
+}
+
+.view-jersey-btn {
+    border-radius: 20px;
+    padding: 5px 15px;
+    cursor: pointer;
+}
 
 }
 
@@ -1299,32 +1318,32 @@ function buildPollGrid() {
     grid.innerHTML = '';
 
     state.logos.forEach((logo, index) => {
-        if (!logo.img && !logo.formaImg) return;
+        // Sadece görseli olan logoları listele
+        if (!logo.img) return;
 
         const card = document.createElement('div');
         card.className = 'logo-card';
-
-        // Logo görseli hazırlığı
-        const logoImgHtml = logo.img 
-            ? `<img src="${logo.img}">` 
-            : `<div class="jersey-logo-placeholder">Logo ${index + 1}</div>`;
+        // Kartın genel stilini burada hafifçe özelleştiriyoruz
+        card.style.background = "#1a1a1a"; // Koyu siyah/gri zemin
+        card.style.borderColor = "#333";
 
         card.innerHTML = `
-            <div class="jersey-mockup">
-                <div class="jersey-base">
-                    <svg viewBox="0 0 200 240">
-                        <path d="M50 20 Q100 5 150 20 L180 50 L170 70 L150 55 L150 220 Q100 235 50 220 L50 55 L30 70 L20 50 Z" fill="#eee" stroke="#ccc"/>
-                    </svg>
-                </div>
-                <div class="jersey-logo-overlay">${logoImgHtml}</div>
+            <div class="jersey-mockup" style="height: 200px; display: flex; align-items: center; justify-content: center; background: #000; border-radius: 12px; overflow: hidden;">
+                <img src="${logo.img}" style="max-width: 85%; max-height: 85%; object-fit: contain;">
             </div>
-            <div class="lc-name">${logo.name}</div>
-            ${logo.formaImg ? `<button class="view-jersey-btn" onclick="openJerseyModal('${logo.name}', '${logo.formaImg}', event)">👕 Formayı Gör</button>` : ''}
+            <div class="lc-name" style="margin-top: 15px; color: #fff;">${logo.name}</div>
+            <div style="margin-top: 10px;">
+                ${logo.formaImg ? `<button class="view-jersey-btn" onclick="openJerseyModal('${logo.name}', '${logo.formaImg}', event)" style="background: #333; color: #fff; border-color: #555;">👕 Formayı Gör</button>` : ''}
+            </div>
         `;
 
         card.onclick = () => {
-            document.querySelectorAll('.logo-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.logo-card').forEach(c => {
+                c.classList.remove('selected');
+                c.style.borderColor = "#333";
+            });
             card.classList.add('selected');
+            card.style.borderColor = "#534AB7"; // Seçilince okul rengi sınır
             state.pollData.logo = logo.name;
             document.getElementById('n4').disabled = false;
         };
