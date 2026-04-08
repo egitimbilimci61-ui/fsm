@@ -171,39 +171,99 @@ textarea:focus { outline: none; border-color: #534AB7; background: white; }
   .winner-box { flex-direction: column; text-align: center; }
 .logo-card { position: relative; }
 
-.forma-preview-popup {
-    position: absolute;
-    bottom: 110%; /* Kartın hemen üzerinde açılır */
-    left: 50%;
-    transform: translateX(-50%) scale(0.9);
-    width: 200px;
-    height: 200px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    display: none; /* Başlangıçta gizli */
-    z-index: 500;
-    pointer-events: none; /* Mouse ile üzerine gelindiğinde titremeyi engeller */
-    border: 3px solid #534AB7;
-    overflow: hidden;
-    transition: all 0.2s ease;
-    opacity: 0;
+
 }
 
 /* Kartın üzerine gelindiğinde pencereyi göster */
-.logo-card:hover .forma-preview-popup {
+/* --- GÜNCELLENMİŞ SABİT PENCERE CSS --- */
+
+/* Tüm ekranın üzerine sabitlenen ana kapsayıcı (Başlangıçta gizli) */
+.forma-preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Arka planı karartır */
+    backdrop-filter: blur(5px); /* Arka planı bulandırır (Şık bir etki) */
+    display: none; /* Gizli */
+    align-items: center;
+    justify-content: center;
+    z-index: 2000; /* En üstte görünmesini sağlar */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Kapsayıcı aktif olduğunda görünür yap */
+.forma-preview-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Beyaz pencere kartı */
+.forma-preview-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    max-width: 90%; /* Mobilde sığması için */
+    max-height: 90%;
+    text-align: center;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+/* Pencere aktif olduğunda büyüyerek gel */
+.forma-preview-overlay.active .forma-preview-card {
+    transform: scale(1);
+}
+
+/* Pencerenin içindeki büyük forma görseli */
+.forma-preview-card img {
+    max-width: 100%;
+    max-height: 70vh; /* Ekran yüksekliğinin %70'ini geçmesin */
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Pencerenin başlığı (Logo Adı) */
+.forma-preview-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Pencerenin alt yazısı */
+.forma-preview-meta {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Kapatma Butonu (X) */
+.close-preview {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
+    transition: background 0.2s;
 }
 
-.forma-preview-popup img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    padding: 10px;
+.close-preview:hover {
+    background: #e0e0e0;
+    color: #d32f2f;
 }
 
 /* Küçük ok işareti */
@@ -426,6 +486,13 @@ textarea:focus { outline: none; border-color: #534AB7; background: white; }
       <div class="btn-row">
         <button class="back-btn" onclick="goToStep(5)">← Geri</button>
         <button class="nxt" id="n6" onclick="submitVote()" disabled>Oyunu Gönder ✓</button>
+      </div>
+      <div class="forma-preview-overlay" id="forma-preview-overlay">
+          <div class="forma-preview-card">
+            <button class="close-preview" onclick="hideFormaPreview()">×</button>
+            <div id="preview-content">
+            </div>
+          </div>
       </div>
     </div>
     
@@ -1171,18 +1238,12 @@ function buildPollGrid() {
     const card = document.createElement('div');
     card.className = 'logo-card';
     
-    // Forma ön izleme penceresi (Eğer forma resmi yüklendiyse)
-    const previewPopup = logo.formaImg 
-      ? `<div class="forma-preview-popup"><img src="${logo.formaImg}"></div>` 
-      : `<div class="forma-preview-popup"><div style="padding:20px; text-align:center; font-size:12px; color:#666;">Bu logo için özel forma tasarımı yüklenmemiş.</div></div>`;
-
-    // Ana kart içeriği (Logo ve SVG Forma)
+    // Ana kart içeriği (Logo ve SVG Forma) - Görseldeki yapı korunuyor
     const logoOverlay = logo.img 
       ? `<img src="${logo.img}" onerror="this.style.display='none'">` 
       : `<div class="jersey-logo-placeholder">Logo ${index + 1}</div>`;
 
     card.innerHTML = `
-      ${previewPopup}
       <div class="jersey-mockup">
         <div class="jersey-base">
           <svg viewBox="0 0 200 240" style="width:100%;height:100%">
@@ -1202,6 +1263,11 @@ function buildPollGrid() {
       <div class="lc-meta">🔍 Üzerine gelip formayı gör</div>
     `;
     
+    // --- YENİ FARE OLAYLARI (HOVER TETİKLEME) ---
+    card.onmouseover = () => showFormaPreview(logo); // Fare gelince pencereyi aç
+    card.onmouseout = () => hideFormaPreview();     // Fare gidince pencereyi kapat
+    
+    // Tıklama olayı (Seçim işlemi) korunuyor
     card.onclick = () => {
       document.querySelectorAll('.logo-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
@@ -1212,6 +1278,7 @@ function buildPollGrid() {
     grid.appendChild(card);
   });
 }
+
 function buildComparison() {
   state.cmpPairs = [];
   state.cmpIndex = 0;
@@ -1320,7 +1387,34 @@ function goToStep(step) {
     buildComparison();
   }
 }
+/* --- PENCEREYİ AÇAN VE KAPATAN YARDIMCI FONKSİYONLAR --- */
 
+function showFormaPreview(logo) {
+    const overlay = document.getElementById('forma-preview-overlay');
+    const content = document.getElementById('preview-content');
+    
+    if (!overlay || !content) return;
+    
+    // Eğer forma resmi yoksa hiçbir şey yapma
+    if (!logo.formaImg) return;
+    
+    // Pencerenin içeriğini dinamik olarak doldur
+    content.innerHTML = `
+        <img src="${logo.formaImg}" alt="${logo.name}">
+        <div class="forma-preview-title">${logo.name}</div>
+        <div class="forma-preview-meta">Tasarım Ön İzlemesi</div>
+    `;
+    
+    // Pencereyi aktif hale getir
+    overlay.classList.add('active');
+}
+
+function hideFormaPreview() {
+    const overlay = document.getElementById('forma-preview-overlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+}
 async function submitVote() {
   if (state.isSubmitting) return;
   
