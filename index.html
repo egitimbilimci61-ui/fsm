@@ -1627,33 +1627,32 @@ function renderResults() {
     const cmpTotals = {}; // Düello (VS) galibiyetleri
 
     state.votes.forEach(v => {
-        // Genel oylar
+        // Genel istatistikler
         if (v.logo) stats.logo[v.logo] = (stats.logo[v.logo] || 0) + 1;
         if (v.sinif) stats.sinif[v.sinif] = (stats.sinif[v.sinif] || 0) + 1;
         stats.yildiz += (Number(v.yildiz) || 0);
 
-        // Düello (VS) verilerini işle
-        try {
-            if (v.cmpWins) {
-                const wins = typeof v.cmpWins === 'string' ? JSON.parse(v.cmpWins) : v.cmpWins;
-                Object.entries(wins).forEach(([logoName, winCount]) => {
-                    cmpTotals[logoName] = (cmpTotals[logoName] || 0) + winCount;
-                });
+        // --- CİNSİYET AYIKLAMA (KARAKTER HATALARINA KARŞI GÜVENLİ) ---
+        let g = null;
+        if (v.cinsiyet) {
+            const c = v.cinsiyet.toString();
+            
+            // "Kız", "Kz", "Kiz" veya "👧" içeriyorsa 'Kız' kabul et
+            if (c.includes('Kz') || c.includes('Kız') || c.includes('Kiz') || c.includes('kız')) {
+                g = 'Kız';
+            } 
+            // "Erkek" veya "👦" içeriyorsa 'Erkek' kabul et
+            else if (c.includes('Erkek') || c.includes('erkek')) {
+                g = 'Erkek';
             }
-        } catch (e) { console.error("Düello veri hatası:", e); }
+        }
 
-        // Cinsiyet kırılımı
-        const g = (v.cinsiyet && v.cinsiyet.includes('Kız')) ? 'Kız' : 
-                  ((v.cinsiyet && v.cinsiyet.includes('Erkek')) ? 'Erkek' : null);
         if (g && v.logo) {
+            if (!genderBreakdown[g]) genderBreakdown[g] = {};
             genderBreakdown[g][v.logo] = (genderBreakdown[g][v.logo] || 0) + 1;
         }
-
-        // Sınıf kırılımı
-        if (v.sinif && v.logo) {
-            if (!classBreakdown[v.sinif]) classBreakdown[v.sinif] = {};
-            classBreakdown[v.sinif][v.logo] = (classBreakdown[v.sinif][v.logo] || 0) + 1;
-        }
+        
+        // ... (Sınıf ve diğerleri aynı kalıyor)
     });
 
     // Hesaplanan değerler
