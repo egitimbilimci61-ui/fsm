@@ -143,7 +143,30 @@ input:checked + .tslider::before { transform: translateX(22px); }
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</script>
+// ==================== APP INIT (TEK ÇALIŞMA GARANTİ) ====================
 
+let appStarted = false;
+
+async function initApp() {
+  console.log("🚀 App başlatılıyor...");
+
+  await loadCfg();
+  applyLang();
+  buildPollGrid();
+  updatePollStatus();
+
+  startLive();
+
+  console.log("✅ App hazır");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (!appStarted) {
+    appStarted = true;
+    initApp();
+  }
+});
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
@@ -2300,29 +2323,6 @@ function renderLogoDetail(name, cmpT) {
   
   console.log('✅ Firestore Base64 modu aktif - Storage kullanılmıyor');
 })();
-</script>
-// ==================== APP INIT (TEK ÇALIŞMA GARANTİ) ====================
 
-let appStarted = false;
-
-async function initApp() {
-  console.log("🚀 App başlatılıyor...");
-
-  await loadCfg();
-  applyLang();
-  buildPollGrid();
-  updatePollStatus();
-
-  startLive();
-
-  console.log("✅ App hazır");
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (!appStarted) {
-    appStarted = true;
-    initApp();
-  }
-});
 </body>
 </html>
