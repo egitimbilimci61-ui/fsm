@@ -640,8 +640,14 @@ function switchTab(t) {
     document.getElementById('tab-' + n).classList.toggle('active', n === t);
     document.getElementById('view-' + n).classList.toggle('active', n === t);
   });
-  if (t === 'poll') { applyLang(); buildPollGrid(); checkForDuplicate(); }
-  if (t === 'results') { loadVotes().then(openResults); }
+
+  if (t === 'poll') {
+    checkForDuplicate();
+  }
+
+  if (t === 'results') {
+    loadVotes().then(openResults);
+  }
 }
 
 async function checkForDuplicate() {
@@ -904,32 +910,38 @@ async function clearVotes() {
 var JERSEY_SVG = `<svg viewBox="0 0 200 240" class="jersey-svg"><defs><linearGradient id="jerseyGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#667eea;stop-opacity:1"/><stop offset="100%" style="stop-color:#764ba2;stop-opacity:1"/></linearGradient></defs><path d="M50 20 Q100 5 150 20 L180 50 L170 70 L150 55 L150 220 Q100 235 50 220 L50 55 L30 70 L20 50 Z" fill="url(#jerseyGrad)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/></svg>`;
 
 function buildPollGrid() {
-  var g = document.getElementById('poll-logo-grid');
-  g.innerHTML = '';
+  const g = document.getElementById('poll-logo-grid');
+
+  if (!g) return;
+
+  g.innerHTML = ""; // 💥 KRİTİK
+
   logos.forEach((logo, idx) => {
-    var c = document.createElement('div');
+    const c = document.createElement('div');
     c.className = 'logo-card';
-    c.setAttribute('data-idx', idx);
-    var logoOverlay = logo.img
-      ? '<img src="' + logo.img + '" alt="' + logo.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="jersey-logo-placeholder" style="display:none">Logo ' + (idx + 1) + '</div>'
-      : '<div class="jersey-logo-placeholder">Logo ' + (idx + 1) + '</div>';
-    c.innerHTML =
-      '<div class="jersey-mockup">' +
-        '<div class="jersey-texture"></div>' +
-        '<div class="jersey-base">' + JERSEY_SVG + '</div>' +
-        '<div class="jersey-logo-overlay">' + logoOverlay + '</div>' +
-      '</div>' +
-      '<div class="lc-name">' + logo.name + '</div>' +
-      '<div class="lc-meta">Forma önizlemesi</div>';
-    c.onclick = function () {
+
+    c.innerHTML = `
+      <div class="jersey-mockup">
+        <div class="jersey-texture"></div>
+        <div class="jersey-base">${JERSEY_SVG}</div>
+        <div class="jersey-logo-overlay">
+          ${logo.img 
+            ? `<img src="${logo.img}">` 
+            : `<div class="jersey-logo-placeholder">Logo ${idx + 1}</div>`}
+        </div>
+      </div>
+      <div class="lc-name">${logo.name}</div>
+    `;
+
+    c.onclick = () => {
       document.querySelectorAll('.logo-card').forEach(x => x.classList.remove('selected'));
       c.classList.add('selected');
       pdata.logo = logo.name;
       document.getElementById('n4').disabled = false;
     };
+
     g.appendChild(c);
   });
-  buildCmp();
 }
 
 function buildCmp() {
@@ -2289,5 +2301,28 @@ function renderLogoDetail(name, cmpT) {
   console.log('✅ Firestore Base64 modu aktif - Storage kullanılmıyor');
 })();
 </script>
+// ==================== APP INIT (TEK ÇALIŞMA GARANTİ) ====================
+
+let appStarted = false;
+
+async function initApp() {
+  console.log("🚀 App başlatılıyor...");
+
+  await loadCfg();
+  applyLang();
+  buildPollGrid();
+  updatePollStatus();
+
+  startLive();
+
+  console.log("✅ App hazır");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (!appStarted) {
+    appStarted = true;
+    initApp();
+  }
+});
 </body>
 </html>
