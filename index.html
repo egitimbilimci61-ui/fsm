@@ -36,8 +36,6 @@ h1 { font-size: 24px; margin: 0 0 8px 0; color: #1a1a1a; }
 .logo-card { background: #fff; border: 2px solid #e5e5e5; border-radius: 16px; padding: 16px; cursor: pointer; transition: all 0.2s; text-align: center; }
 .logo-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 .logo-card.selected { border-color: #534AB7; background: #F8F7FF; }
-.lc-img { width: 80px; height: 80px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 12px; overflow: hidden; }
-.lc-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .lc-name { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 4px; }
 .lc-meta { font-size: 12px; color: #888; }
 .star-row { display: flex; gap: 8px; font-size: 32px; margin-bottom: 20px; }
@@ -382,8 +380,7 @@ input:checked + .tslider::before { transform: translateX(22px); }
 </div>
 
 <script>
-// ==================== BASİT HASH FONKSİYONU ====================
-// ==================== DÜZELTİLMİŞ HASH FONKSİYONLARI ====================
+// ==================== DÜZELTİLMİŞ ŞİFRE FONKSİYONLARI ====================
 function simpleHash(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -391,22 +388,18 @@ function simpleHash(str) {
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash;
   }
-  return 'hash_' + Math.abs(hash).toString(16) + '_salt2024';
+  return 'hash_' + Math.abs(hash).toString(16) + '_2024';
 }
 
 function secureHash(password) {
-  // Basit ama tutarlı hash
-  return simpleHash(password);
+  return simpleHash(password + 'okul_anketi_salt');
 }
 
 function verifyHash(password, hash) {
-  // İlk giriş veya boş hash durumu
   if (!hash || hash === '') {
     return password === 'admin123';
   }
-  
-  // Basit hash kontrolü
-  const testHash = simpleHash(password);
+  const testHash = simpleHash(password + 'okul_anketi_salt');
   return testHash === hash;
 }
 
@@ -682,8 +675,12 @@ function chkAdmin() {
     return; 
   }
   
-  // İlk kurulum - hash yoksa
+  console.log('Girilen şifre:', input);
+  console.log('Mevcut hash:', cfg.adminPassHash);
+  
+  // İlk kurulum - hash yoksa veya boşsa
   if (!cfg.adminPassHash || cfg.adminPassHash === '') {
+    console.log('İlk kurulum yapılıyor...');
     var hash = secureHash(input);
     cfg.adminPassHash = hash;
     saveCfgFb();
@@ -697,16 +694,19 @@ function chkAdmin() {
   
   // Hash varsa doğrula
   if (verifyHash(input, cfg.adminPassHash)) {
+    console.log('Şifre doğrulandı!');
     adminOK = true;
     closeOverlay('admin-overlay');
     switchTab('admin');
     buildAdminGrid();
     updateHashBadge();
   } else {
+    console.log('Şifre yanlış!');
     err.style.display = 'block';
-    err.textContent = '❌ Yanlış şifre!';
+    err.textContent = '❌ Yanlış şifre! (Varsayılan: admin123)';
   }
 }
+
 function updateHashBadge() {
   var badge = document.getElementById('hash-badge');
   if (badge) badge.style.display = cfg.adminPassHash ? 'inline-flex' : 'none';
@@ -1062,7 +1062,7 @@ function chkRes() {
     resOK = true;
     document.getElementById('res-lock-wrap').style.display = 'none';
     renderResults();
-   } else {
+  } else {
     document.getElementById('res-err').style.display = 'block';
   }
 }
