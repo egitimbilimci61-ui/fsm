@@ -1627,22 +1627,35 @@ function renderResults() {
     const cmpTotals = {}; // Düello (VS) galibiyetleri
 
     state.votes.forEach(v => {
-        // Genel istatistikler
+        // 1. Genel İstatistikler
         if (v.logo) stats.logo[v.logo] = (stats.logo[v.logo] || 0) + 1;
         if (v.sinif) stats.sinif[v.sinif] = (stats.sinif[v.sinif] || 0) + 1;
         stats.yildiz += (Number(v.yildiz) || 0);
 
-        // --- CİNSİYET AYIKLAMA (KARAKTER HATALARINA KARŞI GÜVENLİ) ---
+        // 2. DÜELLO (VS) VERİSİNİ AYIKLA (Garantili Yöntem)
+        if (v.cmpWins) {
+            try {
+                let wins = v.cmpWins;
+                // Eğer veri metin (string) ise objeye çevir
+                if (typeof wins === 'string') {
+                    wins = JSON.parse(wins);
+                }
+                // Logoları tek tek havuzda topla
+                Object.entries(wins).forEach(([name, count]) => {
+                    cmpTotals[name] = (cmpTotals[name] || 0) + Number(count);
+                });
+            } catch (e) {
+                console.error("Düello verisi okunamadı:", e);
+            }
+        }
+
+        // 3. CİNSİYET AYIKLAMA (Firebase'deki "Kz" verisi için)
         let g = null;
         if (v.cinsiyet) {
             const c = v.cinsiyet.toString();
-            
-            // "Kız", "Kz", "Kiz" veya "👧" içeriyorsa 'Kız' kabul et
             if (c.includes('Kz') || c.includes('Kız') || c.includes('Kiz') || c.includes('kız')) {
                 g = 'Kız';
-            } 
-            // "Erkek" veya "👦" içeriyorsa 'Erkek' kabul et
-            else if (c.includes('Erkek') || c.includes('erkek')) {
+            } else if (c.includes('Erkek') || c.includes('erkek')) {
                 g = 'Erkek';
             }
         }
@@ -1651,8 +1664,12 @@ function renderResults() {
             if (!genderBreakdown[g]) genderBreakdown[g] = {};
             genderBreakdown[g][v.logo] = (genderBreakdown[g][v.logo] || 0) + 1;
         }
-        
-        // ... (Sınıf ve diğerleri aynı kalıyor)
+
+        // 4. Sınıf Analizi
+        if (v.sinif && v.logo) {
+            if (!classBreakdown[v.sinif]) classBreakdown[v.sinif] = {};
+            classBreakdown[v.sinif][v.logo] = (classBreakdown[v.sinif][v.logo] || 0) + 1;
+        }
     });
 
     // Hesaplanan değerler
