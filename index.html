@@ -176,7 +176,74 @@ textarea:focus { outline: none; border-color: #534AB7; background: white; }
 
 /* Kartın üzerine gelindiğinde pencereyi göster */
 /* --- GÜNCELLENMİŞ SABİT PENCERE CSS --- */
+/* Modal (Arka Plan) */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: none; /* Başlangıçta gizli */
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(8px);
+}
 
+/* Modal İçerik Kutusu */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    text-align: center;
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-content img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Kapat Butonu */
+.modal-close {
+    position: absolute;
+    top: -15px; right: -15px;
+    width: 35px; height: 35px;
+    background: #534AB7;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Karttaki "Büyüteç" Butonu */
+.view-jersey-btn {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background: #f0f0ff;
+    color: #534AB7;
+    border: 1px solid #534AB7;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.view-jersey-btn:hover {
+    background: #534AB7;
+    color: white;
+}
 /* Tüm ekranın üzerine sabitlenen ana kapsayıcı (Başlangıçta gizli) */
 .forma-preview-overlay {
     position: fixed;
@@ -1227,58 +1294,61 @@ async function checkDuplicate() {
 }
 
 function buildPollGrid() {
-  const grid = document.getElementById('poll-logo-grid');
-  if (!grid) return;
-  
-  grid.innerHTML = '';
-  
-  state.logos.forEach((logo, index) => {
-    if (!logo.img && !logo.formaImg) return;
-    
-    const card = document.createElement('div');
-    card.className = 'logo-card';
-    
-    // Ana kart içeriği (Logo ve SVG Forma) - Görseldeki yapı korunuyor
-    const logoOverlay = logo.img 
-      ? `<img src="${logo.img}" onerror="this.style.display='none'">` 
-      : `<div class="jersey-logo-placeholder">Logo ${index + 1}</div>`;
+    const grid = document.getElementById('poll-logo-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
 
-    card.innerHTML = `
-      <div class="jersey-mockup">
-        <div class="jersey-base">
-          <svg viewBox="0 0 200 240" style="width:100%;height:100%">
-            <defs>
-              <linearGradient id="grad${index}" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#667eea"/>
-                <stop offset="100%" style="stop-color:#764ba2"/>
-              </linearGradient>
-            </defs>
-            <path d="M50 20 Q100 5 150 20 L180 50 L170 70 L150 55 L150 220 Q100 235 50 220 L50 55 L30 70 L20 50 Z" 
-                  fill="url(#grad${index})" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
-          </svg>
-        </div>
-        <div class="jersey-logo-overlay">${logoOverlay}</div>
-      </div>
-      <div class="lc-name">${logo.name}</div>
-      <div class="lc-meta">🔍 Üzerine gelip formayı gör</div>
-    `;
-    
-    // --- YENİ FARE OLAYLARI (HOVER TETİKLEME) ---
-    card.onmouseover = () => showFormaPreview(logo); // Fare gelince pencereyi aç
-    card.onmouseout = () => hideFormaPreview();     // Fare gidince pencereyi kapat
-    
-    // Tıklama olayı (Seçim işlemi) korunuyor
-    card.onclick = () => {
-      document.querySelectorAll('.logo-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      state.pollData.logo = logo.name;
-      document.getElementById('n4').disabled = false;
-    };
-    
-    grid.appendChild(card);
-  });
+    state.logos.forEach((logo, index) => {
+        if (!logo.img && !logo.formaImg) return;
+
+        const card = document.createElement('div');
+        card.className = 'logo-card';
+
+        // Logo görseli hazırlığı
+        const logoImgHtml = logo.img 
+            ? `<img src="${logo.img}">` 
+            : `<div class="jersey-logo-placeholder">Logo ${index + 1}</div>`;
+
+        card.innerHTML = `
+            <div class="jersey-mockup">
+                <div class="jersey-base">
+                    <svg viewBox="0 0 200 240">
+                        <path d="M50 20 Q100 5 150 20 L180 50 L170 70 L150 55 L150 220 Q100 235 50 220 L50 55 L30 70 L20 50 Z" fill="#eee" stroke="#ccc"/>
+                    </svg>
+                </div>
+                <div class="jersey-logo-overlay">${logoImgHtml}</div>
+            </div>
+            <div class="lc-name">${logo.name}</div>
+            ${logo.formaImg ? `<button class="view-jersey-btn" onclick="openJerseyModal('${logo.name}', '${logo.formaImg}', event)">👕 Formayı Gör</button>` : ''}
+        `;
+
+        card.onclick = () => {
+            document.querySelectorAll('.logo-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            state.pollData.logo = logo.name;
+            document.getElementById('n4').disabled = false;
+        };
+        grid.appendChild(card);
+    });
 }
 
+// Modal Açma Fonksiyonu
+function openJerseyModal(name, imgSrc, event) {
+    event.stopPropagation(); // Kartın seçilmesini engeller, sadece modalı açar
+    const modal = document.getElementById('jerseyModal');
+    const body = document.getElementById('modalBody');
+    body.innerHTML = `
+        <img src="${imgSrc}">
+        <h3 style="color:#333">${name}</h3>
+        <p style="color:#666; font-size:14px">Forma Tasarımı Ön İzlemesi</p>
+    `;
+    modal.style.display = 'flex';
+}
+
+// Modal Kapatma Fonksiyonu
+function closeJerseyModal() {
+    document.getElementById('jerseyModal').style.display = 'none';
+}
 function buildComparison() {
   state.cmpPairs = [];
   state.cmpIndex = 0;
@@ -1624,5 +1694,11 @@ async function clearAllVotes() {
   }
 }
 </script>
+<div class="modal-overlay" id="jerseyModal" onclick="closeJerseyModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeJerseyModal()">×</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
 </body>
 </html>
