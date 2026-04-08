@@ -146,6 +146,7 @@ input:checked + .tslider::before { transform: translateX(22px); }
 
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
 
 <!-- FingerprintJS -->
 <script>
@@ -163,7 +164,7 @@ input:checked + .tslider::before { transform: translateX(22px); }
 <div class="overlay-bg" id="admin-overlay">
   <div class="lock-card">
     <h2>🔒 Yönetim Paneli</h2>
-    <p>Yönetici şifresini girin.<br><small>Varsayılan: admin123</small></p>
+    <p>Yönetici şifresini girin.<br><small></small></p>
     <input type="password" id="admin-pass-inp" placeholder="Şifrenizi girin" onkeydown="if(event.key==='Enter')chkAdmin()">
     <div class="err-msg" id="admin-err">❌ Yanlış şifre. Tekrar deneyin.</div>
     <div style="display:flex;gap:10px;justify-content:center">
@@ -380,27 +381,19 @@ input:checked + .tslider::before { transform: translateX(22px); }
 </div>
 
 <script>
-// ==================== DÜZELTİLMİŞ ŞİFRE FONKSİYONLARI ====================
-function simpleHash(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  return 'hash_' + Math.abs(hash).toString(16) + '_2024';
-}
-
-function secureHash(password) {
-  return simpleHash(password + 'okul_anketi_salt');
-}
-
-function verifyHash(password, hash) {
-  if (!hash || hash === '') {
-    return password === 'admin123';
-  }
   const testHash = simpleHash(password + 'okul_anketi_salt');
   return testHash === hash;
+}
+
+
+// ==================== GÜVENLİ HASH (BCRYPT) ====================
+async function createHash(password) {
+  return await bcrypt.hash(password, 10);
+}
+
+async function verifyPassword(password, hash) {
+  if (!hash) return false;
+  return await bcrypt.compare(password, hash);
 }
 
 // ==================== FIREBASE YAPILANDIRMA ====================
@@ -665,47 +658,50 @@ function tryAdmin() {
   document.getElementById('admin-overlay').style.display = 'flex';
 }
 
-function chkAdmin() {
-  var input = document.getElementById('admin-pass-inp').value;
-  var err = document.getElementById('admin-err');
-  
-  if (!input) { 
-    err.style.display = 'block'; 
-    err.textContent = '❌ Şifre girin!'; 
-    return; 
-  }
-  
-  console.log('Girilen şifre:', input);
-  console.log('Mevcut hash:', cfg.adminPassHash);
-  
-  // İlk kurulum - hash yoksa veya boşsa
-  if (!cfg.adminPassHash || cfg.adminPassHash === '') {
-    console.log('İlk kurulum yapılıyor...');
-    var hash = secureHash(input);
-    cfg.adminPassHash = hash;
-    saveCfgFb();
-    adminOK = true;
-    closeOverlay('admin-overlay');
-    switchTab('admin');
-    buildAdminGrid();
-    updateHashBadge();
+
+let attempts = 0;
+
+async function chkAdmin() {
+  const input = document.getElementById('admin-pass-inp').value;
+  const err = document.getElementById('admin-err');
+
+  if (!input) {
+    err.style.display = 'block';
+    err.textContent = '❌ Şifre girin!';
     return;
   }
-  
-  // Hash varsa doğrula
-  if (verifyHash(input, cfg.adminPassHash)) {
-    console.log('Şifre doğrulandı!');
+
+  if (attempts >= 5) {
+    err.style.display = 'block';
+    err.textContent = '⛔ Çok fazla deneme!';
+    return;
+  }
+
+  if (!cfg.adminPassHash) {
+    const hash = await createHash(input);
+    cfg.adminPassHash = hash;
+    await saveCfgFb();
+
     adminOK = true;
     closeOverlay('admin-overlay');
     switchTab('admin');
-    buildAdminGrid();
-    updateHashBadge();
+    return;
+  }
+
+  const isValid = await verifyPassword(input, cfg.adminPassHash);
+
+  if (isValid) {
+    adminOK = true;
+    attempts = 0;
+    closeOverlay('admin-overlay');
+    switchTab('admin');
   } else {
-    console.log('Şifre yanlış!');
+    attempts++;
     err.style.display = 'block';
-    err.textContent = '❌ Yanlış şifre! (Varsayılan: admin123)';
+    err.textContent = '❌ Yanlış şifre!';
   }
 }
+
 
 function updateHashBadge() {
   var badge = document.getElementById('hash-badge');
@@ -840,25 +836,23 @@ function chgCount(d) {
   saveCfgFb();
 }
 
-function saveAdminPass() {
-  var pass = document.getElementById('admin-pass-set').value;
-  if (!pass || pass.length < 4) { alert('❌ En az 4 karakter!'); return; }
-  var btn = document.getElementById('btn-save-pass');
-  btn.innerHTML = 'İşleniyor...';
-  btn.disabled = true;
-  setTimeout(() => {
-    var hash = secureHash(pass);
-    cfg.adminPassHash = hash;
-    saveCfgFb();
-    btn.innerHTML = '✅ Kaydedildi!';
-    setTimeout(() => {
-      btn.innerHTML = 'Hashle & Kaydet';
-      btn.disabled = false;
-      updateHashBadge();
-      alert('✅ Şifre hashlendi!');
-    }, 500);
-  }, 100);
+
+async function saveAdminPass() {
+  const pass = document.getElementById('admin-pass-set').value;
+
+  if (!pass || pass.length < 4) {
+    alert('❌ En az 4 karakter!');
+    return;
+  }
+
+  const hash = await createHash(pass);
+  cfg.adminPassHash = hash;
+
+  await saveCfgFb();
+
+  alert('✅ Şifre güvenli şekilde kaydedildi!');
 }
+
 
 function saveResPass() {
   cfg.pass = document.getElementById('res-pass-set').value;
@@ -1242,6 +1236,7 @@ input:checked + .tslider::before { transform: translateX(22px); }
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
 <script>
   const fpPromise = import('https://openfpcdn.io/fingerprintjs/v5').then(FingerprintJS => FingerprintJS.load());
 </script>
@@ -1254,7 +1249,7 @@ input:checked + .tslider::before { transform: translateX(22px); }
 <div class="overlay-bg" id="admin-overlay">
   <div class="lock-card">
     <h2>🔒 Yönetim Paneli</h2>
-    <p>Yönetici şifresini girin.<br><small>Varsayılan: admin123</small></p>
+    <p>Yönetici şifresini girin.<br><small></small></p>
     <input type="password" id="admin-pass-inp" placeholder="Şifrenizi girin" onkeydown="if(event.key==='Enter')chkAdmin()">
     <div class="err-msg" id="admin-err">❌ Yanlış şifre. Tekrar deneyin.</div>
     <div style="display:flex;gap:10px;justify-content:center">
@@ -1469,64 +1464,78 @@ input:checked + .tslider::before { transform: translateX(22px); }
 <script>
 // ==================== DÜZELTİLMİŞ ŞİFRE SİSTEMİ ====================
 // Basit ve güvenilir şifre saklama - düz metin (hash karmaşıklığı yok)
-function chkAdmin() {
-  var input = document.getElementById('admin-pass-inp').value;
-  var err = document.getElementById('admin-err');
-  
-  if (!input) { 
-    err.style.display = 'block'; 
-    err.textContent = '❌ Şifre girin!'; 
-    return; 
+
+let attempts = 0;
+
+async function chkAdmin() {
+  const input = document.getElementById('admin-pass-inp').value;
+  const err = document.getElementById('admin-err');
+
+  if (!input) {
+    err.style.display = 'block';
+    err.textContent = '❌ Şifre girin!';
+    return;
   }
-  
-  console.log('Girilen şifre:', input);
-  console.log('Beklenen şifre:', cfg.adminPassHash || 'admin123 (varsayılan)');
-  
-  // İlk kurulum - şifre yoksa
-  if (!cfg.adminPassHash || cfg.adminPassHash === '') {
-    if (input === 'admin123') {
-      console.log('İlk kurulum başarılı');
-      cfg.adminPassHash = 'admin123'; // Düz metin sakla
-      saveCfgFb();
-      adminOK = true;
-      closeOverlay('admin-overlay');
-      switchTab('admin');
-      buildAdminGrid();
-      return;
-    } else {
-      err.style.display = 'block';
-      err.textContent = '❌ Varsayılan şifre: admin123';
-      return;
-    }
+
+  if (attempts >= 5) {
+    err.style.display = 'block';
+    err.textContent = '⛔ Çok fazla deneme!';
+    return;
   }
-  
-  // Normal giriş - düz metin karşılaştırma
-  if (input === cfg.adminPassHash) {
-    console.log('Giriş başarılı!');
+
+  if (!cfg.adminPassHash) {
+    const hash = await createHash(input);
+    cfg.adminPassHash = hash;
+    await saveCfgFb();
+
     adminOK = true;
     closeOverlay('admin-overlay');
     switchTab('admin');
-    buildAdminGrid();
+    return;
+  }
+
+  const isValid = await verifyPassword(input, cfg.adminPassHash);
+
+  if (isValid) {
+    adminOK = true;
+    attempts = 0;
+    closeOverlay('admin-overlay');
+    switchTab('admin');
   } else {
-    console.log('Şifre yanlış!');
+    attempts++;
     err.style.display = 'block';
-    err.textContent = '❌ Yanlış şifre! (Doğru: ' + cfg.adminPassHash + ')';
+    err.textContent = '❌ Yanlış şifre!';
   }
 }
 
-function saveAdminPass() {
-  var pass = document.getElementById('admin-pass-set').value;
-  if (!pass || pass.length < 4) { alert('❌ En az 4 karakter!'); return; }
-  
-  cfg.adminPassHash = pass; // Düz metin sakla
-  saveCfgFb();
-  
-  var btn = document.getElementById('btn-save-pass');
-  btn.innerHTML = '✅ Kaydedildi!';
-  setTimeout(() => {
-    btn.innerHTML = 'Kaydet';
-    alert('✅ Yeni şifre kaydedildi: ' + pass);
-  }, 500);
+
+
+async function saveAdminPass() {
+  const pass = document.getElementById('admin-pass-set').value;
+
+  if (!pass || pass.length < 4) {
+    alert('❌ En az 4 karakter!');
+    return;
+  }
+
+  const hash = await createHash(pass);
+  cfg.adminPassHash = hash;
+
+  await saveCfgFb();
+
+  alert('✅ Şifre güvenli şekilde kaydedildi!');
+}
+
+
+
+// ==================== GÜVENLİ HASH (BCRYPT) ====================
+async function createHash(password) {
+  return await bcrypt.hash(password, 10);
+}
+
+async function verifyPassword(password, hash) {
+  if (!hash) return false;
+  return await bcrypt.compare(password, hash);
 }
 
 // ==================== FIREBASE YAPILANDIRMA ====================
