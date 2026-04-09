@@ -674,36 +674,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function initApp() {
   try {
-    // Firebase başlat
+    // 1. Temel Başlatma (Firebase ve Kimlik)
     app = firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
-    
-    console.log('✅ Firebase başlatıldı');
-    updateStatus(true, '✅ Firebase bağlı');
-    
-    // Cihaz fingerprint oluştur
     deviceFingerprint = generateFingerprint();
-    console.log('🔐 Fingerprint:', deviceFingerprint);
     
-    // Veritabanı kontrol ve kurulum
+    console.log('✅ Firebase ve Fingerprint hazır');
+    updateStatus(true, '✅ Firebase bağlı');
+
+    // --- HIZLANDIRMA DOKUNUŞU ---
+    // Veritabanından verilerin gelmesini beklemeden (await öncesi) 
+    // statik dil dosyasıyla butonları çiziyoruz ki kullanıcı beklemesin.
+    try {
+        applyLanguage(); 
+        console.log('⚡ Arayüz dilleri ve butonlar ön-yüklendi.');
+    } catch (e) { console.error("Ön yükleme hatası:", e); }
+    // ----------------------------
+    
+    // 2. Veri Yükleme (Ağ trafiği burada gerçekleşir)
     await checkDatabaseSetup();
-    
-    // Verileri yükle (Buradaki await'ler verinin gelmesini bekler)
     await loadConfig();
     await loadLogos();
     await loadVotes();
     
-    // --- UI HAZIRLA ---
-    applyLanguage();     // Dil seçeneklerini uygular
-    buildAdminGrid();    // Yönetim panelindeki logoları çizer
-    buildPollGrid();     // ANKET SAYFASINDAKİ LOGOLARI ÇİZER (Eksik olan buydu)
+    // 3. UI GÜNCELLEME (Veri geldikten sonraki son dokunuşlar)
     
-    updatePollStatus();  // Anketin açık mı kapalı mı olduğunu kontrol eder
+    // Veriler geldiği için butonları ve metinleri (varsa yeni verilerle) tazeliyoruz
+    try {
+        applyLanguage(); 
+    } catch (e) { console.error("Dil yenileme hatası:", e); }
+
+    // Logo gridlerini veri geldikten sonra çizmek zorundayız
+    try {
+        buildAdminGrid();
+        buildPollGrid();
+    } catch (e) { console.error("Grid oluşturma hatası:", e); }
     
-    console.log('✅ Uygulama ve logolar hazır');
+    // En son ve en kapsamlı sonuçlar ekranı
+    try {
+        renderResults();
+    } catch (e) { 
+        console.error("Sonuçlar ekranı çizilemedi:", e); 
+    }
+    
+    updatePollStatus();
+    console.log('🚀 Uygulama verilerle birlikte tamamen hazır');
     
   } catch (error) {
-    console.error('❌ Başlatma hatası:', error);
+    console.error('❌ Kritik Başlatma Hatası:', error);
     updateStatus(false, '❌ Bağlantı hatası: ' + error.message);
     showError('Uygulama başlatılamadı: ' + error.message);
   }
@@ -1613,180 +1631,186 @@ function checkResultPassword() {
 
 function renderResults() {
     const container = document.getElementById('results-inner');
-    const count = state.votes.length;
+    if (!container) return; 
+
+    const count = (state.votes && Array.isArray(state.votes)) ? state.votes.length : 0;
 
     if (count === 0) {
-        container.innerHTML = '<div style="text-align:center;padding:4rem;color:#666;font-size:16px">Henüz oy bulunmuyor.</div>';
+        container.innerHTML = '<div style="text-align:center;padding:4rem;color:#666;">Henüz oy bulunmuyor.</div>';
         return;
     }
 
-    // --- 1. VERİ ANALİZİ VE HESAPLAMALAR ---
-    const stats = { logo: {}, sinif: {}, neden: {}, yildiz: 0 };
+    // --- 1. VERİ ANALİZİ ---
+    const stats = { logo: {}, sinif: {}, neden: {}, logoNedenleri: {}, yildiz: 0 };
     const genderBreakdown = { 'Kız': {}, 'Erkek': {} };
     const classBreakdown = {};
-    const cmpTotals = {}; // Düello (VS) galibiyetleri
+    const cmpTotals = {}; 
 
     state.votes.forEach(v => {
-        // 1. Genel İstatistikler
-        if (v.logo) stats.logo[v.logo] = (stats.logo[v.logo] || 0) + 1;
-        if (v.sinif) stats.sinif[v.sinif] = (stats.sinif[v.sinif] || 0) + 1;
-        stats.yildiz += (Number(v.yildiz) || 0);
-
-        // 2. DÜELLO (VS) VERİSİNİ AYIKLA (Garantili Yöntem)
-        if (v.cmpWins) {
-            try {
-                let wins = v.cmpWins;
-                // Eğer veri metin (string) ise objeye çevir
-                if (typeof wins === 'string') {
-                    wins = JSON.parse(wins);
+        try {
+            if (v.logo) {
+                stats.logo[v.logo] = (stats.logo[v.logo] || 0) + 1;
+                if (v.neden) {
+                    if (!stats.logoNedenleri[v.logo]) stats.logoNedenleri[v.logo] = {};
+                    stats.logoNedenleri[v.logo][v.neden] = (stats.logoNedenleri[v.logo][v.neden] || 0) + 1;
                 }
-                // Logoları tek tek havuzda topla
-                Object.entries(wins).forEach(([name, count]) => {
-                    cmpTotals[name] = (cmpTotals[name] || 0) + Number(count);
-                });
-            } catch (e) {
-                console.error("Düello verisi okunamadı:", e);
             }
-        }
+            if (v.sinif) stats.sinif[v.sinif] = (stats.sinif[v.sinif] || 0) + 1;
+            stats.yildiz += (Number(v.yildiz) || 0);
 
-        // 3. CİNSİYET AYIKLAMA (Firebase'deki "Kz" verisi için)
-        let g = null;
-        if (v.cinsiyet) {
-            const c = v.cinsiyet.toString();
-            if (c.includes('Kz') || c.includes('Kız') || c.includes('Kiz') || c.includes('kız')) {
-                g = 'Kız';
-            } else if (c.includes('Erkek') || c.includes('erkek')) {
-                g = 'Erkek';
+            if (v.cmpWins) {
+                let wins = (typeof v.cmpWins === 'string') ? JSON.parse(v.cmpWins) : v.cmpWins;
+                if (wins && typeof wins === 'object') {
+                    Object.entries(wins).forEach(([name, val]) => {
+                        cmpTotals[name] = (cmpTotals[name] || 0) + Number(val);
+                    });
+                }
             }
-        }
 
-        if (g && v.logo) {
-            if (!genderBreakdown[g]) genderBreakdown[g] = {};
-            genderBreakdown[g][v.logo] = (genderBreakdown[g][v.logo] || 0) + 1;
-        }
-
-        // 4. Sınıf Analizi
-        if (v.sinif && v.logo) {
-            if (!classBreakdown[v.sinif]) classBreakdown[v.sinif] = {};
-            classBreakdown[v.sinif][v.logo] = (classBreakdown[v.sinif][v.logo] || 0) + 1;
-        }
+            let g = (v.cinsiyet || "").toString().toLowerCase().includes('erkek') ? 'Erkek' : 'Kız';
+            if (v.logo) {
+                if (!genderBreakdown[g]) genderBreakdown[g] = {};
+                genderBreakdown[g][v.logo] = (genderBreakdown[g][v.logo] || 0) + 1;
+            }
+            if (v.sinif && v.logo) {
+                if (!classBreakdown[v.sinif]) classBreakdown[v.sinif] = {};
+                classBreakdown[v.sinif][v.logo] = (classBreakdown[v.sinif][v.logo] || 0) + 1;
+            }
+        } catch (e) {}
     });
 
-    // Hesaplanan değerler
-    const topLogoName = Object.entries(stats.logo).sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
-    const topLogoCount = stats.logo[topLogoName] || 0;
+    const sortedLogos = Object.entries(stats.logo).sort((a, b) => b[1] - a[1]);
+    const topLogoName = sortedLogos[0]?.[0] || '—';
     const topLogoObj = state.logos.find(l => l.name === topLogoName) || {};
     const avgRating = (stats.yildiz / count).toFixed(1);
     const sortedCmp = Object.entries(cmpTotals).sort((a, b) => b[1] - a[1]);
 
-    // --- 2. HTML ÇIKTISI OLUŞTURMA ---
+    // --- 2. HTML İNŞA ---
     
-    // Üst Özet Kartları
-    let htmlContent = `
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:15px;border-bottom:2px solid #e0e0e0">
-            <span style="font-size:20px;font-weight:700;color:#333">📊 Anket Sonuçları</span>
-            <span style="font-size:13px;background:#E8F5E9;color:#2E7D32;padding:6px 16px;border-radius:20px;font-weight:600">● Canlı · ${count} katılımcı</span>
-        </div>
-
-        <div class="winner-box">
-            <div class="winner-img">${topLogoObj.img ? `<img src="${topLogoObj.img}">` : '🏆'}</div>
-            <div style="flex:1">
-                <div style="font-size:14px;color:rgba(255,255,255,0.9);font-weight:600;margin-bottom:6px">🏆 En Çok Oy Alan (Genel)</div>
-                <div style="font-size:28px;font-weight:800;color:#fff;margin-bottom:8px">${topLogoName}</div>
-                <div style="font-size:16px;color:rgba(255,255,255,0.9);font-weight:500">${topLogoCount} oy (%${Math.round((topLogoCount/count)*100)})</div>
+    // BÖLÜM A: LİDER VE ÖZET KARTLARI
+    let html = `
+        <div style="background: linear-gradient(135deg, #534AB7 0%, #764ba2 100%); padding: 20px; border-radius: 15px; color: white; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <div style="width: 70px; height: 70px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                ${topLogoObj.img ? `<img src="${topLogoObj.img}" style="max-width:90%;">` : '🏆'}
+            </div>
+            <div>
+                <div style="font-size: 22px; font-weight: 800;">${topLogoName}</div>
+                <div style="font-size: 13px; opacity: 0.9;">Lider Logo | %${Math.round((stats.logo[topLogoName]/count)*100)} Tercih Oranı</div>
             </div>
         </div>
 
-        <div class="metric-grid">
-            <div class="metric"><div class="ml">Toplam Oy</div><div class="mv">${count}</div></div>
-            <div class="metric"><div class="ml">Ortalama Puan</div><div class="mv">${avgRating}★</div></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 25px;">
+            <div style="background: #FFF0F5; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #ffd1dc;">
+                <div style="font-size: 10px; font-weight: 800; color: #d81b60; text-transform: uppercase;">👧 Kızlar Favorisi</div>
+                <div style="font-size: 16px; font-weight: 800; color: #333; margin-top: 4px;">${Object.entries(genderBreakdown['Kız'] || {}).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—'}</div>
+            </div>
+            <div style="background: #E3F2FD; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #bbdefb;">
+                <div style="font-size: 10px; font-weight: 800; color: #1976d2; text-transform: uppercase;">👦 Erkekler Favorisi</div>
+                <div style="font-size: 16px; font-weight: 800; color: #333; margin-top: 4px;">${Object.entries(genderBreakdown['Erkek'] || {}).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—'}</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div style="font-size: 10px; color: #888; font-weight: 700; text-transform: uppercase;">Toplam Oy / Puan</div>
+                <div style="font-size: 16px; font-weight: 800; color: #534AB7; margin-top: 4px;">${count} Oy | ${avgRating}★</div>
+            </div>
         </div>
     `;
 
-    // Düello (VS) Sıralaması Kartı
-    htmlContent += `
-        <div class="result-card" style="margin-top: 25px;">
-            <div class="result-title">⚔️ Düello (VS) Başarı Sıralaması</div>
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                ${sortedCmp.map(([name, wins], index) => {
-                    const lObj = state.logos.find(l => l.name === name) || {};
+    // BÖLÜM B: GENEL OY DAĞILIMI (Resimli ve Çubuk Grafikli)
+    html += `
+        <div class="result-card" style="background: white; padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 1px solid #eee;">
+            <div style="font-weight: 800; margin-bottom: 18px; color: #333; display: flex; align-items: center; gap: 8px;">📊 Genel Oy Dağılımı</div>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+                ${state.logos.map(l => {
+                    const votes = stats.logo[l.name] || 0;
+                    const pct = count > 0 ? (votes / count) * 100 : 0;
                     return `
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8f9fa; border-radius: 12px; border: 1px solid #eee;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <span style="font-weight: 800; color: #534AB7; width: 20px;">${index + 1}.</span>
-                                <div style="width: 40px; height: 40px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #ddd;">
-                                    ${lObj.img ? `<img src="${lObj.img}" style="max-width:90%; max-height:90%;">` : '🖼️'}
-                                </div>
-                                <span style="font-weight: 600; color: #333;">${name}</span>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #eee; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fff; flex-shrink: 0;">
+                                ${l.img ? `<img src="${l.img}" style="width: 100%; height: 100%; object-fit: contain;">` : '🖼️'}
                             </div>
-                            <span style="background: #534AB7; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">${wins} Galibiyet</span>
+                            <div style="width: 50px; font-size: 11px; font-weight: 700; color: #534AB7;">${l.name}</div>
+                            <div style="flex: 1; height: 8px; background: #f0f0f5; border-radius: 4px; overflow: hidden;">
+                                <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #534AB7, #764ba2); border-radius: 4px;"></div>
+                            </div>
+                            <div style="width: 45px; text-align: right; font-size: 12px; font-weight: 700; color: #333;">${votes} Oy</div>
                         </div>`;
                 }).join('')}
-                ${sortedCmp.length === 0 ? '<p style="text-align:center; color:#999;">Henüz düello verisi yok.</p>' : ''}
             </div>
         </div>
     `;
 
-    // Cinsiyet ve Sınıf Kırılımları
-    htmlContent += `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 25px;">
-            <div class="result-card">
-                <div class="result-title">👫 Cinsiyet Bazlı Favoriler</div>
-                ${['Kız', 'Erkek'].map(g => {
-                    const vts = genderBreakdown[g];
-                    const totalG = Object.values(vts).reduce((a, b) => a + b, 0);
-                    const topG = Object.entries(vts).sort((a,b) => b[1]-a[1])[0] || ['—', 0];
-                    const pct = totalG > 0 ? Math.round((topG[1]/totalG)*100) : 0;
+    // BÖLÜM C: LOGO BAZLI NEDEN ANALİZİ
+    html += `
+        <div class="result-card" style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #eee;">
+            <div style="font-weight: 800; margin-bottom: 12px; color: #333; font-size: 14px;">🎯 Logo Tercih Nedenleri</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                ${sortedLogos.map(([logoName, voteCount]) => {
+                    const nedenler = stats.logoNedenleri[logoName] || {};
                     return `
-                        <div style="padding: 12px; border-radius: 12px; margin-top:10px; background: ${g==='Kız' ? '#FFF0F5' : '#E3F2FD'}">
-                            <div style="font-weight: 700;">${g === 'Kız' ? '👧 Kız Öğrenciler' : '👦 Erkek Öğrenciler'}</div>
-                            <div style="font-size: 14px; color: #333;">Lider: <strong>${topG[0]}</strong> (%${pct})</div>
+                        <div style="background: #f8f8fb; padding: 10px; border-radius: 8px; border: 1px solid #eee;">
+                            <div style="font-weight: 700; color: #534AB7; font-size: 12px; margin-bottom: 5px;">${logoName}</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                                ${Object.entries(nedenler).map(([n, c]) => `
+                                    <span style="font-size: 10px; background: white; border: 1px solid #ddd; padding: 1px 6px; border-radius: 4px;">${n}: ${c}</span>
+                                `).join('')}
+                            </div>
                         </div>`;
                 }).join('')}
             </div>
+        </div>
+    `;
 
-            <div class="result-card">
-                <div class="result-title">📏 Sınıf Bazlı Favoriler</div>
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                    ${Object.keys(classBreakdown).sort((a,b) => parseInt(a)-parseInt(b)).map(s => {
-                        const vts = classBreakdown[s];
-                        const totalS = Object.values(vts).reduce((a, b) => a + b, 0);
-                        const topS = Object.entries(vts).sort((a,b) => b[1]-a[1])[0] || ['—', 0];
-                        const pct = totalS > 0 ? Math.round((topS[1]/totalS)*100) : 0;
-                        return `
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
-                                <span style="font-weight: 600; font-size: 14px;">${s}</span>
-                                <span style="color: #534AB7; font-weight: 700; font-size: 14px;">${topS[0]} (%${pct})</span>
-                            </div>`;
-                    }).join('')}
+    // BÖLÜM D: VS SIRALAMASI VE SINIF LİDERLERİ
+    html += `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 25px;">
+            <div class="result-card" style="background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee;">
+                <div style="font-weight: 800; margin-bottom: 12px; font-size: 14px;">⚔️ Tüm Düello (VS) Sıralaması</div>
+                <div style="display: flex; flex-direction: column; gap: 6px; max-height: 300px; overflow-y: auto;">
+                    ${sortedCmp.map(([name, wins], idx) => `
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; padding: 6px; background: #fcfcfc; border-radius: 6px; border: 1px solid #f0f0f0;">
+                            <span>${idx+1}. ${name}</span>
+                            <span style="font-weight: 700; color: #534AB7;">${wins} Galibiyet</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="result-card" style="background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee;">
+                <div style="font-weight: 800; margin-bottom: 12px; font-size: 14px;">📏 Sınıf Bazlı Liderler</div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    ${Object.keys(classBreakdown).sort((a,b)=>parseInt(a)-parseInt(b)).map(s => `
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; padding: 6px; border-bottom: 1px solid #f0f0f0;">
+                            <span style="font-weight: 700;">${s}</span>
+                            <span style="color: #534AB7; font-weight: 600;">${Object.entries(classBreakdown[s]).sort((a,b)=>b[1]-a[1])[0][0]}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
         </div>
     `;
 
-    // Genel Logo Sıralaması (Çubuk Grafikler)
-    htmlContent += `
-        <div class="result-card" style="margin-top: 25px;">
-            <div class="result-title">📊 Genel Oy Dağılımı</div>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-                ${state.logos.map(l => {
-                    const logoVotes = stats.logo[l.name] || 0;
-                    const pct = count > 0 ? Math.round((logoVotes / count) * 100) : 0;
-                    return `
-                        <div class="bar-row" style="display:flex; align-items:center; gap:10px;">
-                            <div style="width: 120px; font-size: 13px; font-weight: 500;">${l.name}</div>
-                            <div style="flex: 1; height: 10px; background: #eee; border-radius: 5px; overflow: hidden;">
-                                <div style="width: ${pct}%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2);"></div>
-                            </div>
-                            <div style="width: 60px; text-align: right; font-size: 13px; font-weight: 600;">${logoVotes} Oy</div>
-                        </div>`;
-                }).join('')}
+    // BÖLÜM E: YORUMLAR
+    const comments = state.votes.filter(v => v.yorum && v.yorum.trim() !== "");
+    html += `
+        <div class="result-card" style="background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee;">
+            <div style="font-weight: 800; margin-bottom: 12px; display: flex; justify-content: space-between;">
+                <span>💬 Öğrenci Görüşleri</span>
+                <span style="font-size: 11px; color: #888;">${comments.length} Mesaj</span>
+            </div>
+            <div style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+                ${comments.slice().reverse().map(v => `
+                    <div style="background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px solid #f0f0f0; border-left: 4px solid #534AB7;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px;">
+                            <span style="font-weight: 800; color: #534AB7;">${v.logo} Favorisi</span>
+                            <span style="color: #999;">${v.sinif || ''} | ${v.cinsiyet || ''}</span>
+                        </div>
+                        <div style="font-size: 13px; color: #444; font-style: italic;">"${v.yorum}"</div>
+                    </div>
+                `).join('')}
             </div>
         </div>
     `;
 
-    // Sonuçları Ekrana Yazdır
-    container.innerHTML = htmlContent;
+    container.innerHTML = html;
 }
 // ==================== VERİ İHRACATI ====================
 
