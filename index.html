@@ -1137,10 +1137,8 @@ function buildAdminGrid() {
   
   const resPassInput = document.getElementById('res-pass-set');
   if (resPassInput) resPassInput.value = state.config.resultPass || '';
-
-  // --- EKLEME: Yorum kontrol listesini oluştur ---
-  buildCommentAdmin();
 }
+
 function triggerUpload(index, type) {
   const input = document.createElement('input');
   input.type = 'file';
