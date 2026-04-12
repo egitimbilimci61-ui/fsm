@@ -1297,11 +1297,16 @@ async function clearAllLogos() {
   try {
     const batch = db.batch();
     
-    for (let i = 0; i < state.logos.length; i++) {
+    // Sabit bir döngü kullanarak tüm olası dokümanları temizleyelim
+    for (let i = 0; i < 20; i++) {
       const ref = db.collection('Logolar').doc('logo_' + i);
       batch.delete(ref);
-      state.logos[i].img = null;
-      state.logos[i].formaImg = null;
+      
+      // Sadece dizide gerçekten var olan elemanları sıfırla
+      if (state.logos && state.logos[i]) {
+        state.logos[i].img = null;
+        state.logos[i].formaImg = null;
+      }
     }
     
     await batch.commit();
@@ -1310,44 +1315,6 @@ async function clearAllLogos() {
     
   } catch (error) {
     showError('Temizleme hatası: ' + error.message);
-  }
-}
-
-async function saveAllChanges() {
-  const btn = document.getElementById('save-btn');
-  btn.innerHTML = '<span class="spinner"></span>Kaydediliyor...';
-  btn.disabled = true;
-  
-  try {
-    // Logoları kaydet
-    const batch = db.batch();
-    state.logos.forEach((logo, index) => {
-      const ref = db.collection('Logolar').doc('logo_' + index);
-      batch.set(ref, {
-        name: logo.name,
-        img: logo.img || null,
-        formaImg: logo.formaImg || null,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
-    });
-    await batch.commit();
-    
-    // Config kaydet
-    await saveConfig();
-    
-    btn.innerHTML = '✅ Kaydedildi!';
-    setTimeout(() => {
-      btn.innerHTML = '💾 Değişiklikleri Kaydet';
-      btn.disabled = false;
-    }, 1500);
-    
-  } catch (error) {
-    btn.innerHTML = '❌ Hata';
-    setTimeout(() => {
-      btn.innerHTML = '💾 Değişiklikleri Kaydet';
-      btn.disabled = false;
-    }, 1500);
-    showError('Kaydetme hatası: ' + error.message);
   }
 }
 
