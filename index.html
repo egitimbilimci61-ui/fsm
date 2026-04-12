@@ -676,7 +676,47 @@ document.addEventListener('DOMContentLoaded', function() {
   initApp();
 });
 
+
+async function saveAllChanges() {
+  const btn = document.getElementById('save-btn');
+  btn.innerHTML = '<span class="spinner"></span>Kaydediliyor...';
+  btn.disabled = true;
   
+  try {
+    const batch = db.batch();
+    
+    // state.config.logoCount kadar dönerek senkronizasyonu zorlayalım
+    for (let index = 0; index < state.config.logoCount; index++) {
+      const logo = state.logos[index];
+      if (!logo) continue; // Eğer logo dizide yoksa bu adımı atla
+
+      const ref = db.collection('Logolar').doc('logo_' + index);
+      batch.set(ref, {
+        name: logo.name || ('Logo ' + (index + 1)),
+        img: logo.img || null,
+        formaImg: logo.formaImg || null,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    }
+    
+    await batch.commit();
+    await saveConfig();
+    
+    btn.innerHTML = '✅ Kaydedildi!';
+    setTimeout(() => {
+      btn.innerHTML = '💾 Değişiklikleri Kaydet';
+      btn.disabled = false;
+    }, 1500);
+    
+  } catch (error) {
+    btn.innerHTML = '❌ Hata';
+    setTimeout(() => {
+      btn.innerHTML = '💾 Değişiklikleri Kaydet';
+      btn.disabled = false;
+    }, 1500);
+    showError('Kaydetme hatası: ' + error.message);
+  }
+}
 async function initApp() {
   try {
     // 1. Temel Başlatma (Firebase ve Kimlik)
